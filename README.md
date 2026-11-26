@@ -13,12 +13,13 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 [Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-26.md) · [Structured data](data/2026-11-26.json)
 
-Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 8:02 AM PST.
+Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 9:57 AM PST.
 
 ### For everyone
 
 - **[Microsoft Office Visio](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-microsoft-visio) — Act soon / Update:** Install Office LTSC 2024 build 16.0.17932.21140 or a later build on that branch, or Office LTSC 2021 build 16.0.14334.21048 or a later build on that branch. For Microsoft 365 Apps for Enterprise, install the build listed at https://aka.ms/OfficeSecurityReleases.
 - **[1Password](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-1password) — Act soon / Mitigate:** You do not need to update anything in your 1Password account. Be cautious about phishing attempts in the form of unexpected emails, texts, or calls that mention 1Password, invitations, or account recovery. 1Password will never ask for your account password or Secret Key. Only enter them in the official 1Password app or on the official website, and only when you opened the app or typed the address yourself. The Secret Key is only needed the first time you sign in on a new device or browser. Keep your Secret Key and account password safe. If you see something suspicious, tell 1Password at support@1password.com.
+- **[Todoist](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-todoist) — Act soon / Rotate credentials:** Follow the instructions in the email Todoist sent you; if you did not receive one, Todoist says there is nothing to do. Depending on your case: 1. If your password was disabled, reset it and choose a new password, not your old Todoist password or one you use elsewhere. 2. If you reused your Todoist password elsewhere, change it on those services too. 3. If your Slack integration was disconnected, reconnect it. 4. If you used the Todoist for Outlook add-in, reconnect it. 5. If you used a Todoist API token in scripts or services, update them with your new token. 6. If you stored API keys, access tokens, recovery phrases, or other credentials in Todoist content, revoke and replace them with the relevant service. 7. If your content included shared links that let anyone with the link access a file, restrict access or replace those links. Todoist's notification comes from no-reply@notify.todoist.com; watch for fake emails.
 
 ### For app and server owners
 
@@ -27,10 +28,15 @@ Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 8:02 AM PST.
 - **[Check Point Security Management](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-checkpoint-security-management) — Act now / Update:** Install the Jumbo Hotfix Accumulator for R82.10 starting from Take 36 or later, for R82 starting from Take 118 or later, and for R81.20 starting from Take 158 or later. Follow the security hardening steps in sk185169: use the security hardening guide, limit Trusted Clients so the type is not Any, and restrict management access and implied rules to trusted addresses. Investigate exposed management servers for compromise.
 - **[VirtueMart](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-virtuemart) — Act now / Update:** Upgrade VirtueMart to 4.8.10 or later. Release 4.8.8 fixed CVE-2026-133335; 4.8.10 also fixes an issue that lets someone fake a paid order.
 - **[WP Rocket](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-wp-rocket) — Act now / Update:** Update WP Rocket to 3.24.2 or later.
+- **[Palo Alto Networks PAN-OS](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-paloalto-panos) — Act now / Update:** Follow Palo Alto Networks' guidance for your setup: 1. If you already run a fixed PAN-OS release listed in the CVE-2026-109618 advisory, you are protected. 2. If your management interface is restricted to trusted internal IP addresses, upgrade to the fixed hotfix for your release (such as 10.2.18-h15, 11.1.16-h6, 11.2.16-h3, 12.1.10-h6 or 12.2.4-h3) or a later release on the same branch at your next maintenance interval. 3. If your management interface, or a dataplane interface with a management profile attached, is reachable from the internet, upgrade immediately and restrict access to trusted internal IP addresses.
 - **[HPE AirWave](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-hpe-airwave) — Act soon / Update:** Update HPE AirWave to 8.3.0.8 or later.
 - **[Jenkins plugins](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-jenkins-plugins) — Act soon / Update:** Update Script Security to 1436.1438.v3dc5ef7d16f2 or a later release, and Pipeline: Groovy to 4403.4405.va\_b\_cdb\_b\_d0b\_89f or a later release, and update the other affected plugins named in the 2026-11-25 advisory.
 - **[vm2](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-vm2) — Monitor / Update:** Update vm2 to 3.12.1 or later. Do not allowlist the crypto builtin for untrusted code.
 - **[PyJWT](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-pyjwt) — Monitor / Update:** Update PyJWT to 2.14.0 or later where the application accepts both HMAC and asymmetric algorithms.
+
+### Early signals: not yet verified
+
+- **Not yet verified. [Rackspace Spot](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-rackspace-spot):** Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date.
 
 <!-- END GENERATED EDITION -->
 

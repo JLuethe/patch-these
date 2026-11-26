@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-25",
   "coverage_end": "2026-11-26",
   "published_at": "2026-11-26T15:12:00Z",
-  "updated_at": "2026-11-26T16:02:17Z",
+  "updated_at": "2026-11-26T17:57:51Z",
   "corrections": [
     {
       "at": "2026-11-26T16:00:00Z",
@@ -29,6 +29,15 @@
       "item_ids": [
         "1password",
         "airbyte-core-images"
+      ]
+    },
+    {
+      "at": "2026-11-26T17:57:51Z",
+      "summary": "Added Palo Alto Networks PAN-OS (CVE-2026-46300, exploited and in KEV) as Act now, the Todoist security incident as Act soon with Todoist's customer steps, and an unverified early signal on a reported Rackspace Spot breach and shutdown.",
+      "item_ids": [
+        "paloalto-panos",
+        "todoist",
+        "rackspace-spot"
       ]
     }
   ],
@@ -1758,6 +1767,437 @@
         }
       ],
       "kind": "incident"
+    },
+    {
+      "id": "paloalto-panos",
+      "product": "Palo Alto Networks PAN-OS",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "Palo Alto Networks has observed exploitation of CVE-2026-46300 against PAN-OS management interfaces exposed to the internet, and CISA lists the CVE in its KEV catalog.",
+      "cves": [
+        "CVE-2026-46300"
+      ],
+      "affected": "PAN-OS releases earlier than the fixed hotfix for each release line listed in Palo Alto Networks bulletin PAN-SA-2026-0015 (for example, 11.2.10 builds before 11.2.10-h19).",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "PAN-OS",
+          "version": "10.2.7-h41",
+          "platform": null,
+          "branch": "10.2.7",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "10.2.10-h45",
+          "platform": null,
+          "branch": "10.2.10",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "10.2.13-h29",
+          "platform": null,
+          "branch": "10.2.13",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "10.2.16-h14",
+          "platform": null,
+          "branch": "10.2.16",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "10.2.18-h15",
+          "platform": null,
+          "branch": "10.2.18",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.1.4-h40",
+          "platform": null,
+          "branch": "11.1.4",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.1.6-h42",
+          "platform": null,
+          "branch": "11.1.6",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.1.7-h14",
+          "platform": null,
+          "branch": "11.1.7",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.1.10-h38",
+          "platform": null,
+          "branch": "11.1.10",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.1.13-h18",
+          "platform": null,
+          "branch": "11.1.13",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.1.16-h6",
+          "platform": null,
+          "branch": "11.1.16",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.2.4-h25",
+          "platform": null,
+          "branch": "11.2.4",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.2.7-h25",
+          "platform": null,
+          "branch": "11.2.7",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.2.10-h19",
+          "platform": null,
+          "branch": "11.2.10",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.2.13-h6",
+          "platform": null,
+          "branch": "11.2.13",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "11.2.16-h3",
+          "platform": null,
+          "branch": "11.2.16",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "12.1.4-h15",
+          "platform": null,
+          "branch": "12.1.4",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "12.1.7-h15",
+          "platform": null,
+          "branch": "12.1.7",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "12.1.10-h6",
+          "platform": null,
+          "branch": "12.1.10",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        },
+        {
+          "component": "PAN-OS",
+          "version": "12.2.4-h3",
+          "platform": null,
+          "branch": "12.2.4",
+          "cves": [
+            "CVE-2026-46300"
+          ],
+          "source_ids": [
+            "pan-sa-2026-0015"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-46300 (Fragnesia) is a Linux kernel local privilege-escalation flaw that Palo Alto Networks has fixed in PAN-OS. Palo Alto says observed exploitation targeted PAN-OS devices whose management interface is exposed to the internet, and that the only known way to exploit it first requires the PHP2Shell vulnerability through that interface. CISA added CVE-2026-46300 to the KEV catalog on 28 October 2026.",
+      "action": "Follow Palo Alto Networks' guidance for your setup: 1. If you already run a fixed PAN-OS release listed in the CVE-2026-109618 advisory, you are protected. 2. If your management interface is restricted to trusted internal IP addresses, upgrade to the fixed hotfix for your release (such as 10.2.18-h15, 11.1.16-h6, 11.2.16-h3, 12.1.10-h6 or 12.2.4-h3) or a later release on the same branch at your next maintenance interval. 3. If your management interface, or a dataplane interface with a management profile attached, is reachable from the internet, upgrade immediately and restrict access to trusted internal IP addresses.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "pan-sa-2026-0015"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-46300",
+            "status": "confirmed",
+            "source_ids": [
+              "pan-sa-2026-0015"
+            ]
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-46300",
+          "listed": true,
+          "date_added": "2026-10-28",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-46300",
+          "probability": 0.02959,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "gaps": "Only bulletin PAN-SA-2026-0015 was read; the CVE-2026-109618 (PHP2Shell) advisory and the PAN-OS release list were not opened, so whether a newer hotfix than each listed version exists was not confirmed. No CVSS score was recorded.",
+      "sources": [
+        {
+          "id": "pan-sa-2026-0015",
+          "kind": "vendor_advisory",
+          "url": "https://security.paloaltonetworks.com/CVE-2026-46300",
+          "label": "Palo Alto Networks PAN-SA-2026-0015",
+          "checked_at": "2026-11-26T17:56:32Z",
+          "supports": [
+            "summary",
+            "affected",
+            "action",
+            "exploitation",
+            "fixes"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T17:56:32Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T17:56:32Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-breachrr",
+          "kind": "social_report",
+          "url": "https://x.com/Breachrr/status/2125985179156271261",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "todoist",
+      "product": "Todoist",
+      "audience": "end_users",
+      "kind": "incident",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "rotate",
+      "priority_reason": "Todoist confirmed that an attacker retrieved customer information on November 23, 2026, and affected customers have account-specific steps to take.",
+      "cves": [],
+      "affected": "About 6% of Todoist users (email addresses, older salted SHA1 password hashes, and account creation dates); about 0.003% (Todoist API and Slack integration tokens, with project, task, and comment data accessed for a smaller subset); about 0.001% (content resembling credentials found by targeted searches); and about 0.001% (connected Todoist for Outlook mailboxes: email subjects, sender information, the beginning of messages up to 255 characters, and attachment details). The attacker could also read source code; Todoist found no changes to application code.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "Todoist says that between November 22 and 23, an attacker used a stolen credential associated with its version control system to modify automated workflows in three repositories and obtain additional credentials, then took over an employee's work account and reached its cloud infrastructure. On November 23, 2026, the attacker gained unauthorized access to production systems and retrieved some customer information. Todoist says it blocked the access paths, revoked and replaced exposed internal credentials, protected affected accounts, and emailed affected customers. How the first credential was obtained has not been established. There is no CVE.",
+      "action": "Follow the instructions in the email Todoist sent you; if you did not receive one, Todoist says there is nothing to do. Depending on your case: 1. If your password was disabled, reset it and choose a new password, not your old Todoist password or one you use elsewhere. 2. If you reused your Todoist password elsewhere, change it on those services too. 3. If your Slack integration was disconnected, reconnect it. 4. If you used the Todoist for Outlook add-in, reconnect it. 5. If you used a Todoist API token in scripts or services, update them with your new token. 6. If you stored API keys, access tokens, recovery phrases, or other credentials in Todoist content, revoke and replace them with the relevant service. 7. If your content included shared links that let anyone with the link access a file, restrict access or replace those links. Todoist's notification comes from no-reply@notify.todoist.com; watch for fake emails.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "todoist-incident"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "todoist-incident",
+          "kind": "vendor_advisory",
+          "url": "https://www.todoist.com/help/todoist/get-started/security-incident-in-november-2026-cG0EIACNU",
+          "label": "Todoist: Security incident in November 2026",
+          "checked_at": "2026-11-26T17:57:00Z",
+          "supports": [
+            "summary",
+            "affected",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "x-worklumo",
+          "kind": "social_report",
+          "url": "https://x.com/worklumo/status/2125997862328881361",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rackspace-spot",
+      "product": "Rackspace Spot",
+      "audience": "applications_and_servers",
+      "kind": "incident",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "Reports say a credential breach reached customer Kubernetes environments and that the service will close on December 8, 2026, but Rackspace's own notice was not confirmed in this edition.",
+      "cves": [],
+      "affected": "Not yet confirmed from Rackspace. Reports describe Rackspace Spot customers' Kubernetes environments.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts and news reports say Rackspace will permanently discontinue Rackspace Spot on December 8, 2026, following a security breach involving compromised credentials that reached customer Kubernetes environments. This edition has not confirmed the details from a Rackspace notice.",
+      "action": "Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date.",
+      "exploitation": {
+        "status": "reported",
+        "source_ids": [
+          "x-rtehrani"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "Rackspace's own incident or shutdown notice was not found; the public Spot release notes read in search results did not mention it. Breach date, scope, and customer steps are unconfirmed.",
+      "sources": [
+        {
+          "id": "x-rtehrani",
+          "kind": "social_report",
+          "url": "https://x.com/rtehrani/status/2125993016066253088",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "exploitation"
+          ]
+        }
+      ]
     }
   ],
   "gaps": "Verification notes on individual items record checks that did not change the customer action, including the F5 NGINX Plus article that did not render."

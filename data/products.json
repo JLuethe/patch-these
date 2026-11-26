@@ -265,6 +265,16 @@
       ]
     },
     {
+      "id": "paloalto-panos",
+      "product": "Palo Alto Networks PAN-OS",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "paloalto-panos"
+        }
+      ]
+    },
+    {
       "id": "pyjwt",
       "product": "PyJWT",
       "appearances": [
@@ -275,12 +285,32 @@
       ]
     },
     {
+      "id": "rackspace-spot",
+      "product": "Rackspace Spot",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "rackspace-spot"
+        }
+      ]
+    },
+    {
       "id": "simple-git",
       "product": "simple-git",
       "appearances": [
         {
           "digest_date": "2026-11-25",
           "item_id": "simple-git"
+        }
+      ]
+    },
+    {
+      "id": "todoist",
+      "product": "Todoist",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "todoist"
         }
       ]
     },
