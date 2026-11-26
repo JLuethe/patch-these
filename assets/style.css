@@ -340,3 +340,10 @@ h1 { margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 500; font-size:
   .site-footer { margin-top: 1rem; padding: 0.75rem 0; background: transparent; box-shadow: none; clip-path: none; color: #333; }
   .site-footer a, .site-footer .wordmark, .site-footer .footer-brand { color: inherit; }
 }
+.action-steps { margin: 0.5rem 0 0; padding-left: 1.3rem; font-size: 0.83rem; line-height: 1.65; }
+.action-steps li { margin: 0.2rem 0; }
+.featured-jump { font-weight: 600; }
+details.how-this-works { margin: 0 0 1.2rem; max-width: 44rem; }
+details.how-this-works summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); }
+details.how-this-works summary:hover { color: var(--accent); }
+details.how-this-works p { margin: 0.5rem 0 0; }

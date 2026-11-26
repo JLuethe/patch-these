@@ -8,7 +8,7 @@ from urllib.parse import urljoin, urlsplit
 import markdown
 import nh3
 
-from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, is_early_signal, ordered_items, root_path, social_platform, status_noun, timestamp, verification_labels
+from .common import ACTIONS, AUDIENCES, DESCRIPTION, TAGLINE, brief, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, is_early_signal, ordered_items, root_path, social_platform, status_noun, timestamp, verification_labels
 
 _CLEANER_OPTIONS = dict(
     tags={"p", "a", "strong", "em", "code", "pre", "ul", "ol", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "br", "table", "thead", "tbody", "tr", "th", "td"},
@@ -97,13 +97,20 @@ def item_detail(item: dict) -> str:
     return "".join(blocks)
 
 
+def steps_list(item: dict) -> str:
+    steps = item.get("steps") or []
+    if not steps:
+        return ""
+    return '<ol class="action-steps">' + "".join(f"<li>{escape(step)}</li>" for step in steps) + "</ol>"
+
+
 ITEM_KINDS = {"vulnerability": "Vulnerability", "incident": "Incident", "supply_chain": "Supply chain"}
 
 
 def item_card(item: dict, digest_date: str, site_url: str, *, interactive: bool = True) -> str:
     product = escape(item["product"])
     item_id = escape(item["id"])
-    search = " ".join([item["product"], item["summary"], item["action"], item["affected"] or "", *item["cves"]])
+    search = " ".join([item["product"], item["summary"], item["action"], *item.get("steps", []), item["affected"] or "", *item["cves"]])
     primary = [source for source in item["sources"] if source["kind"] != "social_report"]
     # An early signal may rest on a single post; never hide its only source.
     shown = primary[:2] or item["sources"][:2]
@@ -135,7 +142,7 @@ def item_card(item: dict, digest_date: str, site_url: str, *, interactive: bool 
 <header class="item-header"><div class="item-heading"><div class="item-meta">{unverified}{urgency(item)}{kind_label}<span class="action-type">{ACTIONS[item['action_type']]}</span></div><h3>{product}</h3></div>{watch}</header>
 <p class="evidence">{escape(evidence)} <span aria-hidden="true">·</span> {AUDIENCES[item['audience']]}</p>
 <p class="item-summary">{escape(item['summary'])}</p>
-<div class="action-box"><strong>What to do</strong><p>{escape(item['action'])}</p></div>
+<div class="action-box"><strong>What to do</strong><p>{escape(item['action'])}</p>{steps_list(item)}</div>
 <p class="applies-to"><strong>Applies to:</strong> {escape(item['affected'] or 'Affected versions not confirmed. Check the advisory for your installation.')}</p>
 <p class="priority-reason"><strong>Why this priority:</strong> {escape(item['priority_reason'])}</p>
 <p class="sources">{links}</p><p class="item-meta muted">{escape(check_label)}</p>
@@ -163,7 +170,7 @@ def page(title: str, body: str, site_url: str, path: str, *, description: str = 
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{escape(title)}"><meta name="twitter:description" content="{escape(description)}"><meta name="twitter:image" content="{escape(site_url + '/assets/social-card.png')}">{article_meta}
 <script src="{href('assets/app.js')}" defer></script></head>
 <body class="{escape(body_class)}"{dates}><a class="skip" href="#main">Skip to content</a>
-<div class="wrap"><header class="site-header"><div class="header-top"><div class="brand"><a class="wordmark" href="{href('')}">patch-these<span aria-hidden="true">.</span></a><p class="byline">By <a href="https://github.com/JLuethe">John Luethe</a></p></div><nav class="main-nav" aria-label="Main"><a href="{href('')}">Latest briefing</a><a href="{href('archive/')}">Archive</a><a href="{href('methodology/')}">Our method</a><a href="{href('subscribe/')}">Subscribe <span aria-hidden="true">↗</span></a></nav></div><p class="project-blurb">{escape(DESCRIPTION)}</p></header>
+<div class="wrap"><header class="site-header"><div class="header-top"><div class="brand"><a class="wordmark" href="{href('')}">patch-these<span aria-hidden="true">.</span></a><p class="byline">By <a href="https://github.com/JLuethe">John Luethe</a></p></div><nav class="main-nav" aria-label="Main"><a href="{href('')}">Latest briefing</a><a href="{href('archive/')}">Archive</a><a href="{href('methodology/')}">Our method</a><a href="{href('subscribe/')}">Subscribe <span aria-hidden="true">↗</span></a></nav></div><p class="project-blurb">{escape(TAGLINE)}</p></header>
 <main id="main">{body}</main>
 <footer class="site-footer"><div><a class="wordmark" href="{href('')}">patch-these.</a><p>By <a href="https://github.com/JLuethe">John Luethe</a></p><p>Curated, not complete. Unofficial. Updated every 4 hours, 6 AM–10 PM Pacific. Early signals are not confirmed. Verify the vendor advisory before acting.</p><p class="muted">Not professional advice. Not affiliated with CISA, FIRST, or any vendor. EPSS is a probability, not a certainty.</p></div><div class="feed-links"><a href="{href('products/')}">Products</a><a href="{href('subscribe/')}">Atom feeds</a><a href="{href('latest.json')}">Latest JSON</a><a href="{href('data/schema.json')}">Data schema</a><a href="{escape(REPO)}">GitHub</a><a href="{escape(REPO + '/blob/main/LICENSE')}">Content: CC BY 4.0</a><a href="{escape(REPO + '/blob/main/LICENSE-CODE')}">Code: MIT</a></div></footer></div></body></html>'''
 
@@ -194,11 +201,12 @@ def featured(edition: dict) -> str:
         item = by_id[item_id]
         if is_early_signal(item):
             continue
-        cards.append(f'<a class="featured-card" href="#item-{escape(item_id)}"><span class="featured-number">0{index}</span>{urgency(item)}<h3>{escape(item["product"])}</h3><p>{escape(item["action"])}</p><span class="featured-action">{ACTIONS[item["action_type"]]} <span aria-hidden="true">↗</span></span></a>')
+        more = " More steps in the full item." if item.get("steps") else ""
+        cards.append(f'<a class="featured-card" href="#item-{escape(item_id)}"><span class="featured-number">0{index}</span>{urgency(item)}<h3>{escape(item["product"])}</h3><p>{escape(brief(item["action"]))}{more}</p><span class="featured-action">{ACTIONS[item["action_type"]]} <span class="featured-jump">Full details <span aria-hidden="true">↓</span></span></span></a>')
     if not cards:
         return ""
     title = "Three to check, if you use them." if len(cards) == 3 else "Start here, if you use these."
-    return '<section class="featured" aria-labelledby="start-here"><div class="section-heading"><div><p class="eyebrow">A place to start</p><h2 id="start-here">' + title + '</h2></div></div><p class="muted">Start with your own software. These are highlights; every urgent item is in the full briefing below.</p><div class="featured-grid">' + "".join(cards) + '</div></section>'
+    return '<section class="featured" aria-labelledby="start-here"><div class="section-heading"><div><p class="eyebrow">A place to start</p><h2 id="start-here">' + title + '</h2></div></div><p class="muted">Highlights only. Every urgent item is in the full briefing below.</p><div class="featured-grid">' + "".join(cards) + '</div></section>'
 
 
 def corrections(edition: dict) -> str:
@@ -227,8 +235,8 @@ def briefing_body(edition: dict, site_url: str, *, latest: bool) -> str:
     signals = early_signals(edition, site_url)
     if not cards:
         cards = '<p class="notice">No new verified items in this edition. This does not establish that your software has no outstanding updates.</p>'
-    return f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">{'Latest briefing' if latest else 'From the archive'} <span aria-hidden="true">/</span> <time datetime="{edition['digest_date']}">{human_date(edition['digest_date'])}</time></p><h1>Know what needs<br>your attention.</h1><p class="hero-intro">Security updates, in plain English.<br>Find your software. Understand the risk. Take the next step.</p><div class="hero-meta"><span>Covers {coverage(edition)}</span><span>Updated {human_time(edition['updated_at'])}</span>{checked_meta(edition)}<span>Updated every 4 hours, 6 AM–10 PM Pacific.</span></div></div><div class="edition-stats" aria-label="Edition summary"><div class="stat"><strong>{len(verified):02d}</strong><span>items in this briefing</span></div><div class="stat"><strong>{now:02d}</strong><span>act now, if affected</span></div><div class="stat"><strong>{soon:02d}</strong><span>act soon</span></div></div></section>
-<section class="how-this-works" aria-labelledby="how-this-works-heading"><h2 id="how-this-works-heading">How this works</h2><p>Each run looks first for new reports on X, Bluesky and Mastodon. Unconfirmed leads are published as Early signals: not yet verified, with no hard patch recommendation. A patch recommendation, confirmed exploitation, or a CISA KEV listing is added only after a primary source confirms it. Official feeds refresh about every 30 minutes, earlier urgent items are rechecked when those feeds show a change for that product, and one dated edition is updated through the day with a corrections log. No exploit details.</p></section>
+    return f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">{'Latest briefing' if latest else 'From the archive'} <span aria-hidden="true">/</span> <time datetime="{edition['digest_date']}">{human_date(edition['digest_date'])}</time></p><h1>Know what needs<br>your attention.</h1><p class="hero-intro">Security updates, in plain English.</p><div class="hero-meta"><span>Covers {coverage(edition)}</span><span>Updated {human_time(edition['updated_at'])}</span>{checked_meta(edition)}<span>Updated every 4 hours, 6 AM–10 PM Pacific.</span></div></div><div class="edition-stats" aria-label="Edition summary"><div class="stat"><strong>{len(verified):02d}</strong><span>items in this briefing</span></div><div class="stat"><strong>{now:02d}</strong><span>act now, if affected</span></div><div class="stat"><strong>{soon:02d}</strong><span>act soon</span></div></div></section>
+<details class="how-this-works"><summary>How this works: early signals first, patch advice only after a primary source confirms it.</summary><p>Each run looks first for new reports on X, Bluesky and Mastodon and publishes unconfirmed leads as early signals, with no patch recommendation. A patch recommendation, confirmed exploitation, or a CISA KEV listing needs a primary source. Earlier urgent items are rechecked when official feeds show a change, and each day's edition is updated in place with a corrections log. No exploit details. <a href="{href('methodology/')}">Our method</a>.</p></details>
 <p class="notice" id="freshness-note" hidden></p>{corrections(edition)}{edition_notes}{signals}{featured(edition)}{filters(len(verified))}
 <div class="content-grid"><div class="briefing-list">{cards}</div><aside class="briefing-sidebar" aria-label="Reading the briefing"><section class="sidebar-card"><p class="eyebrow">Keep it relevant</p><h2>A smaller reading list.</h2><p>Use the filters to find your software. Save products to keep your own list on this browser.</p><p class="muted">Product selection is a reading preference, not a scan of your installed software.</p></section><section class="sidebar-card"><p class="eyebrow">How to read this</p><h2>Urgency ≠ a patch.</h2><p><strong>Act now</strong><br>Prioritize action if your installation is affected.</p><p><strong>Act soon</strong><br>Plan the recommended update or mitigation.</p><p><strong>Monitor</strong><br>Follow developments; the next step may change.</p><p>No patch can mean mitigate or replace. Check the affected scope and the source.</p><a href="{href('methodology/')}">Read our method ↗</a></section><section class="sidebar-card"><p class="eyebrow">Stay in the loop</p><h2>Choose your feed.</h2><p>All updates, personal software, or apps and servers. Read in your preferred feed reader.</p><a href="{href('subscribe/')}">Subscribe to an Atom feed ↗</a></section></aside></div>
 <p class="sidecar"><a href="{href('data/' + edition['digest_date'] + '.json')}">This edition as JSON</a> · <a href="{href('digests/' + edition['digest_date'] + '.md')}">Generated Markdown</a></p>'''

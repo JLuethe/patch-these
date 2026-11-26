@@ -154,7 +154,7 @@ Set `checked_at` only on sources whose content you actually read for this editio
 
 After the JSON is written, verify it field by field against those primary sources. A pull request description gets a checklist table, one row per item, with these columns: primary source read, newest fix confirmed, KEV/EPSS done, vendor steps matched, version ranges copied from the correct CVE row. A direct publish has no pull request, so put any leftover uncertainty in `gaps`, not in `summary` or `action`.
 
-Match the vendor's remediation steps one by one. Do not collapse a numbered list into a shorter paraphrase.
+Match the vendor's remediation steps one by one. Do not collapse a numbered list into a shorter paraphrase. Keep `action` to one or two sentences and put the vendor's list in the optional `steps` array, one short instruction per string, in the vendor's order. The site, the Markdown digest and the Atom feed render `steps` as a numbered list under the action. Do not number the strings yourself.
 
 Incidents and breaches use the vendor's exact wording for dates. An investigation start is not an attack start. Include the full disclosed scope. A confirmed breach is Act now or Act soon, never Monitor. Set `kind` to `vulnerability`, `incident`, or `supply_chain`. Omit it only on an edition that was published before the field existed. The `exploitation` field on an incident means the breach and on a supply-chain item means the compromise. The site labels them "Breach confirmed" or "Compromise confirmed" (and "reported"), never "Exploitation confirmed".
 
@@ -183,7 +183,7 @@ If the lead names a CVE, look up CISA KEV and FIRST EPSS for that CVE before you
 
 ## Featured items
 
-`featured_item_ids` holds at most three ids from this edition. Pick them for what the most readers need to do today. Both-audience items count for everyone. An empty list is valid.
+`featured_item_ids` holds at most three ids from this edition. A featured card shows only the first one or two whole sentences of `action` (about 220 characters) and links to the full item, so put the most important instruction first. Pick them for what the most readers need to do today. Both-audience items count for everyone. An empty list is valid.
 
 ## A quiet day
 

@@ -382,3 +382,50 @@ def test_a_quiet_check_is_shown_separately_from_the_last_content_change(publicat
     meta = home.split('class="hero-meta"', 1)[1].split("</div>", 1)[0]
     assert "Updated 2 Mar 2030 · 6:00 AM PST" in meta
     assert "Last checked 2 Mar 2030 · 2:00 PM PST" in meta
+
+
+def test_brief_keeps_whole_sentences():
+    from patchthese.common import brief
+    assert brief("Upgrade to 1.30.8 or later. Also update images. Then check logs.") == "Upgrade to 1.30.8 or later. Also update images."
+    long_first = "Install " + "x" * 300 + " now. Second."
+    assert brief(long_first) == "Install " + "x" * 300 + " now."
+    assert brief("One sentence only") == "One sentence only"
+    assert brief("Short. " + "Y" * 250 + ".") == "Short."
+
+
+def test_featured_cards_are_short_and_jump_to_the_full_item(publication):
+    edition = latest(publication)
+    edition["items"][0]["action"] = "Upgrade New Server to 2.4.1 or later. Restart the service. Rotate the admin password. Review the audit log."
+    edition["items"][0]["steps"] = ["Back up the configuration.", "Install 2.4.1 or later."]
+    save(publication, edition)
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    featured = home.split('class="featured-grid"', 1)[1].split("</section>", 1)[0]
+    card = featured.split('<a class="featured-card" href="#item-new-server">', 1)[1].split("</a>", 1)[0]
+    assert "Upgrade New Server to 2.4.1 or later. Restart the service." in card
+    assert "Rotate the admin password" not in card
+    assert "Full details" in card and "More steps in the full item." in card
+    assert 'id="item-new-server"' in home
+
+
+def test_steps_render_as_ordered_lists_everywhere(publication):
+    edition = latest(publication)
+    edition["items"][0]["action"] = "Follow the vendor's guidance for your setup."
+    edition["items"][0]["steps"] = ["If exposed, upgrade to 2.4.1 or later now.", "Otherwise, upgrade at the next window."]
+    save(publication, edition)
+    output = build_site(publication, site_url=SITE_URL)
+    card = between((output / "index.html").read_text(), 'id="item-new-server"')
+    assert '<ol class="action-steps"><li>If exposed, upgrade to 2.4.1 or later now.</li><li>Otherwise, upgrade at the next window.</li></ol>' in card
+    digest = (output / "digests" / f"{fx.DAY_TWO}.md").read_text()
+    assert "**What to do:** Follow the vendor's guidance for your setup.\n\n1. If exposed, upgrade to 2.4.1 or later now.\n2. Otherwise, upgrade at the next window." in digest
+    feed = (output / "feed.xml").read_text()
+    assert "&lt;ol&gt;&lt;li&gt;If exposed, upgrade to 2.4.1 or later now.&lt;/li&gt;" in feed
+
+
+def test_first_screen_is_compact_and_early_signals_keep_their_place(publication):
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    assert '<details class="how-this-works">' in home
+    assert "Updated every 4 hours, 6 AM–10 PM Pacific." in home
+    assert "Find your software. Understand the risk." not in home
+    hero_to_signals = home[home.index('class="hero"'):home.index('id="early-signals"')]
+    assert "How this works" in hero_to_signals and "featured-grid" not in hero_to_signals
+    assert home.index('id="early-signals"') < home.index('id="start-here"')

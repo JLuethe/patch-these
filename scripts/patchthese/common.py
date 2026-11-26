@@ -18,11 +18,31 @@ DESCRIPTION = (
     "and recommends patches only after a vendor advisory, CISA KEV, or NVD confirms them. "
     "No exploit details."
 )
+# Header line. DESCRIPTION, the full statement, stays in meta tags and feeds.
+TAGLINE = "Plain-English security updates every 4 hours. Unconfirmed leads are labeled; patch advice waits for a primary source."
 X_HOSTS = {"x.com", "www.x.com", "twitter.com", "www.twitter.com", "mobile.twitter.com"}
 BLUESKY_HOSTS = {"bsky.app", "www.bsky.app"}
 _X_STATUS = re.compile(r"^/[^/]+/status/\d+$")
 _BLUESKY_POST = re.compile(r"^/profile/[^/]+/post/[^/]+$")
 _MASTODON_STATUS = re.compile(r"^/(?:@[^/]+/\d+|users/[^/]+/statuses/\d+)$")
+
+
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9\"'(])")
+
+
+def brief(text: str, *, max_sentences: int = 2, max_chars: int = 220) -> str:
+    """The first one or two whole sentences, for cards that link to the full item.
+
+    Never cuts inside a sentence: the first sentence is always kept whole, and
+    a second is added only when both fit within max_chars.
+    """
+    sentences = _SENTENCE_END.split(" ".join(text.split()))
+    kept = [sentences[0]]
+    for sentence in sentences[1:max_sentences]:
+        if len(" ".join(kept + [sentence])) > max_chars:
+            break
+        kept.append(sentence)
+    return " ".join(kept)
 
 
 def human_date(value: str) -> str:

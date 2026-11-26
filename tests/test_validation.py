@@ -350,7 +350,7 @@ def test_new_editions_must_state_verification_and_old_editions_need_not(edition)
         validate_payload(edition)  # Still bound by the early-signal rules (no patch).
 
 
-@pytest.mark.parametrize("field", ["summary", "action", "priority_reason"])
+@pytest.mark.parametrize("field", ["summary", "action", "priority_reason", "steps"])
 def test_new_editions_must_list_every_cve_named_in_the_text(edition, field):
     _strict_day(edition)
     item = edition["items"][0]
@@ -402,4 +402,15 @@ def test_last_checked_at_is_optional_and_cannot_precede_publication(edition):
     validate_payload(edition)
     edition["last_checked_at"] = "2026-11-26T03:00:00Z"
     with pytest.raises(ValidationError, match="last_checked_at must not precede published_at"):
+        validate_payload(edition)
+
+
+def test_steps_are_optional_short_strings(edition):
+    edition["items"][0]["steps"] = ["Back up the configuration.", "Install 2.0 or later."]
+    validate_payload(edition)
+    edition["items"][0]["steps"] = []
+    with pytest.raises(ValidationError):
+        validate_payload(edition)
+    edition["items"][0]["steps"] = ["  "]
+    with pytest.raises(ValidationError):
         validate_payload(edition)

@@ -28,12 +28,17 @@ def md_url(value: str) -> str:
     return quote(value, safe=":/?&=%#@+;,~.-_")
 
 
+def _steps_rows(item: dict) -> list[str]:
+    steps = item.get("steps") or []
+    return ([""] + [f"{index}. {md_text(step)}" for index, step in enumerate(steps, 1)]) if steps else []
+
+
 def _item_rows(item: dict, edition: dict, site_url: str) -> list[str]:
     """One item's full Markdown section, including its verification state and every source."""
     rows: list[str] = []
     kind = {"vulnerability": "Vulnerability", "incident": "Incident", "supply_chain": "Supply chain"}.get(item.get("kind") or "")
     lead = " · ".join(part for part in (*verification_labels(item), kind, ACTIONS[item["action_type"]], AUDIENCES[item["audience"]]) if part)
-    rows += ["", f"### {md_text(item['product'])}", "", f"**{lead}**", "", md_text(item["summary"]), "", f"**What to do:** {md_text(item['action'])}", "", f"**Why:** {md_text(item['priority_reason'])}", "", f"**Applies to:** {md_text(item['affected'] or 'Affected versions not confirmed. Check the advisory before deciding whether this applies to your installation.')}"]
+    rows += ["", f"### {md_text(item['product'])}", "", f"**{lead}**", "", md_text(item["summary"]), "", f"**What to do:** {md_text(item['action'])}", *_steps_rows(item), "", f"**Why:** {md_text(item['priority_reason'])}", "", f"**Applies to:** {md_text(item['affected'] or 'Affected versions not confirmed. Check the advisory before deciding whether this applies to your installation.')}"]
     if item.get("gaps"):
         rows += ["", f"**Verification notes:** {md_text(item['gaps'])}"]
     if item["cves"]:

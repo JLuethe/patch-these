@@ -65,7 +65,9 @@ def build_feed(editions: list[dict], site_url: str, *, audience: str | None = No
             evidence = exploitation_label(item)
             if evidence:
                 status += f" · {evidence}"
-            blocks.append(f'<h2><a href="{escape(link + "#item-" + item["id"])}">{escape(item["product"])}</a></h2><p><strong>{escape(status)}</strong></p><p>{escape(item["summary"])}</p><p><strong>What to do:</strong> {escape(item["action"])}</p><p><strong>Applies to:</strong> {escape(item["affected"] or "Affected versions not confirmed; check the advisory.")}</p><p><strong>Why:</strong> {escape(item["priority_reason"])}</p><p>{sources}</p>')
+            steps = item.get("steps") or []
+            steps_html = ("<ol>" + "".join(f"<li>{escape(step)}</li>" for step in steps) + "</ol>") if steps else ""
+            blocks.append(f'<h2><a href="{escape(link + "#item-" + item["id"])}">{escape(item["product"])}</a></h2><p><strong>{escape(status)}</strong></p><p>{escape(item["summary"])}</p><p><strong>What to do:</strong> {escape(item["action"])}</p>{steps_html}<p><strong>Applies to:</strong> {escape(item["affected"] or "Affected versions not confirmed; check the advisory.")}</p><p><strong>Why:</strong> {escape(item["priority_reason"])}</p><p>{sources}</p>')
             if item["cves"]:
                 blocks.append('<p><strong>CVEs:</strong> ' + escape(", ".join(item["cves"])) + '</p>')
             if item["fixes"]:
