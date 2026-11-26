@@ -12,8 +12,9 @@ import pytest
 
 from patchthese.editorial import markdown_digest
 from patchthese.feeds import ATOM, build_feed
-from patchthese.publishing import build_site
+from patchthese.publishing import StaleGeneratedFiles, build_site, stale_generated_files
 from patchthese.rendering import render_markdown
+from patchthese.validation import load_editions
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE_URL = "https://example.org/patch-these"
@@ -38,7 +39,7 @@ def test_tomorrow_can_publish_without_any_of_todays_products(publication):
     tomorrow.update(digest_date="2026-11-26", coverage_start="2026-11-26", coverage_end="2026-11-26", published_at="2026-11-27T04:00:00Z", updated_at="2026-11-27T04:00:00Z", corrections=[], featured_item_ids=[])
     item = deepcopy(tomorrow["items"][0])
     item.update(id="independent-example", product="Independent example", summary="A fixture for a different day's subject.", action="Review this example's configuration.", affected=None, cves=[], fixes=[], cvss=[], epss=[], kev=[], sources=[], exploitation={"status": "unknown", "source_ids": []}, fix_status="unknown", action_type="investigate", priority="monitor", priority_reason="More information is needed.")
-    item["sources"] = [{"id": "fixture", "kind": "vendor_advisory", "url": "https://example.org/advisory", "label": "Fixture advisory", "checked_at": None, "supports": ["summary"]}]
+    item["sources"] = [{"id": "fixture", "kind": "vendor_advisory", "url": "https://example.org/advisory", "label": "Fixture advisory", "checked_at": "2026-11-27T03:00:00Z", "supports": ["summary"]}]
     tomorrow["items"] = [item]
     (publication / "data" / "2026-11-26.json").write_text(json.dumps(tomorrow))
     output = build_site(publication, site_url=SITE_URL)
@@ -188,3 +189,35 @@ def test_lowercase_rfc3339_and_structured_fix_values_reach_the_feed(publication)
         assert fix["version"] in content
     for cve in edition["items"][0]["cves"]:
         assert cve in content
+
+
+def test_check_mode_fails_when_generated_views_are_stale(publication):
+    shutil.copytree(ROOT / "digests", publication / "digests")
+    build_site(publication, site_url=SITE_URL, write_generated=True)
+    build_site(publication, site_url=SITE_URL, check_generated=True)
+
+    edition = edition_at(publication)
+    edition["items"][0]["action"] = edition["items"][0]["action"] + " Then confirm the version."
+    (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
+    with pytest.raises(StaleGeneratedFiles, match=r"digests/2026-11-25\.md, README\.md"):
+        build_site(publication, site_url=SITE_URL, check_generated=True)
+
+    build_site(publication, site_url=SITE_URL, write_generated=True)
+    (publication / "digests" / "2026-11-24.md").write_text("# An orphan\n")
+    with pytest.raises(StaleGeneratedFiles, match="no matching data"):
+        build_site(publication, site_url=SITE_URL, check_generated=True)
+
+
+def test_committed_generated_views_match_the_json():
+    assert stale_generated_files(ROOT, load_editions(ROOT / "data"), "https://jluethe.github.io/patch-these") == []
+
+
+def test_exploitation_label_names_only_the_exploited_cves(publication):
+    output = build_site(publication, site_url=SITE_URL)
+    home = (output / "index.html").read_text()
+    chrome = home[home.index('id="item-chrome-desktop"'):]
+    chrome = chrome[:chrome.index("</article>")]
+    assert "Exploitation confirmed for CVE-2026-125350" in chrome
+    assert "CVE-2026-134401: Unknown." in chrome
+    drupal = home[home.index('id="item-drupal-core"'):]
+    assert '<p class="evidence">Exploitation confirmed ·' in drupal[:drupal.index("</article>")]

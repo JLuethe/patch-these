@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-23",
   "coverage_end": "2026-11-25",
   "published_at": "2026-11-26T04:37:59Z",
-  "updated_at": "2026-11-26T05:22:22Z",
+  "updated_at": "2026-11-26T05:55:54Z",
   "corrections": [
     {
       "at": "2026-11-26T05:22:22Z",
@@ -19,6 +19,14 @@
         "mitel-micollab",
         "danfoss-ak-sm-800a",
         "xen-orchestra"
+      ]
+    },
+    {
+      "at": "2026-11-26T05:55:54Z",
+      "summary": "Scoped exploitation labels to individual CVEs. For Chrome, exploitation is confirmed for CVE-2026-125350, which was fixed in an earlier release, and not established for the new sandbox escape CVE-2026-134401. For vCenter, exploitation is confirmed for CVE-2026-123890 and not established for CVE-2026-123903. Recommended actions and urgency are unchanged.",
+      "item_ids": [
+        "chrome-desktop",
+        "vmware-vcenter"
       ]
     }
   ],
@@ -103,6 +111,20 @@
         "status": "confirmed",
         "source_ids": [
           "msrc-record"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-134401",
+            "status": "unknown",
+            "source_ids": []
+          },
+          {
+            "cve": "CVE-2026-125350",
+            "status": "confirmed",
+            "source_ids": [
+              "msrc-record"
+            ]
+          }
         ]
       },
       "kev": [
@@ -379,6 +401,21 @@
         "source_ids": [
           "broadcom-0010",
           "cisa-kev"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-123890",
+            "status": "confirmed",
+            "source_ids": [
+              "broadcom-0010",
+              "cisa-kev"
+            ]
+          },
+          {
+            "cve": "CVE-2026-123903",
+            "status": "unknown",
+            "source_ids": []
+          }
         ]
       },
       "kev": [

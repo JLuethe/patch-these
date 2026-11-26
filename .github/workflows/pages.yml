@@ -38,10 +38,10 @@ jobs:
       - name: Test validation and generated output
         run: python -m pytest -q
 
-      - name: Build the site
+      - name: Build the site and check generated files are committed
         env:
           SITE_URL: https://jluethe.github.io/patch-these
-        run: python scripts/build_site.py
+        run: python scripts/build_site.py --check
 
       - name: Upload the Pages artifact
         if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')

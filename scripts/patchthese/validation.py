@@ -18,6 +18,10 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 SCHEMA_PATH = Path(__file__).resolve().parents[2] / "data" / "schema.json"
 EDITION_FILE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}\.json$")
+EXPLOITATION_RANK = {"confirmed": 0, "reported": 1, "unknown": 2}
+# Editions up to this date were migrated from schema 1 and may lack check times.
+# Every later edition must record when each evidentiary source was checked.
+CHECK_TIMES_REQUIRED_AFTER = date(2026, 11, 25)
 
 
 class ValidationError(ValueError):
@@ -57,7 +61,7 @@ def _source_refs(record: dict, sources: dict, field: str, where: str) -> None:
         )
 
 
-def _validate_item(item: dict, updated: datetime) -> None:
+def _validate_item(item: dict, updated: datetime, *, require_check_times: bool = False) -> None:
     where = f"item {item['id']}"
     cves = set(item["cves"])
     source_ids = [source["id"] for source in item["sources"]]
@@ -76,6 +80,12 @@ def _validate_item(item: dict, updated: datetime) -> None:
             and not any(char.isspace() for char in url),
             f"{where}: source URLs must use HTTPS without credentials or whitespace",
         )
+        if require_check_times and source["kind"] != "social_report":
+            _require(
+                source["checked_at"] is not None,
+                f"{where}: source {source['id']!r} needs checked_at; editions after "
+                f"{CHECK_TIMES_REQUIRED_AFTER.isoformat()} must record when each non-social source was checked",
+            )
         if source["checked_at"] is not None:
             _require(
                 _time(source["checked_at"]) <= updated,
@@ -95,6 +105,21 @@ def _validate_item(item: dict, updated: datetime) -> None:
     _source_refs(exploitation, sources, "exploitation", where)
     if exploitation["status"] in {"confirmed", "reported"}:
         _require(bool(exploitation["source_ids"]), f"{where}: exploitation status needs a source")
+    by_cve = exploitation.get("by_cve")
+    if by_cve is not None:
+        _require(bool(by_cve), f"{where}: exploitation.by_cve must list at least one CVE when present")
+        listed = [record["cve"] for record in by_cve]
+        _require(len(listed) == len(set(listed)), f"{where}: duplicate exploitation.by_cve record")
+        for record in by_cve:
+            _require(record["cve"] in cves, f"{where}: exploitation.by_cve references a CVE outside this item")
+            _source_refs(record, sources, "exploitation", where)
+            if record["status"] in {"confirmed", "reported"}:
+                _require(bool(record["source_ids"]), f"{where}: exploitation status for {record['cve']} needs a source")
+        strongest = min((record["status"] for record in by_cve), key=EXPLOITATION_RANK.__getitem__)
+        _require(
+            exploitation["status"] == strongest,
+            f"{where}: item exploitation status {exploitation['status']!r} must equal the strongest per-CVE status {strongest!r}",
+        )
 
     kev_cves = [record["cve"] for record in item["kev"]]
     _require(len(kev_cves) == len(set(kev_cves)), f"{where}: duplicate KEV record")
@@ -159,8 +184,9 @@ def validate_payload(payload: dict, expected_date: str | None = None) -> None:
         _require(set(correction["item_ids"]) <= item_ids, "correction references an unknown item")
         previous_correction = at
 
+    require_check_times = edition_date > CHECK_TIMES_REQUIRED_AFTER
     for item in payload["items"]:
-        _validate_item(item, updated)
+        _validate_item(item, updated, require_check_times=require_check_times)
 
 
 def _unique_object(pairs: list[tuple]) -> dict:

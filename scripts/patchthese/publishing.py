@@ -16,13 +16,46 @@ from .rendering import archive_body, briefing_body, page, render_markdown, subsc
 from .validation import load_editions
 
 
-def build_site(root: Path, *, site_url: str = "https://jluethe.github.io/patch-these", write_generated: bool = False) -> Path:
+class StaleGeneratedFiles(ValueError):
+    """Committed generated views no longer match the JSON they come from."""
+
+
+def stale_generated_files(root: Path, editions: list[dict], site_url: str) -> list[str]:
+    """List committed generated files that differ from what the editions produce."""
+    root = Path(root)
+    stale = []
+    expected = {}
+    for edition in editions:
+        expected[f"digests/{edition['digest_date']}.md"] = markdown_digest(edition, site_url)
+    readme_path = root / "README.md"
+    expected["README.md"] = replace_readme_block(readme_path.read_text(encoding="utf-8"), editions[-1], site_url)
+    for relative, content in expected.items():
+        path = root / relative
+        if not path.is_file() or path.read_text(encoding="utf-8") != content:
+            stale.append(relative)
+    known = {f"{edition['digest_date']}.md" for edition in editions}
+    for path in sorted((root / "digests").glob("*.md")):
+        if path.name not in known:
+            stale.append(f"digests/{path.name} (no matching data/*.json edition)")
+    return stale
+
+
+def build_site(root: Path, *, site_url: str = "https://jluethe.github.io/patch-these", write_generated: bool = False, check_generated: bool = False) -> Path:
     root = Path(root)
     site_url = normalize_site_url(site_url)
     editions = load_editions(root / "data")
     if not editions:
         raise ValueError("Add at least one data/YYYY-MM-DD.json edition before building")
     latest = editions[-1]
+    if write_generated and check_generated:
+        raise ValueError("Use either --write-generated or --check, not both")
+    if check_generated:
+        stale = stale_generated_files(root, editions, site_url)
+        if stale:
+            raise StaleGeneratedFiles(
+                "Generated files are out of date with data/*.json: " + ", ".join(stale)
+                + ". Run python scripts/build_site.py --write-generated and commit the result."
+            )
     destination = root / "_site"
     generated = {edition["digest_date"]: markdown_digest(edition, site_url) for edition in editions}
     readme = None
