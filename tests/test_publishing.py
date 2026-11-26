@@ -429,3 +429,20 @@ def test_first_screen_is_compact_and_early_signals_keep_their_place(publication)
     hero_to_signals = home[home.index('class="hero"'):home.index('id="early-signals"')]
     assert "How this works" in hero_to_signals and "featured-grid" not in hero_to_signals
     assert home.index('id="early-signals"') < home.index('id="start-here"')
+
+
+def test_markdown_readme_and_atom_list_early_signals_before_verified_items(publication):
+    output = build_site(publication, site_url=SITE_URL, write_generated=True)
+    digest = (output / "digests" / f"{fx.DAY_TWO}.md").read_text()
+    assert digest.index("## Early signals: not yet verified") < digest.index("## Start here") < digest.index("### New Server")
+    assert "Not yet verified · Single source" in digest.split("## Start here", 1)[0]
+    readme = (publication / "README.md").read_text()
+    assert readme.index("### Early signals: not yet verified") < readme.index("### For everyone")
+    for path in ("feed.xml", "feeds/operators.xml"):
+        root = ET.fromstring((output / path).read_text())
+        entry = root.find(f"{{{ATOM}}}entry")
+        content = entry.find(f"{{{ATOM}}}content").text
+        summary = entry.find(f"{{{ATOM}}}summary").text
+        assert content.index("Early signals: not yet verified") < content.index("Example Lead") < content.index("Verified items")
+        assert summary.startswith("Example Lead: Not yet verified")
+        assert "Not yet verified · Single source" in content and "https://x.com/example/status/1234567890" in content

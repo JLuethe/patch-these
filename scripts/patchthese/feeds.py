@@ -33,7 +33,9 @@ def build_feed(editions: list[dict], site_url: str, *, audience: str | None = No
     add(author, "name", "patch-these")
     add(feed, "rights", "Creative Commons Attribution 4.0 International")
     for edition in reversed(editions):
-        items = ordered_items(edition, audience)
+        # Early signals first, matching the site; the rest keep urgency order.
+        ordered = ordered_items(edition, audience)
+        items = [item for item in ordered if is_early_signal(item)] + [item for item in ordered if not is_early_signal(item)]
         if edition["items"] and not items:
             continue
         link = f"{site_url}/digests/{edition['digest_date']}/"
@@ -56,7 +58,9 @@ def build_feed(editions: list[dict], site_url: str, *, audience: str | None = No
         early = [item for item in items if is_early_signal(item)]
         if early:
             blocks.append("<h2>Early signals: not yet verified</h2><p>These leads are not confirmed. Do not patch from them.</p>")
-        for item in items:
+        for index, item in enumerate(items):
+            if early and index == len(early) and index < len(items):
+                blocks.append("<h2>Verified items</h2>")
             primary = [source for source in item["sources"] if source["kind"] != "social_report"]
             # Early signals keep their discovery posts; they may be the only source.
             cited = item["sources"] if is_early_signal(item) or not primary else primary

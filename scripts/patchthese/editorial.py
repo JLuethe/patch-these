@@ -83,17 +83,18 @@ def markdown_digest(edition: dict, site_url: str) -> str:
         rows += ["", "## Corrections"]
         for correction in edition["corrections"]:
             rows += ["", f"- **{human_time(correction['at'])}:** {md_text(correction['summary'])}"]
+    # Same order as the site: early signals come before Start here and the verified items.
+    signals = [item for item in ordered_items(edition) if is_early_signal(item)]
+    if signals:
+        rows += ["", "## Early signals: not yet verified", "", "These leads are not confirmed. Do not patch from this section."]
+        for item in signals:
+            rows += _item_rows(item, edition, site_url)
     by_id = {item["id"]: item for item in edition["items"]}
     featured = [by_id[item_id] for item_id in edition["featured_item_ids"]]
     if featured:
         rows += ["", "## Start here, if you use these", "", "These are starting points, not the only urgent items. Check the full list for your software.", ""]
         for item in featured:
             rows += [f"- **{md_text(item['product'])}:** {md_text(item['action'])}"]
-    signals = [item for item in ordered_items(edition) if is_early_signal(item)]
-    if signals:
-        rows += ["", "## Early signals: not yet verified", "", "These leads are not confirmed. Do not patch from this section."]
-        for item in signals:
-            rows += _item_rows(item, edition, site_url)
     for priority, label in PRIORITIES.items():
         items = [item for item in ordered_items(edition) if item["priority"] == priority and not is_early_signal(item)]
         if not items:
@@ -107,6 +108,14 @@ def markdown_digest(edition: dict, site_url: str) -> str:
 
 def readme_block(edition: dict, site_url: str) -> str:
     rows = [GENERATED_START, f"## Latest edition — {human_date(edition['digest_date'])}", "", f"[Read the briefing]({site_url}/) · [Full Markdown digest](digests/{edition['digest_date']}.md) · [Structured data](data/{edition['digest_date']}.json)", "", f"Coverage: {coverage(edition)}. Updated: {human_time(edition['updated_at'])}."]
+    # Early signals first, matching the site.
+    signals = [item for item in ordered_items(edition) if is_early_signal(item)]
+    if signals:
+        rows += ["", "### Early signals: not yet verified", ""]
+        for item in signals:
+            url = f"{site_url}/digests/{edition['digest_date']}/#item-{item['id']}"
+            discovery = " · ".join(f"[{md_text(source['label'])}]({md_url(source['url'])})" for source in item["sources"][:2])
+            rows += [f"- **{'. '.join(verification_labels(item))}. [{md_text(item['product'])}]({md_url(url)}):** {md_text(item['action'])} Source: {discovery}."]
     for audience, label in [("end_users", "For everyone"), ("applications_and_servers", "For app and server owners")]:
         rows += ["", f"### {label}", ""]
         relevant = [item for item in ordered_items(edition, audience) if not is_early_signal(item)]
@@ -115,13 +124,6 @@ def readme_block(edition: dict, site_url: str) -> str:
         for item in relevant:
             url = f"{site_url}/digests/{edition['digest_date']}/#item-{item['id']}"
             rows += [f"- **[{md_text(item['product'])}]({md_url(url)}) — {PRIORITIES[item['priority']]} / {ACTIONS[item['action_type']]}:** {md_text(item['action'])}"]
-    signals = [item for item in ordered_items(edition) if is_early_signal(item)]
-    if signals:
-        rows += ["", "### Early signals: not yet verified", ""]
-        for item in signals:
-            url = f"{site_url}/digests/{edition['digest_date']}/#item-{item['id']}"
-            discovery = " · ".join(f"[{md_text(source['label'])}]({md_url(source['url'])})" for source in item["sources"][:2])
-            rows += [f"- **{'. '.join(verification_labels(item))}. [{md_text(item['product'])}]({md_url(url)}):** {md_text(item['action'])} Source: {discovery}."]
     rows += ["", GENERATED_END]
     return "\n".join(rows)
 

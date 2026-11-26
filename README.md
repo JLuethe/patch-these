@@ -15,6 +15,10 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 11:23 AM PST.
 
+### Early signals: not yet verified
+
+- **Not yet verified. Single source. [Rackspace Spot](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-rackspace-spot):** Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date. Source: [Discussed on X](https://x.com/rtehrani/status/2125993016066253088).
+
 ### For everyone
 
 - **[Microsoft Office Visio](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-microsoft-visio) — Act soon / Update:** Install Office LTSC 2024 build 16.0.17932.21140 or a later build on that branch, or Office LTSC 2021 build 16.0.14334.21048 or a later build on that branch. For Microsoft 365 Apps for Enterprise, install the build listed at https://aka.ms/OfficeSecurityReleases.
@@ -33,10 +37,6 @@ Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 11:23 AM PST.
 - **[Jenkins plugins](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-jenkins-plugins) — Act soon / Update:** Update Script Security to 1436.1438.v3dc5ef7d16f2 or a later release, and Pipeline: Groovy to 4403.4405.va\_b\_cdb\_b\_d0b\_89f or a later release, and update the other affected plugins named in the 2026-11-25 advisory.
 - **[vm2](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-vm2) — Monitor / Update:** Update vm2 to 3.12.1 or later. Do not allowlist the crypto builtin for untrusted code.
 - **[PyJWT](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-pyjwt) — Monitor / Update:** Update PyJWT to 2.14.0 or later where the application accepts both HMAC and asymmetric algorithms.
-
-### Early signals: not yet verified
-
-- **Not yet verified. Single source. [Rackspace Spot](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-rackspace-spot):** Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date. Source: [Discussed on X](https://x.com/rtehrani/status/2125993016066253088).
 
 <!-- END GENERATED EDITION -->
 
