@@ -2,6 +2,8 @@
 
 A calm security briefing: what applies to you, why it matters, and what to do next.
 
+Maintained by [John Luethe](https://github.com/JLuethe).
+
 Read by audience, search for a product or CVE, or save the products you follow in your browser. Urgency and action are separate: an exploited product without a patch can still require immediate mitigation or replacement.
 
 **[Website](https://jluethe.github.io/patch-these/)** · **[Choose an Atom feed](https://jluethe.github.io/patch-these/subscribe/)** · **[Latest JSON](https://jluethe.github.io/patch-these/latest.json)** · **[Methodology](METHODOLOGY.md)**
@@ -11,7 +13,7 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 [Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-25.md) · [Structured data](data/2026-11-25.json)
 
-Coverage: 23–25 November 2026. Updated: 25 Nov 2026 · 9:55 PM PST.
+Coverage: 23–25 November 2026. Updated: 25 Nov 2026 · 11:20 PM PST.
 
 ### For everyone
 
@@ -31,10 +33,10 @@ Coverage: 23–25 November 2026. Updated: 25 Nov 2026 · 9:55 PM PST.
 - **[Azure API Management Classic](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-azure-api-management-classic) — Act now / Rotate credentials:** For affected Classic instances, rotate tokens and secrets, review access logs and the data behind the gateway, and verify the service update using NSM guidance. Contact the provider if the instance is not updated.
 - **[Bytebase DBHub MCP](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-bytebase-dbhub-mcp) — Act now / Mitigate:** Restrict network access to trusted clients and keep the affected service off untrusted networks while tracking the vendor remediation.
 - **[Idunno.AntiCsrf](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-idunno-anticsrf) — Act now / Replace:** Replace Idunno.AntiCsrf with a supported anti-CSRF mechanism and investigate exposed applications for compromise. Follow Mandiant guidance when removing the component so request-forgery protection is retained.
-- **[Optimizely Web Experimentation](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-optimizely-web-experimentation) — Act now / Check applicability:** If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.
-- **[Mitel MiCollab](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-mitel-micollab) — Act now / Check applicability:** If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.
-- **[Danfoss AK-SM 800A](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-danfoss-ak-sm-800a) — Act now / Check applicability:** If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.
-- **[Xen Orchestra](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-xen-orchestra) — Act now / Check applicability:** If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.
+- **[Optimizely Web Experimentation](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-optimizely-web-experimentation) — Act now / Check applicability:** If you do not use Web Experimentation, Optimizely says no action is required. If you do, treat 07:51–22:24 UTC on 16 November 2026 as the exposure window and follow the customer report: confirm whether Optimizely told you the account was affected, review site activity where the snippet ran on payment or cryptocurrency pages, and keep a strong Content Security Policy. Optimizely has withdrawn the earlier guidance to leave the snippet disabled. This correction read the shortened 20 November report, not the full customer-portal version, and it has no customer-installable fix version.
+- **[Mitel MiCollab](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-mitel-micollab) — Act now / Update:** Upgrade to MiCollab 10.3 (10.3.0.18) and apply the patch Mitel provides for that release, or upgrade to a later release. Until then, restrict external access to the Audio, Web and Video Conferencing component. Mitel points to Knowledge Base article KB000129195 for patch steps; this correction did not open that article, so the patch build number is unknown here.
+- **[Danfoss AK-SM 800A](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-danfoss-ak-sm-800a) — Act now / Update:** Install software 3.3 for the 2023 advisory and 4.2 for CVE-2025-41450. Danfoss lists no workaround in either advisory. Do not assume that moving only to 4.2 also covers the 3.3 fixes; the advisories do not say that.
+- **[Xen Orchestra](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-xen-orchestra) — Act now / Update:** Update to Xen Orchestra 6.9.2 on the stable channel or 6.10.1 on the latest channel (xo-server 5.211.2 or 5.213.1). Do not expose Xen Orchestra to the internet. If compromise is suspected, follow the vendor advisory for recovery, including secret rotation. This briefing does not repeat attacker infrastructure or detection patterns from that advisory.
 - **[simple-git](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-simple-git) — Act soon / Update:** Update to simple-git 4.1.0 and @simple-git/argv-parser 3.0.0. Do not pass untrusted input to listRemote() or raw().
 - **[Jenkins plugins](https://jluethe.github.io/patch-these/digests/2026-11-25/#item-jenkins-plugins) — Act soon / Update:** Update Pipeline: Groovy to 4403.4405.va\_b\_cdb\_b\_d0b\_89f and Script Security to 1436.1438.v3dc5ef7d16f2, and update the other affected plugins named in the advisory.
 

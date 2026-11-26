@@ -51,6 +51,14 @@ def test_tomorrow_can_publish_without_any_of_todays_products(publication):
     assert (output / "digests" / "2026-11-25" / "index.html").exists()
 
 
+def test_site_credits_the_maintainer(publication):
+    output = build_site(publication, site_url=SITE_URL)
+    home = (output / "index.html").read_text()
+    assert home.count('By <a href="https://github.com/JLuethe">John Luethe</a>') == 2
+    assert "No exploit details." in home
+    assert "Maintained by [John Luethe](https://github.com/JLuethe)." in (ROOT / "README.md").read_text()
+
+
 def test_empty_edition_is_an_explicit_quiet_day(publication):
     edition = edition_at(publication)
     edition.update(items=[], featured_item_ids=[])
