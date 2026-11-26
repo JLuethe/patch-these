@@ -97,7 +97,10 @@ def item_detail(item: dict) -> str:
     return "".join(blocks)
 
 
-def item_card(item: dict, *, interactive: bool = True) -> str:
+ITEM_KINDS = {"vulnerability": "Vulnerability", "incident": "Incident", "supply_chain": "Supply chain"}
+
+
+def item_card(item: dict, digest_date: str, site_url: str, *, interactive: bool = True) -> str:
     product = escape(item["product"])
     item_id = escape(item["id"])
     search = " ".join([item["product"], item["summary"], item["action"], item["affected"] or "", *item["cves"]])
@@ -116,9 +119,14 @@ def item_card(item: dict, *, interactive: bool = True) -> str:
     elif item["fix_status"] == "unknown":
         labels.append("Patch details unconfirmed")
     evidence = " · ".join(labels) or "Check the affected scope"
+    kind = ITEM_KINDS.get(item.get("kind") or "", "")
+    kind_label = f'<span class="item-kind">{escape(kind)}</span>' if kind else ""
+    gaps = item.get("gaps")
+    notes = f'<p class="verification-notes"><strong>Verification notes:</strong> {escape(gaps)}</p>' if gaps else ""
+    permalink = escape(root_path(site_url, f"digests/{digest_date}/#item-{item['id']}"))
     watch = f'<button class="watch-button js-only" type="button" data-watch-id="{item_id}" aria-pressed="false" aria-label="Save {product} to my products"><span class="watch-label">Save product</span></button>' if interactive else ""
     return f'''<article class="briefing-item" id="item-{item_id}" data-product="{escape(item['product'].lower())}" data-product-id="{item_id}" data-audience="{item['audience']}" data-priority="{item['priority']}" data-search="{escape(search)}">
-<header class="item-header"><div class="item-heading"><div class="item-meta">{urgency(item)}<span class="action-type">{ACTIONS[item['action_type']]}</span></div><h3>{product}</h3></div>{watch}</header>
+<header class="item-header"><div class="item-heading"><div class="item-meta">{urgency(item)}{kind_label}<span class="action-type">{ACTIONS[item['action_type']]}</span></div><h3>{product}</h3></div>{watch}</header>
 <p class="evidence">{escape(evidence)} <span aria-hidden="true">·</span> {AUDIENCES[item['audience']]}</p>
 <p class="item-summary">{escape(item['summary'])}</p>
 <div class="action-box"><strong>What to do</strong><p>{escape(item['action'])}</p></div>
@@ -126,7 +134,7 @@ def item_card(item: dict, *, interactive: bool = True) -> str:
 <p class="priority-reason"><strong>Why this priority:</strong> {escape(item['priority_reason'])}</p>
 <p class="sources">{links}</p><p class="item-meta muted">{escape(check_label)}</p>
 <details class="item-details"><summary>Versions, evidence &amp; scores</summary>{item_detail(item)}</details>
-<a class="permalink" href="#item-{item_id}" aria-label="Link to {product}">Link to this item <span aria-hidden="true">↗</span></a>
+{notes}<a class="permalink" href="{permalink}" aria-label="Link to {product}">Link to this item <span aria-hidden="true">↗</span></a>
 </article>'''
 
 
@@ -139,7 +147,7 @@ def page(title: str, body: str, site_url: str, path: str, *, description: str = 
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escape(title)}</title><meta name="description" content="{escape(description)}">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
-<link rel="canonical" href="{escape(url)}"><link rel="stylesheet" href="{href('assets/style.css')}">
+<link rel="canonical" href="{escape(url)}"><link rel="icon" href="{href('assets/favicon.svg')}" type="image/svg+xml"><link rel="stylesheet" href="{href('assets/style.css')}">
 <link rel="alternate" type="application/atom+xml" title="patch-these — all updates" href="{href('feed.xml')}">
 <link rel="alternate" type="application/atom+xml" title="patch-these — for everyone" href="{href('feeds/everyone.xml')}">
 <link rel="alternate" type="application/atom+xml" title="patch-these — apps and servers" href="{href('feeds/operators.xml')}">
@@ -151,7 +159,7 @@ def page(title: str, body: str, site_url: str, path: str, *, description: str = 
 <body class="{escape(body_class)}"{dates}><a class="skip" href="#main">Skip to content</a>
 <div class="wrap"><header class="site-header"><div class="header-top"><div class="brand"><a class="wordmark" href="{href('')}">patch-these<span aria-hidden="true">.</span></a><p class="byline">By <a href="https://github.com/JLuethe">John Luethe</a></p></div><nav class="main-nav" aria-label="Main"><a href="{href('')}">Latest briefing</a><a href="{href('archive/')}">Archive</a><a href="{href('methodology/')}">Our method</a><a href="{href('subscribe/')}">Subscribe <span aria-hidden="true">↗</span></a></nav></div><p class="project-blurb">{escape(DESCRIPTION)}</p></header>
 <main id="main">{body}</main>
-<footer class="site-footer"><div><a class="wordmark" href="{href('')}">patch-these.</a><p>By <a href="https://github.com/JLuethe">John Luethe</a></p><p>Curated, not complete. Unofficial. Verify the vendor advisory before acting.</p><p class="muted">Not professional advice. Not affiliated with CISA, FIRST, or any vendor. EPSS is a probability, not a certainty.</p></div><div class="feed-links"><a href="{href('subscribe/')}">Atom feeds</a><a href="{href('latest.json')}">Latest JSON</a><a href="{href('data/schema.json')}">Data schema</a><a href="{escape(REPO)}">GitHub</a><a href="{escape(REPO + '/blob/main/LICENSE')}">Content: CC BY 4.0</a><a href="{escape(REPO + '/blob/main/LICENSE-CODE')}">Code: MIT</a></div></footer></div></body></html>'''
+<footer class="site-footer"><div><a class="wordmark" href="{href('')}">patch-these.</a><p>By <a href="https://github.com/JLuethe">John Luethe</a></p><p>Curated, not complete. Unofficial. Verify the vendor advisory before acting.</p><p class="muted">Not professional advice. Not affiliated with CISA, FIRST, or any vendor. EPSS is a probability, not a certainty.</p></div><div class="feed-links"><a href="{href('products/')}">Products</a><a href="{href('subscribe/')}">Atom feeds</a><a href="{href('latest.json')}">Latest JSON</a><a href="{href('data/schema.json')}">Data schema</a><a href="{escape(REPO)}">GitHub</a><a href="{escape(REPO + '/blob/main/LICENSE')}">Content: CC BY 4.0</a><a href="{escape(REPO + '/blob/main/LICENSE-CODE')}">Code: MIT</a></div></footer></div></body></html>'''
 
 
 def filters(total: int) -> str:
@@ -164,7 +172,7 @@ def featured(edition: dict) -> str:
     cards = []
     for index, item_id in enumerate(edition["featured_item_ids"], 1):
         item = by_id[item_id]
-        cards.append(f'<a class="featured-card" href="#item-{escape(item_id)}"><span class="featured-number">0{index}</span>{urgency(item)}<h3>{escape(item["product"])}</h3><p>{escape(item["priority_reason"])}</p><span class="featured-action">{ACTIONS[item["action_type"]]} <span aria-hidden="true">↗</span></span></a>')
+        cards.append(f'<a class="featured-card" href="#item-{escape(item_id)}"><span class="featured-number">0{index}</span>{urgency(item)}<h3>{escape(item["product"])}</h3><p>{escape(item["action"])}</p><span class="featured-action">{ACTIONS[item["action_type"]]} <span aria-hidden="true">↗</span></span></a>')
     if not cards:
         return ""
     title = "Three to check, if you use them." if len(cards) == 3 else "Start here, if you use these."
@@ -183,11 +191,12 @@ def briefing_body(edition: dict, site_url: str, *, latest: bool) -> str:
     now = sum(item["priority"] == "act_now" for item in items)
     soon = sum(item["priority"] == "act_soon" for item in items)
     href = lambda value: escape(root_path(site_url, value))
-    cards = "".join(item_card(item) for item in items)
+    cards = "".join(item_card(item, edition["digest_date"], site_url) for item in items)
+    edition_notes = f'<p class="verification-notes"><strong>Verification notes:</strong> {escape(edition["gaps"])}</p>' if edition.get("gaps") else ""
     if not cards:
         cards = '<p class="notice">No new verified items in this edition. This does not establish that your software has no outstanding updates.</p>'
     return f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">{'Latest briefing' if latest else 'From the archive'} <span aria-hidden="true">/</span> <time datetime="{edition['digest_date']}">{human_date(edition['digest_date'])}</time></p><h1>Know what needs<br>your attention.</h1><p class="hero-intro">Security updates, in plain English.<br>Find your software. Understand the risk. Take the next step.</p><div class="hero-meta"><span>Covers {coverage(edition)}</span><span>Updated {human_time(edition['updated_at'])}</span></div></div><div class="edition-stats" aria-label="Edition summary"><div class="stat"><strong>{len(items):02d}</strong><span>items in this briefing</span></div><div class="stat"><strong>{now:02d}</strong><span>act now, if affected</span></div><div class="stat"><strong>{soon:02d}</strong><span>act soon</span></div></div></section>
-<p class="notice" id="freshness-note" hidden></p>{corrections(edition)}{featured(edition)}{filters(len(items))}
+<p class="notice" id="freshness-note" hidden></p>{corrections(edition)}{edition_notes}{featured(edition)}{filters(len(items))}
 <div class="content-grid"><div class="briefing-list">{cards}</div><aside class="briefing-sidebar" aria-label="Reading the briefing"><section class="sidebar-card"><p class="eyebrow">Keep it relevant</p><h2>A smaller reading list.</h2><p>Use the filters to find your software. Save products to keep your own list on this browser.</p><p class="muted">Product selection is a reading preference, not a scan of your installed software.</p></section><section class="sidebar-card"><p class="eyebrow">How to read this</p><h2>Urgency ≠ a patch.</h2><p><strong>Act now</strong><br>Prioritize action if your installation is affected.</p><p><strong>Act soon</strong><br>Plan the recommended update or mitigation.</p><p><strong>Monitor</strong><br>Follow developments; the next step may change.</p><p>No patch can mean mitigate or replace. Check the affected scope and the source.</p><a href="{href('methodology/')}">Read our method ↗</a></section><section class="sidebar-card"><p class="eyebrow">Stay in the loop</p><h2>Choose your feed.</h2><p>All updates, personal software, or apps and servers. Read in your preferred feed reader.</p><a href="{href('subscribe/')}">Subscribe to an Atom feed ↗</a></section></aside></div>
 <p class="sidecar"><a href="{href('data/' + edition['digest_date'] + '.json')}">This edition as JSON</a> · <a href="{href('digests/' + edition['digest_date'] + '.md')}">Generated Markdown</a></p>'''
 

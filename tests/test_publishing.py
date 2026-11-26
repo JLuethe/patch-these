@@ -235,6 +235,30 @@ def test_committed_generated_views_match_the_json():
     assert stale_generated_files(ROOT, load_editions(ROOT / "data"), "https://jluethe.github.io/patch-these") == []
 
 
+def test_dated_permalinks_featured_actions_and_product_index(publication):
+    output = build_site(publication, site_url=SITE_URL)
+    home = (output / "index.html").read_text()
+    featured = home.split('class="featured-grid"', 1)[1].split("</section>", 1)[0]
+    assert "1.30.8 or later" in featured
+    assert "widely deployed web server" not in featured
+    assert 'class="permalink" href="/patch-these/digests/2026-11-26/#item-nginx-http2"' in home
+    digest = (output / "digests" / "2026-11-26" / "index.html").read_text()
+    assert 'class="permalink" href="/patch-these/digests/2026-11-26/#item-1password"' in digest
+    assert (output / "digests" / "2026-11-25" / "index.html").is_file()
+    assert 'rel="icon" href="/patch-these/assets/favicon.svg"' in home
+    assert (output / "assets" / "favicon.svg").is_file()
+    index = json.loads((output / "data" / "products.json").read_text())
+    by_id = {row["id"]: row for row in index["products"]}
+    assert "2026-11-26" in {row["digest_date"] for row in by_id["nginx-http2"]["appearances"]}
+    assert "2026-11-25" in {row["digest_date"] for row in by_id["jenkins-plugins"]["appearances"]}
+    assert "2026-11-26" in {row["digest_date"] for row in by_id["jenkins-plugins"]["appearances"]}
+    products = (output / "products" / "index.html").read_text()
+    assert "nginx-http2" in products
+    assert "Supply chain" in home and "Incident" in home
+    airbyte = home[home.index('id="item-airbyte-core-images"'):home.index('id="item-checkpoint-security-management"')]
+    assert "Verification notes" not in airbyte.split('class="action-box"', 1)[1].split("</div>", 1)[0]
+
+
 def test_exploitation_label_names_only_the_exploited_cves(publication):
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "digests" / "2026-11-25" / "index.html").read_text()
