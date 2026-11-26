@@ -36,7 +36,7 @@ Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 9:57 AM PST.
 
 ### Early signals: not yet verified
 
-- **Not yet verified. [Rackspace Spot](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-rackspace-spot):** Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date.
+- **Not yet verified. Single source. [Rackspace Spot](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-rackspace-spot):** Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date. Source: [Discussed on X](https://x.com/rtehrani/status/2125993016066253088).
 
 <!-- END GENERATED EDITION -->
 

@@ -27,7 +27,7 @@ def product_index(editions: list[dict]) -> dict:
         for item in edition["items"]:
             record = products.setdefault(item["id"], {"id": item["id"], "product": item["product"], "appearances": []})
             record["product"] = item["product"]
-            record["appearances"].append({"digest_date": edition["digest_date"], "item_id": item["id"]})
+            record["appearances"].append({"digest_date": edition["digest_date"], "item_id": item["id"], "verification": item.get("verification") or "verified"})
     return {"products": [products[key] for key in sorted(products)]}
 
 
@@ -37,7 +37,8 @@ def products_body(index: dict, site_url: str) -> str:
         links = []
         for appearance in product["appearances"]:
             href = escape(root_path(site_url, f"digests/{appearance['digest_date']}/#item-{appearance['item_id']}"))
-            links.append(f'<a href="{href}">{escape(appearance["digest_date"])}</a>')
+            note = " (not yet verified)" if appearance.get("verification") == "early_signal" else ""
+            links.append(f'<a href="{href}">{escape(appearance["digest_date"])}</a>{note}')
         rows.append(f'<li><strong>{escape(product["product"])}</strong> <span class="muted">{escape(product["id"])}</span><br>{" · ".join(links)}</li>')
     listing = "".join(rows) or "<li>No products have been published yet.</li>"
     return f'<section class="prose"><p class="eyebrow">Across editions</p><h1>Products</h1><p>Each id is the stable item id used by Save product. One id can appear in more than one edition.</p><ul>{listing}</ul></section>'

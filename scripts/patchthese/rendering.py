@@ -105,7 +105,9 @@ def item_card(item: dict, digest_date: str, site_url: str, *, interactive: bool 
     item_id = escape(item["id"])
     search = " ".join([item["product"], item["summary"], item["action"], item["affected"] or "", *item["cves"]])
     primary = [source for source in item["sources"] if source["kind"] != "social_report"]
-    links = " · ".join(source_link(source) for source in primary[:2]) or "Source details below"
+    # An early signal may rest on a single post; never hide its only source.
+    shown = primary[:2] or item["sources"][:2]
+    links = " · ".join(source_link(source) for source in shown) or "Source details below"
     checked = [source["checked_at"] for source in primary if source["checked_at"]]
     check_label = f'Latest source check: {human_time(max(checked, key=timestamp))}' if checked else "Source check time not recorded"
     labels = []

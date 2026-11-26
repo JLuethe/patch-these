@@ -5,10 +5,15 @@ from __future__ import annotations
 from html import escape
 import xml.etree.ElementTree as ET
 
-from .common import ACTIONS, DESCRIPTION, PRIORITIES, exploitation_label, human_date, is_early_signal, ordered_items, timestamp, verification_labels
+from .common import ACTIONS, DESCRIPTION, PRIORITIES, exploitation_label, human_date, is_early_signal, ordered_items, social_platform, timestamp, verification_labels
 
 ATOM = "http://www.w3.org/2005/Atom"
 ET.register_namespace("", ATOM)
+
+
+def source_label(source: dict) -> str:
+    platform = social_platform(source["url"]) if source["kind"] == "social_report" else None
+    return f"{platform} · {source['label']}" if platform else source["label"]
 
 
 def build_feed(editions: list[dict], site_url: str, *, audience: str | None = None, feed_path: str = "feed.xml") -> str:
@@ -53,7 +58,9 @@ def build_feed(editions: list[dict], site_url: str, *, audience: str | None = No
             blocks.append("<h2>Early signals: not yet verified</h2><p>These leads are not confirmed. Do not patch from them.</p>")
         for item in items:
             primary = [source for source in item["sources"] if source["kind"] != "social_report"]
-            sources = " · ".join(f'<a href="{escape(source["url"])}">{escape(source["label"])}</a>' for source in primary)
+            # Early signals keep their discovery posts; they may be the only source.
+            cited = item["sources"] if is_early_signal(item) or not primary else primary
+            sources = " · ".join(f'<a href="{escape(source["url"])}">{escape(source_label(source))}</a>' for source in cited)
             status = " · ".join(verification_labels(item)) if is_early_signal(item) else f"{PRIORITIES[item['priority']]} · {ACTIONS[item['action_type']]}"
             evidence = exploitation_label(item)
             if evidence:

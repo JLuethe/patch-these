@@ -6,7 +6,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "1password"
+          "item_id": "1password",
+          "verification": "verified"
         }
       ]
     },
@@ -16,7 +17,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "airbyte-core-images"
+          "item_id": "airbyte-core-images",
+          "verification": "verified"
         }
       ]
     },
@@ -26,7 +28,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "azure-api-management-classic"
+          "item_id": "azure-api-management-classic",
+          "verification": "verified"
         }
       ]
     },
@@ -36,7 +39,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "bytebase-dbhub-mcp"
+          "item_id": "bytebase-dbhub-mcp",
+          "verification": "verified"
         }
       ]
     },
@@ -46,7 +50,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "checkpoint-security-management"
+          "item_id": "checkpoint-security-management",
+          "verification": "verified"
         }
       ]
     },
@@ -56,7 +61,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "chrome-desktop"
+          "item_id": "chrome-desktop",
+          "verification": "verified"
         }
       ]
     },
@@ -66,7 +72,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "cisco-expressway"
+          "item_id": "cisco-expressway",
+          "verification": "verified"
         }
       ]
     },
@@ -76,7 +83,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "danfoss-ak-sm-800a"
+          "item_id": "danfoss-ak-sm-800a",
+          "verification": "verified"
         }
       ]
     },
@@ -86,7 +94,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "drupal-core"
+          "item_id": "drupal-core",
+          "verification": "verified"
         }
       ]
     },
@@ -96,7 +105,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "firefox-thunderbird"
+          "item_id": "firefox-thunderbird",
+          "verification": "verified"
         }
       ]
     },
@@ -106,7 +116,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "geoserver"
+          "item_id": "geoserver",
+          "verification": "verified"
         }
       ]
     },
@@ -116,7 +127,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "ghostscript"
+          "item_id": "ghostscript",
+          "verification": "verified"
         }
       ]
     },
@@ -126,7 +138,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "hex-pm"
+          "item_id": "hex-pm",
+          "verification": "verified"
         }
       ]
     },
@@ -136,7 +149,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "hpe-airwave"
+          "item_id": "hpe-airwave",
+          "verification": "verified"
         }
       ]
     },
@@ -146,7 +160,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "idunno-anticsrf"
+          "item_id": "idunno-anticsrf",
+          "verification": "verified"
         }
       ]
     },
@@ -156,7 +171,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "java-se"
+          "item_id": "java-se",
+          "verification": "verified"
         }
       ]
     },
@@ -166,11 +182,13 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "jenkins-plugins"
+          "item_id": "jenkins-plugins",
+          "verification": "verified"
         },
         {
           "digest_date": "2026-11-26",
-          "item_id": "jenkins-plugins"
+          "item_id": "jenkins-plugins",
+          "verification": "verified"
         }
       ]
     },
@@ -180,7 +198,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "juniper-session-smart"
+          "item_id": "juniper-session-smart",
+          "verification": "verified"
         }
       ]
     },
@@ -190,7 +209,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "linux-nfsd"
+          "item_id": "linux-nfsd",
+          "verification": "verified"
         }
       ]
     },
@@ -200,7 +220,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "microsoft-visio"
+          "item_id": "microsoft-visio",
+          "verification": "verified"
         }
       ]
     },
@@ -210,7 +231,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "mitel-micollab"
+          "item_id": "mitel-micollab",
+          "verification": "verified"
         }
       ]
     },
@@ -220,7 +242,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "monai-label"
+          "item_id": "monai-label",
+          "verification": "verified"
         }
       ]
     },
@@ -230,7 +253,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "nable-mail-assure"
+          "item_id": "nable-mail-assure",
+          "verification": "verified"
         }
       ]
     },
@@ -240,7 +264,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "nginx-http2"
+          "item_id": "nginx-http2",
+          "verification": "verified"
         }
       ]
     },
@@ -250,7 +275,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "omarchy-dell-xps-touchpad-haptics"
+          "item_id": "omarchy-dell-xps-touchpad-haptics",
+          "verification": "verified"
         }
       ]
     },
@@ -260,7 +286,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "optimizely-web-experimentation"
+          "item_id": "optimizely-web-experimentation",
+          "verification": "verified"
         }
       ]
     },
@@ -270,7 +297,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "paloalto-panos"
+          "item_id": "paloalto-panos",
+          "verification": "verified"
         }
       ]
     },
@@ -280,7 +308,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "pyjwt"
+          "item_id": "pyjwt",
+          "verification": "verified"
         }
       ]
     },
@@ -290,7 +319,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "rackspace-spot"
+          "item_id": "rackspace-spot",
+          "verification": "early_signal"
         }
       ]
     },
@@ -300,7 +330,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "simple-git"
+          "item_id": "simple-git",
+          "verification": "verified"
         }
       ]
     },
@@ -310,7 +341,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "todoist"
+          "item_id": "todoist",
+          "verification": "verified"
         }
       ]
     },
@@ -320,7 +352,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "virtuemart"
+          "item_id": "virtuemart",
+          "verification": "verified"
         }
       ]
     },
@@ -330,7 +363,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "vm2"
+          "item_id": "vm2",
+          "verification": "verified"
         }
       ]
     },
@@ -340,7 +374,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "vmware-vcenter"
+          "item_id": "vmware-vcenter",
+          "verification": "verified"
         }
       ]
     },
@@ -350,7 +385,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "wp-connect-plugins"
+          "item_id": "wp-connect-plugins",
+          "verification": "verified"
         }
       ]
     },
@@ -360,7 +396,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-26",
-          "item_id": "wp-rocket"
+          "item_id": "wp-rocket",
+          "verification": "verified"
         }
       ]
     },
@@ -370,7 +407,8 @@
       "appearances": [
         {
           "digest_date": "2026-11-25",
-          "item_id": "xen-orchestra"
+          "item_id": "xen-orchestra",
+          "verification": "verified"
         }
       ]
     }

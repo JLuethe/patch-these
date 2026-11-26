@@ -174,6 +174,8 @@ An `early_signal` item must:
 - set `gaps` to what is still unconfirmed;
 - stay out of `featured_item_ids`.
 
+Every output keeps an early signal's state and its discovery link: the site card shows "Not yet verified" (plus "Single source") and links the post right on the card, the Markdown digest gives it a full section with its sources under "Early signals: not yet verified", the README block and Atom feeds link the post, and `latest.json`, `data/YYYY-MM-DD.json` and `data/products.json` carry `verification`. Never drop the only source of a lead.
+
 Write the action as a check, not a patch. For example: "Check whether you run Example service; watch for a vendor advisory." Do not name a version to install. When a primary source later confirms the lead, keep the same id, change `verification` to `verified`, fill the confirmed fields, and append a correction.
 
 If the lead names a CVE, look up CISA KEV and FIRST EPSS for that CVE before you publish the id. A CVE you did not look up stays out of the item. Record the lookup. Do not treat a KEV hit as something an early signal can carry: if KEV lists it, the item is no longer an early signal.

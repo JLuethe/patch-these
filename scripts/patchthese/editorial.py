@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from urllib.parse import quote
 
-from .common import ACTIONS, AUDIENCES, PRIORITIES, coverage, human_date, human_time, is_early_signal, ordered_items, status_noun, verification_labels
+from .common import ACTIONS, AUDIENCES, PRIORITIES, coverage, human_date, human_time, is_early_signal, ordered_items, social_platform, status_noun, verification_labels
 
 GENERATED_START = "<!-- BEGIN GENERATED EDITION -->"
 GENERATED_END = "<!-- END GENERATED EDITION -->"
@@ -28,6 +28,46 @@ def md_url(value: str) -> str:
     return quote(value, safe=":/?&=%#@+;,~.-_")
 
 
+def _item_rows(item: dict, edition: dict, site_url: str) -> list[str]:
+    """One item's full Markdown section, including its verification state and every source."""
+    rows: list[str] = []
+    kind = {"vulnerability": "Vulnerability", "incident": "Incident", "supply_chain": "Supply chain"}.get(item.get("kind") or "")
+    lead = " · ".join(part for part in (*verification_labels(item), kind, ACTIONS[item["action_type"]], AUDIENCES[item["audience"]]) if part)
+    rows += ["", f"### {md_text(item['product'])}", "", f"**{lead}**", "", md_text(item["summary"]), "", f"**What to do:** {md_text(item['action'])}", "", f"**Why:** {md_text(item['priority_reason'])}", "", f"**Applies to:** {md_text(item['affected'] or 'Affected versions not confirmed. Check the advisory before deciding whether this applies to your installation.')}"]
+    if item.get("gaps"):
+        rows += ["", f"**Verification notes:** {md_text(item['gaps'])}"]
+    if item["cves"]:
+        rows += ["", "**CVEs:** " + ", ".join(item["cves"])]
+    if item["fixes"]:
+        rows += ["", "**Fixes by component / platform / branch:**", ""]
+        for fix in item["fixes"]:
+            scope = " / ".join(str(v) for v in (fix["component"], fix["platform"], fix["branch"]) if v)
+            cves = "; " + ", ".join(fix["cves"]) if fix["cves"] else ""
+            rows += [f"- {md_text(scope)}: {md_code(fix['version'])}{cves}."]
+    by_cve = item["exploitation"].get("by_cve")
+    if by_cve:
+        rows += ["", f"**{status_noun(item)}:** " + "; ".join(f"{record['cve']} {record['status']}" for record in by_cve) + "."]
+    else:
+        rows += ["", f"**{status_noun(item)}:** " + item["exploitation"]["status"] + "."]
+    for kev in item["kev"]:
+        status = "listed" if kev["listed"] is True else "not listed" if kev["listed"] is False else "not established"
+        added = f"; added {kev['date_added']}" if kev["date_added"] else ""
+        rows += [f"- KEV {kev['cve']}: {status}{added}."]
+    rows += ["", "**Sources:**", ""]
+    for source in item["sources"]:
+        checked = f"; checked {human_time(source['checked_at'])}" if source["checked_at"] else "; check not recorded"
+        platform = social_platform(source["url"]) if source["kind"] == "social_report" else None
+        kind_text = f"{platform} post" if platform else source["kind"].replace("_", " ")
+        rows += [f"- [{md_text(source['label'])}]({md_url(source['url'])}) ({kind_text}{checked})."]
+    for score in item["cvss"]:
+        rows += [f"- Reported CVSS{(' ' + md_text(score['version'])) if score['version'] else ''}: {score['score']:g}" + (f" ({score['cve']})" if score["cve"] else "") + "."]
+    for score in item["epss"]:
+        when = score["score_date"] or "original score date not recorded"
+        rows += [f"- Reported EPSS: {score['probability']:.2%} ({score['cve']}; {when})."]
+    rows += ["", f"[Link to this item]({md_url(site_url)}/digests/{edition['digest_date']}/#item-{item['id']})"]
+    return rows
+
+
 def markdown_digest(edition: dict, site_url: str) -> str:
     rows = [f"# {human_date(edition['digest_date'])}", "", "<!-- Generated from data/" + edition["digest_date"] + ".json. Edit the JSON, then run python scripts/build_site.py --write-generated. -->", "", f"Coverage: {coverage(edition)}.", "", f"Updated: {human_time(edition['updated_at'])}.", "", "Urgency describes when to act if affected. The action may be an update, mitigation, replacement, or credential rotation. Missing information is marked as unknown."]
     if edition.get("gaps"):
@@ -46,47 +86,16 @@ def markdown_digest(edition: dict, site_url: str) -> str:
             rows += [f"- **{md_text(item['product'])}:** {md_text(item['action'])}"]
     signals = [item for item in ordered_items(edition) if is_early_signal(item)]
     if signals:
-        rows += ["", "## Early signals: not yet verified", "", "These leads are not confirmed. Do not patch from this section.", ""]
+        rows += ["", "## Early signals: not yet verified", "", "These leads are not confirmed. Do not patch from this section."]
         for item in signals:
-            rows += [f"- **{'. '.join(verification_labels(item))}. {md_text(item['product'])}:** {md_text(item['action'])}"]
+            rows += _item_rows(item, edition, site_url)
     for priority, label in PRIORITIES.items():
         items = [item for item in ordered_items(edition) if item["priority"] == priority and not is_early_signal(item)]
         if not items:
             continue
         rows += ["", f"## {label}"]
         for item in items:
-            kind = {"vulnerability": "Vulnerability", "incident": "Incident", "supply_chain": "Supply chain"}.get(item.get("kind") or "")
-            lead = " · ".join(part for part in (("Not yet verified" if is_early_signal(item) else ""), kind, ACTIONS[item["action_type"]], AUDIENCES[item["audience"]]) if part)
-            rows += ["", f"### {md_text(item['product'])}", "", f"**{lead}**", "", md_text(item["summary"]), "", f"**What to do:** {md_text(item['action'])}", "", f"**Why:** {md_text(item['priority_reason'])}", "", f"**Applies to:** {md_text(item['affected'] or 'Affected versions not confirmed. Check the advisory before deciding whether this applies to your installation.')}"]
-            if item.get("gaps"):
-                rows += ["", f"**Verification notes:** {md_text(item['gaps'])}"]
-            if item["cves"]:
-                rows += ["", "**CVEs:** " + ", ".join(item["cves"])]
-            if item["fixes"]:
-                rows += ["", "**Fixes by component / platform / branch:**", ""]
-                for fix in item["fixes"]:
-                    scope = " / ".join(str(v) for v in (fix["component"], fix["platform"], fix["branch"]) if v)
-                    cves = "; " + ", ".join(fix["cves"]) if fix["cves"] else ""
-                    rows += [f"- {md_text(scope)}: {md_code(fix['version'])}{cves}."]
-            by_cve = item["exploitation"].get("by_cve")
-            if by_cve:
-                rows += ["", f"**{status_noun(item)}:** " + "; ".join(f"{record['cve']} {record['status']}" for record in by_cve) + "."]
-            else:
-                rows += ["", f"**{status_noun(item)}:** " + item["exploitation"]["status"] + "."]
-            for kev in item["kev"]:
-                status = "listed" if kev["listed"] is True else "not listed" if kev["listed"] is False else "not established"
-                added = f"; added {kev['date_added']}" if kev["date_added"] else ""
-                rows += [f"- KEV {kev['cve']}: {status}{added}."]
-            rows += ["", "**Sources:**", ""]
-            for source in item["sources"]:
-                checked = f"; checked {human_time(source['checked_at'])}" if source["checked_at"] else "; check not recorded"
-                rows += [f"- [{md_text(source['label'])}]({md_url(source['url'])}) ({source['kind'].replace('_', ' ')}{checked})."]
-            for score in item["cvss"]:
-                rows += [f"- Reported CVSS{(' ' + md_text(score['version'])) if score['version'] else ''}: {score['score']:g}" + (f" ({score['cve']})" if score["cve"] else "") + "."]
-            for score in item["epss"]:
-                when = score["score_date"] or "original score date not recorded"
-                rows += [f"- Reported EPSS: {score['probability']:.2%} ({score['cve']}; {when})."]
-            rows += ["", f"[Link to this item]({md_url(site_url)}/digests/{edition['digest_date']}/#item-{item['id']})"]
+            rows += _item_rows(item, edition, site_url)
     rows += ["", "## About this briefing", "", "Curated, not complete. Unofficial. Not professional advice. Verify actions against the vendor advisory. EPSS is a probability, not a certainty.", ""]
     return "\n".join(rows)
 
@@ -106,7 +115,8 @@ def readme_block(edition: dict, site_url: str) -> str:
         rows += ["", "### Early signals: not yet verified", ""]
         for item in signals:
             url = f"{site_url}/digests/{edition['digest_date']}/#item-{item['id']}"
-            rows += [f"- **Not yet verified. [{md_text(item['product'])}]({md_url(url)}):** {md_text(item['action'])}"]
+            discovery = " · ".join(f"[{md_text(source['label'])}]({md_url(source['url'])})" for source in item["sources"][:2])
+            rows += [f"- **{'. '.join(verification_labels(item))}. [{md_text(item['product'])}]({md_url(url)}):** {md_text(item['action'])} Source: {discovery}."]
     rows += ["", GENERATED_END]
     return "\n".join(rows)
 

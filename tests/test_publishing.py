@@ -333,3 +333,40 @@ def test_incidents_and_supply_chain_never_say_exploitation_confirmed(publication
     feed = (output / "feed.xml").read_text()
     assert "Breach confirmed" in feed and "Compromise confirmed" in feed
     assert "Exploitation confirmed" not in feed
+
+
+def test_every_output_keeps_an_early_signals_verification_state_and_only_source(publication):
+    post = "https://x.com/example/status/1234567890"
+    output = build_site(publication, site_url=SITE_URL, write_generated=True)
+    home = (output / "index.html").read_text()
+    card = between(home, 'id="item-example-lead"')
+    assert "Not yet verified" in card and "Single source" in card
+    sources_line = card.split('<p class="sources">', 1)[1].split("</p>", 1)[0]
+    assert post in sources_line  # The only source is on the card, not just in the details.
+    digest = (output / "digests" / f"{fx.DAY_TWO}.md").read_text()
+    section = digest.split("## Early signals: not yet verified", 1)[1].split("\n## ", 1)[0]
+    assert "**Not yet verified · Single source · Incident" in section
+    assert f"]({post})" in section and "X post" in section
+    readme = (publication / "README.md").read_text()
+    assert "Not yet verified. Single source." in readme and f"]({post})" in readme
+    for path in ("feed.xml", "feeds/operators.xml"):
+        feed = (output / path).read_text()
+        entry = feed.split("Example Lead", 1)[1]
+        assert "Not yet verified · Single source" in feed
+        assert post in entry
+    data = json.loads((output / "latest.json").read_text())
+    lead = next(item for item in data["items"] if item["id"] == "example-lead")
+    assert lead["verification"] == "early_signal" and lead["sources"][0]["url"] == post
+    index = json.loads((output / "data" / "products.json").read_text())
+    appearance = next(row for row in index["products"] if row["id"] == "example-lead")["appearances"][0]
+    assert appearance["verification"] == "early_signal"
+    assert "(not yet verified)" in (output / "products" / "index.html").read_text()
+
+
+def test_verified_items_keep_primary_sources_first_on_the_card(publication):
+    edition = latest(publication)
+    edition["items"][0]["sources"].append(fx.source("post", kind="social_report", url="https://x.com/example/status/99", supports=["summary"]))
+    save(publication, edition)
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    sources_line = between(home, 'id="item-new-server"').split('<p class="sources">', 1)[1].split("</p>", 1)[0]
+    assert "vendor.example/advisory" in sources_line and "x.com/example/status/99" not in sources_line
