@@ -75,8 +75,12 @@ button { touch-action: manipulation; }
 .wrap { width: min(100% - 5rem, 1120px); margin: 0 auto; }
 .muted { color: var(--muted); }
 
-.site-header { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.6rem 0; border-bottom: 1px solid var(--line); }
-.brand { display: flex; align-items: center; gap: 0.8rem; color: var(--ink); text-decoration: none; }
+.site-header { display: flex; flex-direction: column; align-items: stretch; gap: 0.85rem; padding: 1.6rem 0; border-bottom: 1px solid var(--line); }
+.header-top { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.brand { display: flex; align-items: baseline; gap: 0.75rem; color: var(--ink); text-decoration: none; }
+.byline { margin: 0; font-family: var(--sans); font-size: 0.78rem; color: var(--muted); }
+.byline a { color: inherit; }
+.project-blurb { margin: 0; max-width: 44rem; color: var(--ink); font-size: 0.95rem; line-height: 1.5; }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--accent); color: var(--bg); }
 .wordmark { margin: 0; font-family: var(--serif); font-size: 1.65rem; font-weight: 700; letter-spacing: -0.055em; line-height: 1.15; }
 .wordmark a, a.wordmark { color: inherit; text-decoration: none; }
@@ -228,9 +232,10 @@ h1 { margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 500; font-size:
   .filter-actions { flex-basis: 100%; }
 }
 @media (max-width: 760px) {
-  .site-header { align-items: flex-start; gap: 1rem; padding: 1.3rem 0; }
+  .header-top { align-items: flex-start; gap: 1rem; }
+  .site-header { padding: 1.3rem 0; }
   .main-nav { gap: 0.9rem; font-size: 0.74rem; padding-top: 0.25rem; }
-  .tagline { max-width: 220px; }
+  .project-blurb { font-size: 0.9rem; }
   .hero { grid-template-columns: minmax(0, 1fr); padding: 2.3rem 0 1.8rem; gap: 1.5rem; }
   h1 { font-size: 3.2rem; }
   .hero-copy > p:not(.eyebrow):not(.kicker) { max-width: 520px; font-size: 0.9rem; }
@@ -248,9 +253,8 @@ h1 { margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 500; font-size:
 }
 @media (max-width: 520px) {
   .wrap { width: calc(100% - 2rem); }
-  .site-header { flex-wrap: wrap; gap: 1.05rem; }
-  .brand { gap: 0.65rem; }
-  .tagline { max-width: none; }
+  .header-top { flex-wrap: wrap; gap: 1.05rem; }
+  .brand { flex-wrap: wrap; gap: 0.35rem 0.65rem; }
   .main-nav { justify-content: space-between; width: 100%; padding-top: 0.8rem; border-top: 1px solid var(--line); gap: 1rem; }
   .wordmark { font-size: 1.55rem; }
   .hero { padding-top: 2rem; }
