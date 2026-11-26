@@ -13,11 +13,14 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 [Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-26.md) · [Structured data](data/2026-11-26.json)
 
-Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 11:23 AM PST.
+Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 1:54 PM PST.
 
 ### Early signals: not yet verified
 
+- **Not yet verified. [Cacti](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-cacti-core):** Check whether you run Cacti and whether guest access is enabled and reachable; watch for an advisory from the Cacti project. Source: [SecurityOnline report on the researcher's disclosure](https://securityonline.info/cacti-zero-day-rce-4http2root-poc/) · [Discussed on Bluesky](https://bsky.app/profile/securityonline.bsky.social/post/3n3amexvv6v2x).
 - **Not yet verified. Single source. [Rackspace Spot](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-rackspace-spot):** Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date. Source: [Discussed on X](https://x.com/rtehrani/status/2125993016066253088).
+- **Not yet verified. Single source. [USA TODAY Co. subscriber accounts](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-usa-today-subscribers):** If you have a USA TODAY or affiliated newspaper subscription, be wary of phishing that mentions your subscription; watch for a notice from the publisher. Source: [Discussed on X](https://x.com/zubiqo/status/2126068935523250494).
+- **Not yet verified. [Zodia Custody](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-zodia-custody):** If your organization is a Zodia Custody client, check for a notice from Zodia and watch for targeted phishing using your contacts' names. Source: [Discussed on X](https://x.com/infinitimarkets/status/2126069765341069781) · [Discussed on X (service restored)](https://x.com/infinitimarkets/status/2126069780621008953).
 
 ### For everyone
 

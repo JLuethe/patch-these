@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-25",
   "coverage_end": "2026-11-26",
   "published_at": "2026-11-26T15:12:00Z",
-  "updated_at": "2026-11-26T19:23:40Z",
+  "updated_at": "2026-11-26T21:54:52Z",
   "corrections": [
     {
       "at": "2026-11-26T16:00:00Z",
@@ -48,6 +48,15 @@
         "todoist",
         "checkpoint-security-management",
         "airbyte-core-images"
+      ]
+    },
+    {
+      "at": "2026-11-26T21:54:52Z",
+      "summary": "Added three early signals from the 2 PM social scan: an unpatched Cacti remote code execution report, an unverified extortion claim against USA TODAY Co. subscribers, and a reported Zodia Custody data breach.",
+      "item_ids": [
+        "cacti-core",
+        "usa-today-subscribers",
+        "zodia-custody"
       ]
     }
   ],
@@ -2244,6 +2253,145 @@
           "supports": [
             "summary",
             "exploitation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cacti-core",
+      "product": "Cacti",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "A researcher reports an unauthenticated remote code execution chain in Cacti 1.2.31, the latest release, with no fix and public code; the Cacti project has not confirmed it in this edition.",
+      "cves": [],
+      "affected": "Reported to affect Cacti 1.2.31 with guest access enabled; not yet confirmed by the Cacti project.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A researcher disclosed a flaw named 4HTTP2ROOT in Cacti 1.2.31, the newest release, and a SecurityOnline report says it lets an unauthenticated visitor run commands on the Cacti server when guest access is turned on. The report says no CVE id or vendor fix exists yet and no attacks in the wild have been confirmed. Cacti servers often hold network device credentials.",
+      "action": "Check whether you run Cacti and whether guest access is enabled and reachable; watch for an advisory from the Cacti project.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "No Cacti project advisory, CVE record or fix was found; affected versions and the guest-access mitigation come only from the researcher write-up as reported by SecurityOnline. Exploitation in the wild is unconfirmed.",
+      "sources": [
+        {
+          "id": "securityonline-4http2root",
+          "kind": "researcher_report",
+          "url": "https://securityonline.info/cacti-zero-day-rce-4http2root-poc/",
+          "label": "SecurityOnline report on the researcher's disclosure",
+          "checked_at": "2026-11-26T21:54:52Z",
+          "supports": [
+            "summary",
+            "affected"
+          ]
+        },
+        {
+          "id": "bsky-securityonline",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/securityonline.bsky.social/post/3n3amexvv6v2x",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-emunaeliran",
+          "kind": "social_report",
+          "url": "https://x.com/EmunaEliran/status/2126071094805475450",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "usa-today-subscribers",
+      "product": "USA TODAY Co. subscriber accounts",
+      "audience": "end_users",
+      "kind": "incident",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "An extortion group claims to hold about 166 million USA TODAY Co. subscriber records; the publisher has not confirmed a breach.",
+      "cves": [],
+      "affected": "Not confirmed. The claim describes USA TODAY Co. subscriber records.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "Not yet verified. Posts say the extortion group n0n listed USA TODAY Co. on its leak site, claiming theft of about 166 million subscriber records and about 27 million emails. The publisher has not confirmed a breach, and the claim is unverified.",
+      "action": "If you have a USA TODAY or affiliated newspaper subscription, be wary of phishing that mentions your subscription; watch for a notice from the publisher.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "No statement from USA TODAY Co. was found. Whether any data was taken, its date and its scope are unconfirmed; the figures are the group's claim as relayed in a post.",
+      "sources": [
+        {
+          "id": "x-zubiqo",
+          "kind": "social_report",
+          "url": "https://x.com/zubiqo/status/2126068935523250494",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zodia-custody",
+      "product": "Zodia Custody",
+      "audience": "applications_and_servers",
+      "kind": "incident",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "Reports say Zodia Custody confirmed an unauthorized party accessed limited client and staff contact details; Zodia's own notice was not read in this edition.",
+      "cves": [],
+      "affected": "Not yet confirmed from Zodia Custody. Reports describe institutional client and employee contact information.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "Not yet verified. Posts and news summaries say Zodia Custody, an institutional digital-asset custodian, detected probing on November 23, took its B2B API offline, and found that an unauthorized party had accessed limited information such as contact names and emails for a small number of clients and staff. Reports say no unauthorized transactions occurred and service has been restored.",
+      "action": "If your organization is a Zodia Custody client, check for a notice from Zodia and watch for targeted phishing using your contacts' names.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "Zodia Custody's own statement was not read; dates, scope and the no-transactions claim come from posts and news summaries.",
+      "sources": [
+        {
+          "id": "x-infinitimarkets-1",
+          "kind": "social_report",
+          "url": "https://x.com/infinitimarkets/status/2126069765341069781",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-infinitimarkets-2",
+          "kind": "social_report",
+          "url": "https://x.com/infinitimarkets/status/2126069780621008953",
+          "label": "Discussed on X (service restored)",
+          "checked_at": null,
+          "supports": [
+            "summary"
           ]
         }
       ]

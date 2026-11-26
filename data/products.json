@@ -45,6 +45,17 @@
       ]
     },
     {
+      "id": "cacti-core",
+      "product": "Cacti",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "cacti-core",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "checkpoint-security-management",
       "product": "Check Point Security Management",
       "appearances": [
@@ -347,6 +358,17 @@
       ]
     },
     {
+      "id": "usa-today-subscribers",
+      "product": "USA TODAY Co. subscriber accounts",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "usa-today-subscribers",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "virtuemart",
       "product": "VirtueMart",
       "appearances": [
@@ -409,6 +431,17 @@
           "digest_date": "2026-11-25",
           "item_id": "xen-orchestra",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "zodia-custody",
+      "product": "Zodia Custody",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "zodia-custody",
+          "verification": "early_signal"
         }
       ]
     }
