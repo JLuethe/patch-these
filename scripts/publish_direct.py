@@ -195,27 +195,55 @@ def main(argv: list[str] | None = None) -> int:
     if branch.stdout.strip() != "main":
         return _fail("publish_direct.py must be run from main.")
 
-    add = ["git", "add", "--", *sorted(allowed)]
-    completed = _run(add, cwd=ROOT)
-    if completed.returncode != 0:
-        return completed.returncode
-    staged = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT)
-    if staged.returncode == 0:
-        print("Nothing to publish.")
-        return 0
-    completed = _run(["git", "commit", "-m", message], cwd=ROOT)
-    if completed.returncode != 0:
-        return completed.returncode
-
     auth_remote = f"https://x-access-token:{token}@github.com/JLuethe/patch-these.git"
-    pull = _run(["git", "pull", "--rebase", auth_remote, "main"], cwd=ROOT, token=token)
+    return commit_and_push(ROOT, sorted(allowed), message, auth_remote, token=token)
+
+
+def unpushed_commits(root: Path, remote: str, *, token: str = "") -> int | None:
+    """Commits on HEAD that the remote main does not have, or None if the fetch failed."""
+    fetch = _run(["git", "fetch", remote, "main"], cwd=root, token=token)
+    if fetch.returncode != 0:
+        return None
+    count = subprocess.run(["git", "rev-list", "--count", "FETCH_HEAD..HEAD"], cwd=root, capture_output=True, text=True)
+    if count.returncode != 0:
+        return None
+    return int(count.stdout.strip() or 0)
+
+
+def commit_and_push(root: Path, paths: list[str], message: str, remote: str, *, token: str = "") -> int:
+    """Commit the edition files if they changed, then push anything main does not have yet.
+
+    A clean working tree is not proof of success: a previous run may have
+    committed and then failed to push. That commit is pushed now, so a failed
+    push can simply be retried by running the script again.
+    """
+    completed = _run(["git", "add", "--", *paths], cwd=root)
+    if completed.returncode != 0:
+        return completed.returncode
+    staged = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=root)
+    if staged.returncode != 0:
+        completed = _run(["git", "commit", "-m", message], cwd=root)
+        if completed.returncode != 0:
+            return completed.returncode
+    else:
+        waiting = unpushed_commits(root, remote, token=token)
+        if waiting is None:
+            return _fail("Could not compare with the remote main; nothing was pushed. Retry when the network is back.")
+        if waiting == 0:
+            print("Nothing to publish: no edition changes and main already has every local commit.")
+            return 0
+        print(f"No new edition changes, but {waiting} local commit(s) have not reached main yet; pushing them now.")
+
+    pull = _run(["git", "pull", "--rebase", remote, "main"], cwd=root, token=token)
     if pull.returncode != 0:
-        _run(["git", "rebase", "--abort"], cwd=ROOT)
+        _run(["git", "rebase", "--abort"], cwd=root)
         return pull.returncode
-    push = _run(["git", "push", auth_remote, "HEAD:main"], cwd=ROOT, token=token)
+    push = _run(["git", "push", remote, "HEAD:main"], cwd=root, token=token)
     if push.returncode != 0:
+        print("Push failed. The commit is kept locally; run the same command again to retry.", file=sys.stderr)
         return push.returncode
-    print(f"Pushed {message}")
+    head = subprocess.run(["git", "log", "-1", "--format=%h %s"], cwd=root, capture_output=True, text=True)
+    print(f"Pushed {head.stdout.strip()}")
     return 0
 
 

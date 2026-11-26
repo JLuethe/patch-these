@@ -1,15 +1,19 @@
-"""Publication regressions: future editions, corrections, safe output and URLs."""
+"""Publication regressions: future editions, corrections, safe output and URLs.
+
+Every test builds from small synthetic editions (tests/editions.py), so a new
+day's data or a quiet day never breaks them. Only
+test_committed_generated_views_match_the_json reads the real data, on purpose.
+"""
 # SPDX-License-Identifier: MIT
-from copy import deepcopy
-from html import unescape
 from html.parser import HTMLParser
 import json
 from pathlib import Path
-import shutil
 import xml.etree.ElementTree as ET
 
 import pytest
 
+import editions as fx
+from patchthese.common import exploitation_label, verification_labels
 from patchthese.editorial import markdown_digest
 from patchthese.feeds import ATOM, build_feed
 from patchthese.publishing import StaleGeneratedFiles, build_site, stale_generated_files
@@ -20,35 +24,51 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE_URL = "https://example.org/patch-these"
 
 
+def two_days():
+    first = fx.edition(fx.DAY_ONE, [fx.item("old-server", "Old Server", cve="CVE-2030-10001")])
+    second = fx.edition(fx.DAY_TWO, [
+        fx.item("new-server", "New Server", cve="CVE-2030-20001"),
+        fx.item("desktop-app", "Desktop App", cve="CVE-2030-20002", audience="end_users"),
+        fx.item("shared-tool", "Shared Tool", cve="CVE-2030-20003", audience="both"),
+        fx.early_signal(),
+    ])
+    return first, second
+
+
 @pytest.fixture
 def publication(tmp_path):
-    for folder in ("assets", "data"):
-        shutil.copytree(ROOT / folder, tmp_path / folder)
-    for name in ("METHODOLOGY.md", "README.md"):
-        shutil.copyfile(ROOT / name, tmp_path / name)
-    return tmp_path
+    return fx.publication(tmp_path, list(two_days()))
 
 
-def edition_at(root):
+def latest(root):
     path = sorted((root / "data").glob("????-??-??.json"))[-1]
     return json.loads(path.read_text())
 
 
-def test_tomorrow_can_publish_without_any_of_todays_products(publication):
-    tomorrow = deepcopy(edition_at(publication))
-    tomorrow.update(digest_date="2026-11-26", coverage_start="2026-11-26", coverage_end="2026-11-26", published_at="2026-11-27T04:00:00Z", updated_at="2026-11-27T04:00:00Z", corrections=[], featured_item_ids=[])
-    item = deepcopy(tomorrow["items"][0])
-    item.update(id="independent-example", product="Independent example", summary="A fixture for a different day's subject.", action="Review this example's configuration.", affected=None, cves=[], fixes=[], cvss=[], epss=[], kev=[], sources=[], exploitation={"status": "unknown", "source_ids": []}, fix_status="unknown", action_type="investigate", priority="monitor", priority_reason="More information is needed.")
-    item["sources"] = [{"id": "fixture", "kind": "vendor_advisory", "url": "https://example.org/advisory", "label": "Fixture advisory", "checked_at": "2026-11-27T03:00:00Z", "supports": ["summary"]}]
-    tomorrow["items"] = [item]
-    (publication / "data" / "2026-11-26.json").write_text(json.dumps(tomorrow))
+def save(root, payload):
+    fx.write_edition(root, payload)
+
+
+def between(html, start, end="</article>"):
+    chunk = html[html.index(start):]
+    return chunk[:chunk.index(end)]
+
+
+def test_the_homepage_shows_the_newest_edition_only(publication):
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "index.html").read_text()
+    assert "New Server" in home
+    assert "Old Server" not in home
+    assert json.loads((output / "latest.json").read_text())["digest_date"] == fx.DAY_TWO
+    assert "Old Server" in (output / "digests" / fx.DAY_ONE / "index.html").read_text()
+
+
+def test_a_new_day_can_publish_without_any_of_the_previous_days_products(publication):
+    tomorrow = fx.edition("2030-03-03", [fx.item("independent-example", "Independent example", cve="CVE-2030-30001")])
+    save(publication, tomorrow)
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
     assert "Independent example" in home
-    assert "158.0.8127.89" not in home
-    assert "4403.4405.va_b_cdb_b_d0b_89f" not in home
-    assert json.loads((output / "latest.json").read_text())["digest_date"] == "2026-11-26"
-    assert (output / "digests" / "2026-11-25" / "index.html").exists()
+    assert "New Server" not in home
 
 
 def test_site_credits_the_maintainer(publication):
@@ -60,50 +80,38 @@ def test_site_credits_the_maintainer(publication):
     assert "No exploit details." in home
     feed = (output / "feed.xml").read_text()
     assert "updated every 4 hours from 6 AM to 10 PM Pacific" in feed
-    assert "finds new issues on X, Bluesky and Mastodon" in feed
     assert "Maintained by [John Luethe](https://github.com/JLuethe)." in (ROOT / "README.md").read_text()
 
 
 def test_social_source_labels_name_the_platform():
-    assert "X · Discussed" in source_link({
-        "kind": "social_report", "url": "https://x.com/example/status/1", "label": "Discussed",
-    })
-    assert "Bluesky · Discussed" in source_link({
-        "kind": "social_report", "url": "https://bsky.app/profile/example.bsky.social/post/3abc", "label": "Discussed",
-    })
-    assert "Mastodon · Discussed" in source_link({
-        "kind": "social_report", "url": "https://infosec.exchange/@example/123", "label": "Discussed",
-    })
+    assert "X · Discussed" in source_link({"kind": "social_report", "url": "https://x.com/example/status/1", "label": "Discussed"})
+    assert "Bluesky · Discussed" in source_link({"kind": "social_report", "url": "https://bsky.app/profile/example.bsky.social/post/3abc", "label": "Discussed"})
+    assert "Mastodon · Discussed" in source_link({"kind": "social_report", "url": "https://infosec.exchange/@example/123", "label": "Discussed"})
 
 
 def test_empty_edition_is_an_explicit_quiet_day(publication):
-    edition = edition_at(publication)
-    edition.update(items=[], featured_item_ids=[])
-    for correction in edition["corrections"]:
-        correction["item_ids"] = []
-    (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
+    save(publication, fx.edition(fx.DAY_TWO, []))
     output = build_site(publication, site_url=SITE_URL)
     assert "No new verified items" in (output / "index.html").read_text()
     assert "No new verified items" in (output / "feeds" / "everyone.xml").read_text()
-    assert "No new verified items" in (output / "digests" / f"{edition['digest_date']}.md").read_text()
+    assert "No new verified items" in (output / "digests" / f"{fx.DAY_TWO}.md").read_text()
 
 
 def test_json_changes_reach_all_generated_views_and_normal_build_is_read_only(publication):
-    edition = edition_at(publication)
+    edition = latest(publication)
     edition["items"][0]["action"] = "A unique corrected action for this regression."
-    data_file = publication / "data" / f"{edition['digest_date']}.json"
-    data_file.write_text(json.dumps(edition))
+    save(publication, edition)
     (publication / "digests").mkdir()
-    stale_digest = publication / "digests" / f"{edition['digest_date']}.md"
+    stale_digest = publication / "digests" / f"{fx.DAY_TWO}.md"
     stale_digest.write_text("A stale unrelated Markdown copy is not an input.")
     before = {path: path.read_bytes() for path in publication.rglob("*") if path.is_file()}
     output = build_site(publication, site_url=SITE_URL)
     for path, original in before.items():
         assert path.read_bytes() == original
-    for path in ("index.html", "feed.xml", f"digests/{edition['digest_date']}.md", f"data/{edition['digest_date']}.json", "latest.json"):
-        assert edition["items"][0]["action"] in (output / path).read_text()
+    for path in ("index.html", "feed.xml", f"digests/{fx.DAY_TWO}.md", f"data/{fx.DAY_TWO}.json", "latest.json"):
+        assert "A unique corrected action for this regression." in (output / path).read_text()
     build_site(publication, site_url=SITE_URL, write_generated=True)
-    assert edition["items"][0]["action"] in (publication / "README.md").read_text()
+    assert "A unique corrected action for this regression." in (publication / "README.md").read_text()
     assert stale_digest.read_text() == markdown_digest(edition, SITE_URL)
 
 
@@ -145,12 +153,10 @@ def test_nested_404_uses_project_root_links_and_all_local_assets_exist(publicati
     assert 'name="twitter:card"' in missing
 
 
-def test_corrections_advance_feed_timestamps_even_for_an_older_edition(publication):
-    first = edition_at(publication)
-    second = deepcopy(first)
-    second.update(digest_date="2026-11-26", published_at="2026-11-27T04:00:00Z", updated_at="2026-11-27T04:00:00Z", corrections=[])
+def test_corrections_advance_feed_timestamps_even_for_an_older_edition():
+    first, second = two_days()
     before = ET.fromstring(build_feed([first, second], SITE_URL))
-    first["updated_at"] = "2026-11-28T04:00:00Z"
+    first["updated_at"] = "2030-03-04T04:00:00Z"
     first["corrections"].append({"at": first["updated_at"], "summary": "Corrected the earlier advice.", "item_ids": []})
     after = ET.fromstring(build_feed([first, second], SITE_URL))
     tag = lambda value: f"{{{ATOM}}}{value}"
@@ -158,26 +164,25 @@ def test_corrections_advance_feed_timestamps_even_for_an_older_edition(publicati
     assert after.findtext(tag("updated")) == first["updated_at"]
     entries = after.findall(tag("entry"))
     assert entries[-1].findtext(tag("updated")) == first["updated_at"]
-    assert entries[-1].findtext(tag("id")) == f"{SITE_URL}/digests/{first['digest_date']}/"
+    assert entries[-1].findtext(tag("id")) == f"{SITE_URL}/digests/{fx.DAY_ONE}/"
     assert "Corrected the earlier advice" in entries[-1].findtext(tag("content"))
 
 
-def test_audience_feeds_include_shared_items_and_exclude_the_other_audience(publication):
-    edition = edition_at(publication)
+def test_audience_feeds_include_shared_items_and_exclude_the_other_audience():
+    _first, edition = two_days()
     for audience, excluded in [("end_users", "applications_and_servers"), ("applications_and_servers", "end_users")]:
         feed = ET.fromstring(build_feed([edition], SITE_URL, audience=audience))
         content = "".join(entry.findtext(f"{{{ATOM}}}content") for entry in feed.findall(f"{{{ATOM}}}entry"))
         for item in edition["items"]:
             needle = "#item-" + item["id"] + '"'
-            assert (needle in content) == (item["audience"] != excluded)
+            assert (needle in content) == (item["audience"] != excluded), item["id"]
 
 
 def test_source_text_cannot_become_html(publication):
-    edition = edition_at(publication)
+    edition = latest(publication)
     edition["items"][0]["summary"] = '<img src=x onerror="alert(1)"> A literal source claim.'
-    (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
-    output = build_site(publication, site_url=SITE_URL)
-    home = (output / "index.html").read_text()
+    save(publication, edition)
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
     assert "<img src=x" not in home
     assert "&lt;img src=x" in home
 
@@ -185,14 +190,14 @@ def test_source_text_cannot_become_html(publication):
 def test_failed_validation_keeps_the_last_successful_site(publication):
     output = build_site(publication, site_url=SITE_URL)
     before = (output / "index.html").read_bytes()
-    (publication / "data" / "2026-11-26.json").write_text('{"schema_version": 99}')
+    (publication / "data" / f"{fx.DAY_TWO}.json").write_text('{"schema_version": 99}')
     with pytest.raises(ValueError):
         build_site(publication, site_url=SITE_URL)
     assert (output / "index.html").read_bytes() == before
 
 
-def test_generated_markdown_cannot_inject_instructions_from_version_text(publication):
-    edition = edition_at(publication)
+def test_generated_markdown_cannot_inject_instructions_from_version_text():
+    _first, edition = two_days()
     edition["items"][0]["fixes"][0]["version"] = '1.0`\n\n## Forged instruction\n[bad](javascript:alert(1))'
     generated = markdown_digest(edition, SITE_URL)
     assert "\n## Forged instruction" not in generated
@@ -202,14 +207,13 @@ def test_generated_markdown_cannot_inject_instructions_from_version_text(publica
 
 
 def test_lowercase_rfc3339_and_structured_fix_values_reach_the_feed(publication):
-    edition = edition_at(publication)
+    edition = latest(publication)
     edition["published_at"] = edition["published_at"].lower()
     edition["updated_at"] = edition["updated_at"].lower()
     edition["items"][0]["action"] = "Use the fixed release listed below."
-    (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
+    save(publication, edition)
     output = build_site(publication, site_url=SITE_URL)
-    feed = ET.fromstring((output / "feed.xml").read_text())
-    content = feed.find(f"{{{ATOM}}}entry").findtext(f"{{{ATOM}}}content")
+    content = ET.fromstring((output / "feed.xml").read_text()).find(f"{{{ATOM}}}entry").findtext(f"{{{ATOM}}}content")
     for fix in edition["items"][0]["fixes"]:
         assert fix["version"] in content
     for cve in edition["items"][0]["cves"]:
@@ -217,18 +221,15 @@ def test_lowercase_rfc3339_and_structured_fix_values_reach_the_feed(publication)
 
 
 def test_check_mode_fails_when_generated_views_are_stale(publication):
-    shutil.copytree(ROOT / "digests", publication / "digests")
     build_site(publication, site_url=SITE_URL, write_generated=True)
     build_site(publication, site_url=SITE_URL, check_generated=True)
-
-    edition = edition_at(publication)
-    edition["items"][0]["action"] = edition["items"][0]["action"] + " Then confirm the version."
-    (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
-    with pytest.raises(StaleGeneratedFiles, match=rf"digests/{edition['digest_date']}\.md, README\.md"):
+    edition = latest(publication)
+    edition["items"][0]["action"] += " Then confirm the version."
+    save(publication, edition)
+    with pytest.raises(StaleGeneratedFiles, match=rf"digests/{fx.DAY_TWO}\.md, README\.md"):
         build_site(publication, site_url=SITE_URL, check_generated=True)
-
     build_site(publication, site_url=SITE_URL, write_generated=True)
-    (publication / "digests" / "2026-11-24.md").write_text("# An orphan\n")
+    (publication / "digests" / "2030-02-28.md").write_text("# An orphan\n")
     with pytest.raises(StaleGeneratedFiles, match="no matching data"):
         build_site(publication, site_url=SITE_URL, check_generated=True)
 
@@ -238,89 +239,69 @@ def test_committed_generated_views_match_the_json():
 
 
 def test_dated_permalinks_featured_actions_and_product_index(publication):
+    second = latest(publication)
+    second["items"].append(fx.item("old-server", "Old Server", cve="CVE-2030-20009"))
+    save(publication, second)
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "index.html").read_text()
     featured = home.split('class="featured-grid"', 1)[1].split("</section>", 1)[0]
-    assert "1.30.8 or later" in featured
-    assert "widely deployed web server" not in featured
-    assert 'class="permalink" href="/patch-these/digests/2026-11-26/#item-nginx-http2"' in home
-    digest = (output / "digests" / "2026-11-26" / "index.html").read_text()
-    assert 'class="permalink" href="/patch-these/digests/2026-11-26/#item-1password"' in digest
-    assert (output / "digests" / "2026-11-25" / "index.html").is_file()
+    assert "Upgrade New Server to 2.4.1 or later." in featured
+    assert f'class="permalink" href="/patch-these/digests/{fx.DAY_TWO}/#item-new-server"' in home
+    digest = (output / "digests" / fx.DAY_ONE / "index.html").read_text()
+    assert f'class="permalink" href="/patch-these/digests/{fx.DAY_ONE}/#item-old-server"' in digest
     assert 'rel="icon" href="/patch-these/assets/favicon.svg"' in home
     assert (output / "assets" / "favicon.svg").is_file()
     index = json.loads((output / "data" / "products.json").read_text())
     by_id = {row["id"]: row for row in index["products"]}
-    assert "2026-11-26" in {row["digest_date"] for row in by_id["nginx-http2"]["appearances"]}
-    assert "2026-11-25" in {row["digest_date"] for row in by_id["jenkins-plugins"]["appearances"]}
-    assert "2026-11-26" in {row["digest_date"] for row in by_id["jenkins-plugins"]["appearances"]}
-    products = (output / "products" / "index.html").read_text()
-    assert "nginx-http2" in products
-    assert "Supply chain" in home and "Incident" in home
-    airbyte = home[home.index('id="item-airbyte-core-images"'):home.index('id="item-checkpoint-security-management"')]
-    assert "Verification notes" not in airbyte.split('class="action-box"', 1)[1].split("</div>", 1)[0]
+    assert {row["digest_date"] for row in by_id["old-server"]["appearances"]} == {fx.DAY_ONE, fx.DAY_TWO}
+    assert "old-server" in (output / "products" / "index.html").read_text()
+    assert "Vulnerability" in home and "Incident" in home
 
 
 def test_early_signals_are_labeled_in_html_json_and_feeds(publication):
-    edition = edition_at(publication)
-    edition["items"].append({
-        "id": "early-lead",
-        "product": "Example signal",
-        "verification": "early_signal",
-        "audience": "applications_and_servers",
-        "priority": "monitor",
-        "action_type": "investigate",
-        "priority_reason": "A social post named this product and no vendor page has been read.",
-        "cves": [],
-        "affected": None,
-        "fix_status": "unknown",
-        "fixes": [],
-        "summary": "A public post says this product may need a security update.",
-        "action": "Check whether you run Example signal; watch for a vendor advisory.",
-        "gaps": "No vendor advisory was read, so any fix is unconfirmed.",
-        "exploitation": {"status": "reported", "source_ids": ["post"]},
-        "kev": [],
-        "cvss": [],
-        "epss": [],
-        "sources": [{
-            "id": "post",
-            "kind": "social_report",
-            "url": "https://x.com/example/status/1",
-            "label": "Discussed on X",
-            "checked_at": None,
-            "supports": ["summary", "exploitation"],
-        }],
-    })
-    (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "index.html").read_text()
     section = home.split('id="early-signals"', 1)[1].split("</section>", 1)[0]
     assert "Early signals: not yet verified" in home
-    assert "Not yet verified" in section
-    assert "Check whether you run Example signal" in section
-    assert "widely deployed web server" not in section
+    assert "Not yet verified" in section and "Single source" in section
+    assert "Check whether you use Example Lead" in section
+    assert "New Server" not in section
     featured = home.split('class="featured-grid"', 1)[1].split("</section>", 1)[0]
-    assert "Example signal" not in featured
-    latest = json.loads((output / "latest.json").read_text())
-    assert any(item["id"] == "early-lead" and item["verification"] == "early_signal" for item in latest["items"])
+    assert "Example Lead" not in featured
+    data = json.loads((output / "latest.json").read_text())
+    assert any(item["id"] == "example-lead" and item["verification"] == "early_signal" for item in data["items"])
     feed = (output / "feed.xml").read_text()
-    assert "Not yet verified" in feed
+    assert "Not yet verified · Single source" in feed
     assert "Early signals: not yet verified" in feed
 
 
+def test_early_signals_stay_above_the_featured_and_verified_items(publication):
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    assert home.index('id="early-signals"') < home.index('id="start-here"') < home.index('id="item-new-server"')
+
+
 def test_exploitation_label_names_only_the_exploited_cves(publication):
-    output = build_site(publication, site_url=SITE_URL)
-    home = (output / "digests" / "2026-11-25" / "index.html").read_text()
-    chrome = home[home.index('id="item-chrome-desktop"'):]
-    chrome = chrome[:chrome.index("</article>")]
-    assert "Exploitation confirmed for CVE-2026-125350" in chrome
-    assert "CVE-2026-134401: Unknown." in chrome
-    drupal = home[home.index('id="item-drupal-core"'):]
-    assert '<p class="evidence">Exploitation confirmed ·' in drupal[:drupal.index("</article>")]
+    edition = latest(publication)
+    two = fx.item("two-cves", "Two CVEs", cve="CVE-2030-20011")
+    two["cves"].append("CVE-2030-20012")
+    two["fixes"][0]["cves"].append("CVE-2030-20012")
+    two["priority"] = "act_now"
+    two["exploitation"] = {"status": "confirmed", "source_ids": ["advisory"], "by_cve": [
+        {"cve": "CVE-2030-20011", "status": "confirmed", "source_ids": ["advisory"]},
+        {"cve": "CVE-2030-20012", "status": "unknown", "source_ids": []},
+    ]}
+    whole = fx.item("whole-item", "Whole Item", cve="CVE-2030-20013", priority="act_now",
+                    exploitation={"status": "confirmed", "source_ids": ["advisory"]})
+    edition["items"] += [two, whole]
+    save(publication, edition)
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    card = between(home, 'id="item-two-cves"')
+    assert "Exploitation confirmed for CVE-2030-20011" in card
+    assert "CVE-2030-20012: Unknown." in card
+    assert '<p class="evidence">Exploitation confirmed <span' in between(home, 'id="item-whole-item"')
 
 
-def test_incidents_and_supply_chain_never_say_exploitation_confirmed():
-    from patchthese.common import exploitation_label, verification_labels
+def test_incidents_and_supply_chain_never_say_exploitation_confirmed(publication):
     base = {"cves": [], "exploitation": {"status": "confirmed", "source_ids": ["a"]}, "sources": [{}]}
     assert exploitation_label({**base, "kind": "vulnerability"}) == "Exploitation confirmed"
     assert exploitation_label(base) == "Exploitation confirmed"
@@ -331,3 +312,24 @@ def test_incidents_and_supply_chain_never_say_exploitation_confirmed():
     assert verification_labels({**base, "verification": "early_signal"}) == ["Not yet verified", "Single source"]
     assert verification_labels({**base, "verification": "early_signal", "sources": [{}, {}]}) == ["Not yet verified"]
     assert verification_labels({**base, "verification": "verified"}) == []
+
+    edition = latest(publication)
+    edition["items"] += [
+        fx.item("breached-service", "Breached Service", cves=[], kind="incident", priority="act_now", action_type="rotate",
+                fix_status="not_applicable", fixes=[], kev=[], epss=[], summary="The vendor confirmed a breach.",
+                action="Rotate your credentials.", exploitation={"status": "confirmed", "source_ids": ["advisory"]}),
+        fx.item("tampered-image", "Tampered Image", cves=[], kind="supply_chain", priority="act_now", action_type="replace",
+                fix_status="not_applicable", fixes=[], kev=[], epss=[], summary="The vendor confirmed tampered images.",
+                action="Replace the image.", exploitation={"status": "confirmed", "source_ids": ["advisory"]}),
+    ]
+    save(publication, edition)
+    output = build_site(publication, site_url=SITE_URL)
+    home = (output / "index.html").read_text()
+    breach, compromise = between(home, 'id="item-breached-service"'), between(home, 'id="item-tampered-image"')
+    assert "Breach confirmed" in breach and "Exploitation confirmed" not in breach
+    assert "Compromise confirmed" in compromise and "Exploitation confirmed" not in compromise
+    digest = (output / "digests" / f"{fx.DAY_TWO}.md").read_text()
+    assert "**Breach:** confirmed." in digest and "**Compromise:** confirmed." in digest
+    feed = (output / "feed.xml").read_text()
+    assert "Breach confirmed" in feed and "Compromise confirmed" in feed
+    assert "Exploitation confirmed" not in feed

@@ -230,7 +230,7 @@ python scripts/check_links.py --report _reports/link-check.json
 
 `pytest` must pass. Link check: a confirmed 404 or 410 on a URL that was already in the repository stops the push. A 404 or 410 on a non-social source added in this edit is printed and does not stop the push. HTTP 401, 403, 429, 5xx, and network errors are inconclusive. Unauthenticated X responses are inconclusive. Do not treat a passing link check as proof of the claims. Put inconclusive notes in `gaps` or, when you opened a pull request, in the pull request. Do not put them in `summary` or `action`.
 
-The commit subject looks like `Update 2026-11-26 edition (15:15 PT run)`. The script then runs `git pull --rebase origin main` and pushes `main`.
+The commit subject looks like `Update 2026-11-26 edition (15:15 PT run)`. The script then runs `git pull --rebase origin main` and pushes `main`. If the push fails, the commit stays on the local `main`; run the same command again to retry. A rerun with no new edition changes still pushes any local commit that `origin/main` does not have yet, and it reports "Nothing to publish" only when there are no changes and `origin/main` already has every local commit. If the remote cannot be reached, it fails instead of reporting success.
 
 ## Pull request, merge, deploy
 
