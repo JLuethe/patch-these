@@ -259,6 +259,53 @@ def test_dated_permalinks_featured_actions_and_product_index(publication):
     assert "Verification notes" not in airbyte.split('class="action-box"', 1)[1].split("</div>", 1)[0]
 
 
+def test_early_signals_are_labeled_in_html_json_and_feeds(publication):
+    edition = edition_at(publication)
+    edition["items"].append({
+        "id": "early-lead",
+        "product": "Example signal",
+        "verification": "early_signal",
+        "audience": "applications_and_servers",
+        "priority": "monitor",
+        "action_type": "investigate",
+        "priority_reason": "A social post named this product and no vendor page has been read.",
+        "cves": [],
+        "affected": None,
+        "fix_status": "unknown",
+        "fixes": [],
+        "summary": "A public post says this product may need a security update.",
+        "action": "Check whether you run Example signal; watch for a vendor advisory.",
+        "gaps": "No vendor advisory was read, so any fix is unconfirmed.",
+        "exploitation": {"status": "reported", "source_ids": ["post"]},
+        "kev": [],
+        "cvss": [],
+        "epss": [],
+        "sources": [{
+            "id": "post",
+            "kind": "social_report",
+            "url": "https://x.com/example/status/1",
+            "label": "Discussed on X",
+            "checked_at": None,
+            "supports": ["summary", "exploitation"],
+        }],
+    })
+    (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
+    output = build_site(publication, site_url=SITE_URL)
+    home = (output / "index.html").read_text()
+    section = home.split('id="early-signals"', 1)[1].split("</section>", 1)[0]
+    assert "Early signals: not yet verified" in home
+    assert "Not yet verified" in section
+    assert "Check whether you run Example signal" in section
+    assert "widely deployed web server" not in section
+    featured = home.split('class="featured-grid"', 1)[1].split("</section>", 1)[0]
+    assert "Example signal" not in featured
+    latest = json.loads((output / "latest.json").read_text())
+    assert any(item["id"] == "early-lead" and item["verification"] == "early_signal" for item in latest["items"])
+    feed = (output / "feed.xml").read_text()
+    assert "Not yet verified" in feed
+    assert "Early signals: not yet verified" in feed
+
+
 def test_exploitation_label_names_only_the_exploited_cves(publication):
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "digests" / "2026-11-25" / "index.html").read_text()

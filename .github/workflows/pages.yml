@@ -1,4 +1,7 @@
 # Validate the JSON sources and generated site, then publish main to Pages.
+# The build job runs the tests and --check. Deploy needs that job, so a bad
+# direct push fails before anything is published. Feed-cache commits touch
+# only feeds/** and do not start this workflow.
 # One-time setup: Settings > Pages > Source: GitHub Actions.
 
 name: Pages
@@ -6,7 +9,11 @@ name: Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "feeds/**"
   pull_request:
+    paths-ignore:
+      - "feeds/**"
   workflow_dispatch:
 
 permissions: {}

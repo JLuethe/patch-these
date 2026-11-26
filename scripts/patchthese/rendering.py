@@ -8,7 +8,7 @@ from urllib.parse import urljoin, urlsplit
 import markdown
 import nh3
 
-from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, ordered_items, root_path, social_platform, timestamp
+from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, is_early_signal, ordered_items, root_path, social_platform, timestamp
 
 _CLEANER_OPTIONS = dict(
     tags={"p", "a", "strong", "em", "code", "pre", "ul", "ol", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "br", "table", "thead", "tbody", "tr", "th", "td"},
@@ -121,12 +121,13 @@ def item_card(item: dict, digest_date: str, site_url: str, *, interactive: bool 
     evidence = " · ".join(labels) or "Check the affected scope"
     kind = ITEM_KINDS.get(item.get("kind") or "", "")
     kind_label = f'<span class="item-kind">{escape(kind)}</span>' if kind else ""
+    unverified = '<span class="unverified-label">Not yet verified</span>' if is_early_signal(item) else ""
     gaps = item.get("gaps")
     notes = f'<p class="verification-notes"><strong>Verification notes:</strong> {escape(gaps)}</p>' if gaps else ""
     permalink = escape(root_path(site_url, f"digests/{digest_date}/#item-{item['id']}"))
     watch = f'<button class="watch-button js-only" type="button" data-watch-id="{item_id}" aria-pressed="false" aria-label="Save {product} to my products"><span class="watch-label">Save product</span></button>' if interactive else ""
     return f'''<article class="briefing-item" id="item-{item_id}" data-product="{escape(item['product'].lower())}" data-product-id="{item_id}" data-audience="{item['audience']}" data-priority="{item['priority']}" data-search="{escape(search)}">
-<header class="item-header"><div class="item-heading"><div class="item-meta">{urgency(item)}{kind_label}<span class="action-type">{ACTIONS[item['action_type']]}</span></div><h3>{product}</h3></div>{watch}</header>
+<header class="item-header"><div class="item-heading"><div class="item-meta">{unverified}{urgency(item)}{kind_label}<span class="action-type">{ACTIONS[item['action_type']]}</span></div><h3>{product}</h3></div>{watch}</header>
 <p class="evidence">{escape(evidence)} <span aria-hidden="true">·</span> {AUDIENCES[item['audience']]}</p>
 <p class="item-summary">{escape(item['summary'])}</p>
 <div class="action-box"><strong>What to do</strong><p>{escape(item['action'])}</p></div>
@@ -167,11 +168,27 @@ def filters(total: int) -> str:
 <form class="filters js-only" id="filters" role="search"><div class="filter-field"><label for="search">Find your software</label><input id="search" type="search" placeholder="Product, CVE, or keyword" autocomplete="off"></div><div class="filter-field"><label for="audience">Show updates for</label><select id="audience"><option value="all">Everyone</option><option value="end_users">My computer</option><option value="applications_and_servers">Apps &amp; servers</option></select></div><div class="filter-field"><label for="urgency">Urgency</label><select id="urgency"><option value="all">All priorities</option><option value="act_now">Act now</option><option value="act_soon">Act soon</option><option value="monitor">Monitor</option></select></div><div class="filter-actions"><button id="watchlist-toggle" type="button" aria-pressed="false">My saved products <span id="saved-count">0</span></button><button id="clear-filters" type="button">Clear filters</button></div></form><p id="watchlist-status" class="sr-only" role="status"></p><p id="no-results" class="notice" hidden>No matching updates. Try another product or clear your filters. This is a curated briefing; a missing product does not mean it is unaffected.</p></section>'''
 
 
+def early_signals(edition: dict, site_url: str) -> str:
+    items = [item for item in ordered_items(edition) if is_early_signal(item)]
+    if not items:
+        return ""
+    cards = "".join(item_card(item, edition["digest_date"], site_url) for item in items)
+    return (
+        '<section class="early-signals" aria-labelledby="early-signals">'
+        '<div class="section-heading"><div><p class="eyebrow">Hot off the press</p>'
+        '<h2 id="early-signals">Early signals: not yet verified</h2></div></div>'
+        '<p class="muted">These leads are not confirmed. Do not patch from this section. A later correction promotes a lead in place once a primary source confirms it.</p>'
+        f'<div class="early-grid">{cards}</div></section>'
+    )
+
+
 def featured(edition: dict) -> str:
     by_id = {item["id"]: item for item in edition["items"]}
     cards = []
     for index, item_id in enumerate(edition["featured_item_ids"], 1):
         item = by_id[item_id]
+        if is_early_signal(item):
+            continue
         cards.append(f'<a class="featured-card" href="#item-{escape(item_id)}"><span class="featured-number">0{index}</span>{urgency(item)}<h3>{escape(item["product"])}</h3><p>{escape(item["action"])}</p><span class="featured-action">{ACTIONS[item["action_type"]]} <span aria-hidden="true">↗</span></span></a>')
     if not cards:
         return ""
@@ -188,15 +205,17 @@ def corrections(edition: dict) -> str:
 
 def briefing_body(edition: dict, site_url: str, *, latest: bool) -> str:
     items = ordered_items(edition)
-    now = sum(item["priority"] == "act_now" for item in items)
-    soon = sum(item["priority"] == "act_soon" for item in items)
+    verified = [item for item in items if not is_early_signal(item)]
+    now = sum(item["priority"] == "act_now" for item in verified)
+    soon = sum(item["priority"] == "act_soon" for item in verified)
     href = lambda value: escape(root_path(site_url, value))
-    cards = "".join(item_card(item, edition["digest_date"], site_url) for item in items)
+    cards = "".join(item_card(item, edition["digest_date"], site_url) for item in verified)
     edition_notes = f'<p class="verification-notes"><strong>Verification notes:</strong> {escape(edition["gaps"])}</p>' if edition.get("gaps") else ""
+    signals = early_signals(edition, site_url)
     if not cards:
         cards = '<p class="notice">No new verified items in this edition. This does not establish that your software has no outstanding updates.</p>'
-    return f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">{'Latest briefing' if latest else 'From the archive'} <span aria-hidden="true">/</span> <time datetime="{edition['digest_date']}">{human_date(edition['digest_date'])}</time></p><h1>Know what needs<br>your attention.</h1><p class="hero-intro">Security updates, in plain English.<br>Find your software. Understand the risk. Take the next step.</p><div class="hero-meta"><span>Covers {coverage(edition)}</span><span>Updated {human_time(edition['updated_at'])}</span></div></div><div class="edition-stats" aria-label="Edition summary"><div class="stat"><strong>{len(items):02d}</strong><span>items in this briefing</span></div><div class="stat"><strong>{now:02d}</strong><span>act now, if affected</span></div><div class="stat"><strong>{soon:02d}</strong><span>act soon</span></div></div></section>
-<p class="notice" id="freshness-note" hidden></p>{corrections(edition)}{edition_notes}{featured(edition)}{filters(len(items))}
+    return f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">{'Latest briefing' if latest else 'From the archive'} <span aria-hidden="true">/</span> <time datetime="{edition['digest_date']}">{human_date(edition['digest_date'])}</time></p><h1>Know what needs<br>your attention.</h1><p class="hero-intro">Security updates, in plain English.<br>Find your software. Understand the risk. Take the next step.</p><div class="hero-meta"><span>Covers {coverage(edition)}</span><span>Updated {human_time(edition['updated_at'])}</span></div></div><div class="edition-stats" aria-label="Edition summary"><div class="stat"><strong>{len(verified):02d}</strong><span>items in this briefing</span></div><div class="stat"><strong>{now:02d}</strong><span>act now, if affected</span></div><div class="stat"><strong>{soon:02d}</strong><span>act soon</span></div></div></section>
+<p class="notice" id="freshness-note" hidden></p>{corrections(edition)}{edition_notes}{signals}{featured(edition)}{filters(len(verified))}
 <div class="content-grid"><div class="briefing-list">{cards}</div><aside class="briefing-sidebar" aria-label="Reading the briefing"><section class="sidebar-card"><p class="eyebrow">Keep it relevant</p><h2>A smaller reading list.</h2><p>Use the filters to find your software. Save products to keep your own list on this browser.</p><p class="muted">Product selection is a reading preference, not a scan of your installed software.</p></section><section class="sidebar-card"><p class="eyebrow">How to read this</p><h2>Urgency ≠ a patch.</h2><p><strong>Act now</strong><br>Prioritize action if your installation is affected.</p><p><strong>Act soon</strong><br>Plan the recommended update or mitigation.</p><p><strong>Monitor</strong><br>Follow developments; the next step may change.</p><p>No patch can mean mitigate or replace. Check the affected scope and the source.</p><a href="{href('methodology/')}">Read our method ↗</a></section><section class="sidebar-card"><p class="eyebrow">Stay in the loop</p><h2>Choose your feed.</h2><p>All updates, personal software, or apps and servers. Read in your preferred feed reader.</p><a href="{href('subscribe/')}">Subscribe to an Atom feed ↗</a></section></aside></div>
 <p class="sidecar"><a href="{href('data/' + edition['digest_date'] + '.json')}">This edition as JSON</a> · <a href="{href('digests/' + edition['digest_date'] + '.md')}">Generated Markdown</a></p>'''
 

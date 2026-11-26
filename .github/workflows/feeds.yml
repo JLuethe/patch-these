@@ -1,0 +1,45 @@
+# Refresh the discovery cache. This is not an edition and it does not deploy the site.
+
+name: Discovery feeds
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: discovery-feeds
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch public discovery feeds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/fetch_feeds.py
+
+      - name: Commit the cache when it changed
+        run: |
+          git add feeds/cache
+          if git diff --cached --quiet; then
+            echo "Feed cache unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update the discovery feed cache"
+          git push

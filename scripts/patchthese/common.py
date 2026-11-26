@@ -107,6 +107,11 @@ def exploitation_label(item: dict) -> str | None:
     return f"{label} for {len(scoped)} of {len(item['cves'])} CVEs"
 
 
+def is_early_signal(item: dict) -> bool:
+    """An unverified lead. Omitted verification means the item is verified."""
+    return item.get("verification") == "early_signal"
+
+
 def for_audience(item: dict, audience: str | None) -> bool:
     return audience is None or item["audience"] in {audience, "both"}
 

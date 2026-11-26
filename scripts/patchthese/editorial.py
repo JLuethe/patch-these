@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from urllib.parse import quote
 
-from .common import ACTIONS, AUDIENCES, PRIORITIES, coverage, human_date, human_time, ordered_items
+from .common import ACTIONS, AUDIENCES, PRIORITIES, coverage, human_date, human_time, is_early_signal, ordered_items
 
 GENERATED_START = "<!-- BEGIN GENERATED EDITION -->"
 GENERATED_END = "<!-- END GENERATED EDITION -->"
@@ -44,14 +44,19 @@ def markdown_digest(edition: dict, site_url: str) -> str:
         rows += ["", "## Start here, if you use these", "", "These are starting points, not the only urgent items. Check the full list for your software.", ""]
         for item in featured:
             rows += [f"- **{md_text(item['product'])}:** {md_text(item['action'])}"]
+    signals = [item for item in ordered_items(edition) if is_early_signal(item)]
+    if signals:
+        rows += ["", "## Early signals: not yet verified", "", "These leads are not confirmed. Do not patch from this section.", ""]
+        for item in signals:
+            rows += [f"- **Not yet verified. {md_text(item['product'])}:** {md_text(item['action'])}"]
     for priority, label in PRIORITIES.items():
-        items = [item for item in ordered_items(edition) if item["priority"] == priority]
+        items = [item for item in ordered_items(edition) if item["priority"] == priority and not is_early_signal(item)]
         if not items:
             continue
         rows += ["", f"## {label}"]
         for item in items:
             kind = {"vulnerability": "Vulnerability", "incident": "Incident", "supply_chain": "Supply chain"}.get(item.get("kind") or "")
-            lead = " · ".join(part for part in (kind, ACTIONS[item["action_type"]], AUDIENCES[item["audience"]]) if part)
+            lead = " · ".join(part for part in (("Not yet verified" if is_early_signal(item) else ""), kind, ACTIONS[item["action_type"]], AUDIENCES[item["audience"]]) if part)
             rows += ["", f"### {md_text(item['product'])}", "", f"**{lead}**", "", md_text(item["summary"]), "", f"**What to do:** {md_text(item['action'])}", "", f"**Why:** {md_text(item['priority_reason'])}", "", f"**Applies to:** {md_text(item['affected'] or 'Affected versions not confirmed. Check the advisory before deciding whether this applies to your installation.')}"]
             if item.get("gaps"):
                 rows += ["", f"**Verification notes:** {md_text(item['gaps'])}"]
@@ -90,12 +95,18 @@ def readme_block(edition: dict, site_url: str) -> str:
     rows = [GENERATED_START, f"## Latest edition — {human_date(edition['digest_date'])}", "", f"[Read the briefing]({site_url}/) · [Full Markdown digest](digests/{edition['digest_date']}.md) · [Structured data](data/{edition['digest_date']}.json)", "", f"Coverage: {coverage(edition)}. Updated: {human_time(edition['updated_at'])}."]
     for audience, label in [("end_users", "For everyone"), ("applications_and_servers", "For app and server owners")]:
         rows += ["", f"### {label}", ""]
-        relevant = ordered_items(edition, audience)
+        relevant = [item for item in ordered_items(edition, audience) if not is_early_signal(item)]
         if not relevant:
             rows += ["No items for this audience in this edition."]
         for item in relevant:
             url = f"{site_url}/digests/{edition['digest_date']}/#item-{item['id']}"
             rows += [f"- **[{md_text(item['product'])}]({md_url(url)}) — {PRIORITIES[item['priority']]} / {ACTIONS[item['action_type']]}:** {md_text(item['action'])}"]
+    signals = [item for item in ordered_items(edition) if is_early_signal(item)]
+    if signals:
+        rows += ["", "### Early signals: not yet verified", ""]
+        for item in signals:
+            url = f"{site_url}/digests/{edition['digest_date']}/#item-{item['id']}"
+            rows += [f"- **Not yet verified. [{md_text(item['product'])}]({md_url(url)}):** {md_text(item['action'])}"]
     rows += ["", GENERATED_END]
     return "\n".join(rows)
 

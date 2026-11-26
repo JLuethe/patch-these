@@ -251,6 +251,70 @@ def test_social_report_rejects_a_url_that_is_not_a_status(edition, url):
         validate_payload(edition)
 
 
+def _early_signal(edition):
+    from copy import deepcopy
+    signal = deepcopy(edition["items"][0])
+    signal.update(
+        id="early-lead",
+        verification="early_signal",
+        action_type="investigate",
+        fix_status="unknown",
+        fixes=[],
+        priority="monitor",
+        priority_reason="A social post named this product and no vendor page has been read.",
+        cves=[],
+        affected=None,
+        summary="A public post says Example service may need a security update.",
+        action="Check whether you run Example service; watch for a vendor advisory.",
+        gaps="No vendor advisory was read, so the affected range and any fix are unconfirmed.",
+        exploitation={"status": "unknown", "source_ids": []},
+        kev=[],
+        cvss=[],
+        epss=[],
+        sources=[{
+            "id": "post",
+            "kind": "social_report",
+            "url": "https://x.com/example/status/1",
+            "label": "Discussed on X",
+            "checked_at": None,
+            "supports": ["summary"],
+        }],
+    )
+    edition["items"].append(signal)
+    return signal
+
+
+def test_early_signal_allows_a_social_lead_and_rejects_a_patch_or_feature(edition):
+    signal = _early_signal(edition)
+    validate_payload(edition)
+    signal["exploitation"]["status"] = "reported"
+    signal["exploitation"]["source_ids"] = ["post"]
+    signal["sources"][0]["supports"].append("exploitation")
+    validate_payload(edition)
+    edition["featured_item_ids"] = ["early-lead"]
+    with pytest.raises(ValidationError, match="cannot be featured"):
+        validate_payload(edition)
+    edition["featured_item_ids"] = ["example-service"]
+    signal["action_type"] = "update"
+    signal["fix_status"] = "available"
+    signal["sources"][0]["supports"].append("fixes")
+    signal["fixes"] = [{"component": "Example", "version": "2.0", "platform": None, "branch": None, "cves": [], "source_ids": ["post"]}]
+    with pytest.raises(ValidationError, match="cannot recommend a patch"):
+        validate_payload(edition)
+
+
+def test_early_signal_cannot_claim_confirmed_exploitation_or_omit_gaps(edition):
+    signal = _early_signal(edition)
+    signal["exploitation"] = {"status": "confirmed", "source_ids": ["post"]}
+    signal["sources"][0]["supports"].append("exploitation")
+    with pytest.raises(ValidationError, match="confirmed exploitation"):
+        validate_payload(edition)
+    signal["exploitation"] = {"status": "unknown", "source_ids": []}
+    signal["gaps"] = "  "
+    with pytest.raises(ValidationError):
+        validate_payload(edition)
+
+
 def test_kind_and_gaps_are_optional_and_a_bad_kind_fails(edition):
     validate_payload(edition)
     edition["gaps"] = "One vendor page did not render."
