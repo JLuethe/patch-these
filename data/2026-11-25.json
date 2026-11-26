@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-23",
   "coverage_end": "2026-11-25",
   "published_at": "2026-11-26T04:37:59Z",
-  "updated_at": "2026-11-26T07:20:00Z",
+  "updated_at": "2026-11-26T07:21:00Z",
   "corrections": [
     {
       "at": "2026-11-26T05:22:22Z",
@@ -47,12 +47,32 @@
         "bytebase-dbhub-mcp",
         "idunno-anticsrf"
       ]
+    },
+    {
+      "at": "2026-11-26T07:21:00Z",
+      "summary": "Bluesky and Mastodon discovery added six items (linux-nfsd, ghostscript, hex-pm, java-se, wp-connect-plugins, cisco-expressway) and a Drupal follow-on fix (drupal-core, CVE-2026-136716). New social posts were also linked on azure-api-management-classic, chrome-desktop, firefox-thunderbird, geoserver, jenkins-plugins, idunno-anticsrf, and monai-label. Jenkins CVE identifiers named only in social posts were not added. A related Ash claim was not published. Wordfence pages were not marked checked.",
+      "item_ids": [
+        "drupal-core",
+        "linux-nfsd",
+        "ghostscript",
+        "hex-pm",
+        "java-se",
+        "wp-connect-plugins",
+        "cisco-expressway",
+        "azure-api-management-classic",
+        "chrome-desktop",
+        "firefox-thunderbird",
+        "geoserver",
+        "jenkins-plugins",
+        "idunno-anticsrf",
+        "monai-label"
+      ]
     }
   ],
   "featured_item_ids": [
     "chrome-desktop",
-    "drupal-core",
-    "vmware-vcenter"
+    "java-se",
+    "drupal-core"
   ],
   "items": [
     {
@@ -227,6 +247,26 @@
             "fixes",
             "exploitation"
           ]
+        },
+        {
+          "id": "bsky-asherwolf",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/asherwolf.bsky.social/post/3n36hvmoc2s2o",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-beyondmachines",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@beyondmachines1/117676264475136395",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
         }
       ]
     },
@@ -236,11 +276,12 @@
       "audience": "applications_and_servers",
       "priority": "act_now",
       "action_type": "update",
-      "priority_reason": "CISA KEV listing and potential site takeover require prompt action on affected installations.",
+      "priority_reason": "Vendor confirms in-the-wild exploitation of a second installer access-bypass; sites already on the 017 fixes can still be affected and must install later releases and run update.php.",
       "cves": [
-        "CVE-2026-132165"
+        "CVE-2026-132165",
+        "CVE-2026-136716"
       ],
-      "affected": "<10.6.22 || >=11.0.0 <11.3.22 || >=11.4.0 <11.4.13; unsupported release lines require migration to a supported branch.",
+      "affected": "CVE-2026-132165: <10.6.22 || >=11.0.0 <11.3.22 || >=11.4.0 <11.4.13. CVE-2026-136716: <10.6.23 || >=11.0.0 <11.3.23 || >=11.4.0 <11.4.14. Unsupported lines have no security coverage. Sites that already secured the installer are not vulnerable to CVE-2026-136716, per the advisory. It may not be visible in the UI whether a site is in the affected state.",
       "fix_status": "available",
       "fixes": [
         {
@@ -278,14 +319,67 @@
           "source_ids": [
             "drupal-advisory"
           ]
+        },
+        {
+          "component": "Drupal core",
+          "version": "10.6.23",
+          "platform": null,
+          "branch": "10.6",
+          "cves": [
+            "CVE-2026-136716"
+          ],
+          "source_ids": [
+            "drupal-sa-core-2026-019"
+          ]
+        },
+        {
+          "component": "Drupal core",
+          "version": "11.3.23",
+          "platform": null,
+          "branch": "11.3",
+          "cves": [
+            "CVE-2026-136716"
+          ],
+          "source_ids": [
+            "drupal-sa-core-2026-019"
+          ]
+        },
+        {
+          "component": "Drupal core",
+          "version": "11.4.14",
+          "platform": null,
+          "branch": "11.4",
+          "cves": [
+            "CVE-2026-136716"
+          ],
+          "source_ids": [
+            "drupal-sa-core-2026-019"
+          ]
         }
       ],
-      "summary": "An installer weakness can allow a Drupal site takeover. Drupal rates the issue Highly critical, and CISA lists it as exploited. Unsupported release lines have no security fix.",
-      "action": "Update to 10.6.22, 11.3.22, or 11.4.13. Lock down /core/install.php and keep settings.php unwritable. End-of-life lines have no fix.",
+      "summary": "An installer weakness, CVE-2026-132165, can allow a Drupal site takeover. Drupal rates that issue Highly critical, and CISA lists it as exploited. SA-CORE-2026-019 is a follow-on installer access-bypass, CVE-2026-136716, which the vendor says is being exploited. Drupal rates that advisory Highly critical 21/25, which is not a CVSS score. Sites already on the 017 fixes can still be affected. Unsupported lines have no fix.",
+      "action": "Update to 10.6.23, 11.3.23, or 11.4.14, then run update.php (an update hook must run). Lock down /core/install.php and keep settings.php unwritable. Check logs for unauthorized access, especially unexpected use of user 1, and confirm user 1's email. End-of-life lines have no fix.",
       "exploitation": {
         "status": "confirmed",
         "source_ids": [
-          "cisa-kev"
+          "cisa-kev",
+          "drupal-sa-core-2026-019"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-132165",
+            "status": "confirmed",
+            "source_ids": [
+              "cisa-kev"
+            ]
+          },
+          {
+            "cve": "CVE-2026-136716",
+            "status": "confirmed",
+            "source_ids": [
+              "drupal-sa-core-2026-019"
+            ]
+          }
         ]
       },
       "kev": [
@@ -295,6 +389,14 @@
           "date_added": "2026-11-24",
           "source_ids": [
             "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-136716",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev-feed"
           ]
         }
       ],
@@ -338,6 +440,63 @@
             "cves",
             "kev",
             "exploitation"
+          ]
+        },
+        {
+          "id": "drupal-sa-core-2026-019",
+          "kind": "vendor_advisory",
+          "url": "https://www.drupal.org/sa-core-2026-019",
+          "label": "Drupal SA-CORE-2026-019",
+          "checked_at": "2026-11-26T06:28:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "fixes",
+            "summary",
+            "action",
+            "exploitation",
+            "fix_status"
+          ]
+        },
+        {
+          "id": "cisa-kev-feed",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "kev",
+            "cves"
+          ]
+        },
+        {
+          "id": "bsky-unnchain",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/unnchain.bsky.social/post/3n36suitqth26",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-ssvc",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@ssvc/117678796758735310",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-abijita",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/abijita.bsky.social/post/3n363hw7gfy2m",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
           ]
         }
       ]
@@ -652,6 +811,26 @@
             "summary",
             "exploitation"
           ]
+        },
+        {
+          "id": "mastodon-cloud",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@cloud/117680984907911585",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-dailytech",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/thedailytechfeed.com/post/3n35ataielk2h",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
         }
       ]
     },
@@ -877,6 +1056,26 @@
             "kev",
             "exploitation"
           ]
+        },
+        {
+          "id": "bsky-suriq",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/suriq.io/post/3n36w2sqnx72r",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-suriq",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@suriq/117681030581045484",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
         }
       ]
     },
@@ -1031,6 +1230,26 @@
             "action",
             "exploitation",
             "fix_status"
+          ]
+        },
+        {
+          "id": "bsky-hacker",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/hacker.at.thenote.app/post/3n367cm2f5k25",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-cyberseckyle",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@cyberseckyle/117672661091581492",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
           ]
         }
       ]
@@ -1267,6 +1486,16 @@
             "action",
             "fixes"
           ]
+        },
+        {
+          "id": "mastodon-aakl",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@AAKL/117672546225209092",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
         }
       ]
     },
@@ -1433,6 +1662,26 @@
             "action",
             "fixes"
           ]
+        },
+        {
+          "id": "bsky-trustlist",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/trustlist.bsky.social/post/3n367gesydu2c",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-securityonline",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/securityonline.bsky.social/post/3n36eulnj4322",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
         }
       ]
     },
@@ -1594,6 +1843,16 @@
             "action",
             "fix_status",
             "exploitation"
+          ]
+        },
+        {
+          "id": "bsky-itstck",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/itstck.com/post/3n36yonygyt24",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
           ]
         }
       ]
@@ -2183,6 +2442,1085 @@
             "cves",
             "kev",
             "exploitation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "linux-nfsd",
+      "product": "Linux kernel NFS server (nfsd)",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "Unauthenticated remote kernel memory corruption in nfsd, CVSS 9.8, with upstream fixed releases available. Hosts that do not run an NFS server are not affected.",
+      "cves": [
+        "CVE-2026-99362"
+      ],
+      "affected": "Linux kernel nfsd from 3.16 before the fixed release on each branch, per the kernel.org CVE record. Red Hat: only systems that export NFSv4.1 or NFSv4.2; systems that do not run an NFS server are not exposed. Default RHEL configs do not enable nfsd. Ubuntu's tracker, last updated 25 November 2026, still listed current Ubuntu releases as vulnerable with work in progress. No Ubuntu package versions are named here.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Linux kernel",
+          "version": "5.10.275",
+          "platform": null,
+          "branch": "5.10",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "5.15.226",
+          "platform": null,
+          "branch": "5.15",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.1.193",
+          "platform": null,
+          "branch": "6.1",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.6.163",
+          "platform": null,
+          "branch": "6.6",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.12.117",
+          "platform": null,
+          "branch": "6.12",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.18.61",
+          "platform": null,
+          "branch": "6.18",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "7.3.2",
+          "platform": null,
+          "branch": "7.3",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "7.4-rc1",
+          "platform": null,
+          "branch": "mainline",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        }
+      ],
+      "summary": "A flaw in the in-kernel NFS server's session reply handling can let a remote, unauthenticated client corrupt kernel memory. Fixed upstream. Confirm the distribution kernel actually includes the fix. Hosts that do not run an NFS server are not affected.",
+      "action": "Install a kernel that includes the fix (the upstream versions above, or a distribution kernel that names this CVE) and reboot. If a vendor kernel is not yet available, Red Hat's mitigation is to stop or disable nfs-server if it is not needed, or restrict port 2049 to trusted networks.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-99362",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev-feed"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-99362",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "kernel.org",
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "cve": "CVE-2026-99362",
+          "score": 9.3,
+          "version": "4.0",
+          "authority": "Ubuntu",
+          "source_ids": [
+            "ubuntu-99362"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-99362",
+          "probability": 0.00755,
+          "score_date": "2026-11-25",
+          "source_ids": [
+            "epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "cve-99362",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-99362",
+          "label": "CVE-2026-99362 (kernel.org CNA)",
+          "checked_at": "2026-11-26T06:31:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "fixes",
+            "cvss",
+            "fix_status"
+          ]
+        },
+        {
+          "id": "nvd-99362",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-99362",
+          "label": "NVD CVE-2026-99362",
+          "checked_at": "2026-11-26T06:27:00Z",
+          "supports": [
+            "cves",
+            "cvss",
+            "summary"
+          ]
+        },
+        {
+          "id": "ubuntu-99362",
+          "kind": "vendor_advisory",
+          "url": "https://ubuntu.com/security/cve-2026-99362",
+          "label": "Ubuntu CVE-2026-99362",
+          "checked_at": "2026-11-26T06:29:00Z",
+          "supports": [
+            "affected",
+            "cvss",
+            "summary"
+          ]
+        },
+        {
+          "id": "redhat-99362",
+          "kind": "vendor_advisory",
+          "url": "https://access.redhat.com/security/cve/cve-2026-99362",
+          "label": "Red Hat CVE-2026-99362",
+          "checked_at": "2026-11-26T06:27:00Z",
+          "supports": [
+            "summary",
+            "action",
+            "affected"
+          ]
+        },
+        {
+          "id": "epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-99362",
+          "label": "FIRST EPSS for CVE-2026-99362",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "cisa-kev-feed",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "bsky-ytroncal",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/ytroncal.bsky.social/post/3n36yokhhi22u",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-glonce",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/glonce.com/post/3n36ujchhud2q",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-benoit",
+          "kind": "social_report",
+          "url": "https://mastodon.benoit.jp.net/@benoit/117680298949193877",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ghostscript",
+      "product": "Artifex Ghostscript",
+      "audience": "applications_and_servers",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "Public details of a sandbox bypass that can run commands when untrusted documents are rendered; a fix is available, and no in-the-wild exploitation was reported in the sources checked.",
+      "cves": [
+        "CVE-2026-125396"
+      ],
+      "affected": "Ghostscript before 10.08.0, per the official CVE list and NVD. Applications that call Ghostscript, including via ImageMagick or Pillow, can be exposed. Distribution packages may backport the fix without changing the reported version; confirm the package names this CVE.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Ghostscript",
+          "version": "10.08.0",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-125396"
+          ],
+          "source_ids": [
+            "ghostscript-cve-index",
+            "nvd-125396"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-125396 is a Ghostscript sandbox bypass that can run commands when untrusted documents are rendered. A fix is available in 10.08.0. Sophos, writing on 23 November 2026, was not aware of public reports of in-the-wild exploitation.",
+      "action": "Update Ghostscript to 10.08.0 or a distribution package that fixes CVE-2026-125396, including copies bundled in document-conversion, preview, and print services. Until then, avoid passing untrusted PostScript, EPS, or PDF to Ghostscript. Sophos notes that -dSAFER alone does not protect against this issue.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-125396",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev-feed"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-125396",
+          "score": 8.5,
+          "version": "4.0",
+          "authority": "VulnCheck",
+          "source_ids": [
+            "nvd-125396"
+          ]
+        },
+        {
+          "cve": "CVE-2026-125396",
+          "score": 7.8,
+          "version": "3.1",
+          "authority": "VulnCheck",
+          "source_ids": [
+            "nvd-125396"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-125396",
+          "probability": 0.00439,
+          "score_date": "2026-11-25",
+          "source_ids": [
+            "epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "ghostscript-cve-index",
+          "kind": "vendor_advisory",
+          "url": "https://ghostscript.com/releases/cve/index.html",
+          "label": "Artifex Ghostscript CVE index",
+          "checked_at": "2026-11-26T06:31:00Z",
+          "supports": [
+            "cves",
+            "fixes",
+            "fix_status"
+          ]
+        },
+        {
+"id": "nvd-125396",
+        "kind": "cve_record",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-125396",
+        "label": "NVD CVE-2026-125396",
+        "checked_at": "2026-11-26T06:27:00Z",
+        "supports": [
+          "cves",
+          "affected",
+          "cvss",
+          "summary",
+          "fixes",
+          "fix_status"
+        ]
+        },
+        {
+          "id": "sophos-sa-20261123-upload2shell",
+          "kind": "vendor_advisory",
+          "url": "https://www.sophos.com/en-us/security-advisories/sophos-sa-20261123-upload2shell",
+          "label": "Sophos SA-20261123-upload2shell",
+          "checked_at": "2026-11-26T06:28:00Z",
+          "supports": [
+            "summary",
+            "action",
+            "exploitation",
+            "affected"
+          ]
+        },
+        {
+          "id": "epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-125396",
+          "label": "FIRST EPSS for CVE-2026-125396",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "cisa-kev-feed",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "bsky-karenit",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/karenit.net/post/3n33xa6wsog2w",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-beyondmachines-gs",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@beyondmachines1/117676736382050188",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-karenit",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@karenit/117674343275286158",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hex-pm",
+      "product": "Hex.pm",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "rotate",
+      "priority_reason": "The vendor confirmed unauthenticated remote code execution was used against hex.pm on 23 November 2026; the hosted service is patched, but users should rotate credentials and self-hosted servers must be updated.",
+      "cves": [
+        "CVE-2026-129514"
+      ],
+      "affected": "hex.pm service versions from 2016-02-23 before 2026-11-23, per the GitHub advisory and vendor blog. Self-hosted hexpm before commit 379b0a29bcc95164249f38ad7d772a37a8ff9533.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "hexpm (self-hosted)",
+          "version": "2026-11-23 (379b0a29bcc95164249f38ad7d772a37a8ff9533)",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-129514"
+          ],
+          "source_ids": [
+            "hex-incident",
+            "ghsa-9pmm-hf4r-27pg"
+          ]
+        }
+      ],
+      "summary": "Hex.pm says an unauthenticated vulnerability was used against the registry on 23 November 2026. The vendor deployed a fix for the hosted service by 18:31 UTC that day. The vendor found no evidence of unauthorized package modifications or database writes, and could not rule out database reads of emails, password hashes, API key hashes, 2FA secrets, and sessions. Not in the CISA KEV catalog as of catalogVersion 2026.11.25.",
+      "action": "Change the hex.pm password and reset 2FA at hex.pm/dashboard/security: set up a new authenticator app and store new recovery codes. Until a new Hex client with a rotated registry signing system ships, fetch packages only from repo.hex.pm, not third-party mirrors. Treat unexpected email claiming to be from Hex with care. Operators of self-hosted hexpm must update to the 23 November build.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "hex-incident"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-129514",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev-feed"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-129514",
+          "score": 10.0,
+          "version": "4.0",
+          "authority": "Erlang Ecosystem Foundation",
+          "source_ids": [
+            "ghsa-9pmm-hf4r-27pg"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-129514",
+          "probability": 0.01652,
+          "score_date": "2026-11-25",
+          "source_ids": [
+            "epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "hex-incident",
+          "kind": "vendor_advisory",
+          "url": "https://hex.pm/blog/security-incident-on-hexpm",
+          "label": "Security incident on hex.pm",
+          "checked_at": "2026-11-26T06:28:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "summary",
+            "action",
+            "exploitation",
+            "fix_status",
+            "fixes"
+          ]
+        },
+        {
+          "id": "ghsa-9pmm-hf4r-27pg",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/hexpm/hexpm/security/advisories/GHSA-9pmm-hf4r-27pg",
+          "label": "GHSA-9pmm-hf4r-27pg",
+          "checked_at": "2026-11-26T06:28:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "fixes",
+            "exploitation",
+            "cvss"
+          ]
+        },
+        {
+          "id": "nvd-129514",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-129514",
+          "label": "NVD CVE-2026-129514",
+          "checked_at": "2026-11-26T06:27:00Z",
+          "supports": [
+            "cves",
+            "summary"
+          ]
+        },
+        {
+          "id": "epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-129514",
+          "label": "FIRST EPSS for CVE-2026-129514",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "cisa-kev-feed",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "mastodon-ssvc-hex",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@ssvc/117677486871245788",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "java-se",
+      "product": "Java SE / OpenJDK",
+      "audience": "both",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "CISA issued an urgent patching alert for an unauthenticated memory-corruption bug in the x86-64 HotSpot Base64 decoder; EPSS is high (0.59). Not in KEV.",
+      "cves": [
+        "CVE-2026-114938"
+      ],
+      "affected": "OpenJDK advisory: CVE-2026-114938 is marked against releases 17, 21, 25, and 27 only. Red Hat: the vulnerable path was introduced in OpenJDK 17.0.6; OpenJDK 8 and 11 do not contain it. Exploitation requires an x86-64 CPU with AVX-512 VBMI (avx512f, avx512bw, avx512vbmi, bmi2). ARM64 and x86-64 CPUs without AVX-512 VBMI are not known to be affected. Oracle/NVD affected builds: Oracle Java SE 8u511b33-perf (Enterprise Performance Pack only), 17.0.21.0.3, 21.0.13.0.3, 25.0.5.0.3, and 27.0.1.0.3; Oracle GraalVM for JDK 17.0.21.0.3 and 21.0.13.0.3; Oracle GraalVM Enterprise Edition 21.3.20.0.3. The same 17 November 2026 OpenJDK advisory also fixes CVE-2026-114939 through CVE-2026-114947 and OpenJFX CVE-2026-86144. Several of those do affect 8 and 11. This edition does not add per-CVE details for that set.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "OpenJDK",
+          "version": "8u514",
+          "platform": null,
+          "branch": "8",
+          "cves": [
+            "CVE-2026-114938"
+          ],
+          "source_ids": [
+            "openjdk-vuln-announce"
+          ]
+        },
+        {
+          "component": "OpenJDK",
+          "version": "11.0.33.1",
+          "platform": null,
+          "branch": "11",
+          "cves": [
+            "CVE-2026-114938"
+          ],
+          "source_ids": [
+            "openjdk-vuln-announce"
+          ]
+        },
+        {
+          "component": "OpenJDK",
+          "version": "17.0.21.1",
+          "platform": null,
+          "branch": "17",
+          "cves": [
+            "CVE-2026-114938"
+          ],
+          "source_ids": [
+            "openjdk-vuln-announce"
+          ]
+        },
+        {
+          "component": "OpenJDK",
+          "version": "21.0.13.1",
+          "platform": null,
+          "branch": "21",
+          "cves": [
+            "CVE-2026-114938"
+          ],
+          "source_ids": [
+            "openjdk-vuln-announce"
+          ]
+        },
+        {
+          "component": "OpenJDK",
+          "version": "25.0.5.1",
+          "platform": null,
+          "branch": "25",
+          "cves": [
+            "CVE-2026-114938"
+          ],
+          "source_ids": [
+            "openjdk-vuln-announce"
+          ]
+        },
+        {
+          "component": "OpenJDK",
+          "version": "27.0.1.1",
+          "platform": null,
+          "branch": "27",
+          "cves": [
+            "CVE-2026-114938"
+          ],
+          "source_ids": [
+            "openjdk-vuln-announce"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-114938 is an unauthenticated memory-corruption bug in the x86-64 HotSpot Base64 decoder. CISA urged immediate patching on 17 November 2026 and did not state confirmed in-the-wild use. The CVE is not in the KEV catalog. Red Hat says public research demonstrated working exploits against applications in default configurations; that is not recorded here as confirmed in-the-wild exploitation. Oracle/OpenJDK score it CVSS 3.1 8.1. Red Hat scores 9.8 with a low attack-complexity vector.",
+      "action": "Inventory JDKs and runtimes, including those bundled in apps and containers. Update to the fixed OpenJDK builds (8u514, 11.0.33.1, 17.0.21.1, 21.0.13.1, 25.0.5.1, 27.0.1.1) or apply the Oracle November 2026 Critical Security Patch Update, prioritizing internet-facing systems. Exact Oracle patch build strings beyond the affected versions were not extracted. If you cannot patch immediately, CISA recommends restricting and validating Base64 input, enforcing input-size limits, and limiting unauthenticated access. Red Hat points to bulletin RHSB-2026-018 for a detailed mitigation procedure. The Red Hat CVE page does not list the JVM flag.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-114938",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev-feed"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-114938",
+          "score": 8.1,
+          "version": "3.1",
+          "authority": "secalert_us@oracle.com",
+          "source_ids": [
+            "openjdk-advisory-2026-11-17"
+          ]
+        },
+        {
+          "cve": "CVE-2026-114938",
+          "score": 9.8,
+          "version": "3.0",
+          "authority": "Red Hat",
+          "source_ids": [
+            "redhat-114938"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-114938",
+          "probability": 0.59265,
+          "score_date": "2026-11-25",
+          "source_ids": [
+            "epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "cisa-java-alert",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/news-events/alerts/2026/11/17/critical-java-vulnerability-requires-immediate-patching",
+          "label": "CISA alert, 17 November 2026",
+          "checked_at": "2026-11-26T06:29:00Z",
+          "supports": [
+            "cves",
+            "summary",
+            "action"
+          ]
+        },
+        {
+          "id": "openjdk-advisory-2026-11-17",
+          "kind": "vendor_advisory",
+          "url": "https://openjdk.org/groups/vulnerability/advisories/2026-11-17",
+          "label": "OpenJDK vulnerability advisory, 17 November 2026",
+          "checked_at": "2026-11-26T06:32:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "cvss",
+            "summary"
+          ]
+        },
+        {
+          "id": "openjdk-vuln-announce",
+          "kind": "vendor_advisory",
+          "url": "https://mail.openjdk.org/archives/list/vuln-announce@openjdk.org/message/345FU6B7ISFZQJ3PYYWO7KOPUGR7WVFJ/",
+          "label": "OpenJDK vuln-announce, 17 November 2026",
+          "checked_at": "2026-11-26T06:31:00Z",
+          "supports": [
+            "fixes",
+            "fix_status",
+            "cves"
+          ]
+        },
+        {
+          "id": "oracle-cspu-nov2026",
+          "kind": "vendor_advisory",
+          "url": "https://www.oracle.com/security-alerts/cspunov2026.html",
+          "label": "Oracle November 2026 Critical Security Patch Update",
+          "checked_at": "2026-11-26T06:31:00Z",
+          "supports": [
+            "action",
+            "cves"
+          ]
+        },
+        {
+          "id": "redhat-114938",
+          "kind": "vendor_advisory",
+          "url": "https://access.redhat.com/security/cve/cve-2026-114938",
+          "label": "Red Hat CVE-2026-114938",
+          "checked_at": "2026-11-26T06:32:12Z",
+          "supports": [
+            "affected",
+            "cvss",
+            "summary"
+          ]
+        },
+        {
+          "id": "nvd-114938",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-114938",
+          "label": "NVD CVE-2026-114938",
+          "checked_at": "2026-11-26T06:27:00Z",
+          "supports": [
+            "cves",
+            "summary"
+          ]
+        },
+        {
+          "id": "epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-114938",
+          "label": "FIRST EPSS for CVE-2026-114938",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "cisa-kev-feed",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "bsky-errorbudget",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/errorbudget.bsky.social/post/3n34sh26jhn22",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-errorbudget",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@errorbudget/117676272071892096",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wp-connect-plugins",
+      "product": "WP connect WordPress plugins",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "replace",
+      "priority_reason": "The CVE describes a supply-chain backdoor in specific plugin releases, with no patch; the only remedy is to uninstall those releases and inspect the site. In-the-wild exploitation was not established in the sources that could be read.",
+      "cves": [
+        "CVE-2026-135202"
+      ],
+      "affected": "NVD references name these tagged releases: air-wp-sync 2.9.4; wp-sync-for-notion 1.7.4; addon-gravityforms-sendinblue-free 2.6.3; add-on-cf7-for-airtable 2.5.4; add-on-cf7-for-notion 1.6.4; orders-sync-to-airtable-for-woocommerce 1.0.2. Third-party notes also list Air WP Sync 2.9.1 through 2.9.3. The Wordfence CNA page was not opened, so that extra range is not confirmed from the CNA write-up.",
+      "fix_status": "unavailable",
+      "fixes": [],
+      "summary": "CVE-2026-135202 describes a supply-chain backdoor in specific releases of six WP connect WordPress plugins: Orders Sync to Airtable for WooCommerce; Add-On for Contact Form 7 to Notion; WP Sync for Notion; Add-On for Contact Form 7 to Airtable; Add-on Brevo for Gravity Forms; and Air WP Sync. NVD/CNA says the plugins were closed on WordPress.org and no patched versions are available. In-the-wild exploitation was not established in the sources read for this edition. A social figure of 3,600 sites was not used; it tracks install base, and secondary reporting says a WordPress.org release hold blocked public distribution.",
+      "action": "Uninstall the affected plugin versions and run a full site scan. If indicators from the CVE record are present (the module includes/airwp-online.php, traffic to tascredit-pay.com, unexpected WP-Cron hooks, or new PHP files under uploads), treat the site as compromised and rotate credentials and API keys. Do not wait for a vendor update.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-135202",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev-feed"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-135202",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "security@wordfence.com",
+          "source_ids": [
+            "nvd-135202"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-135202",
+          "probability": 0.02672,
+          "score_date": "2026-11-25",
+          "source_ids": [
+            "epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "nvd-135202",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-135202",
+          "label": "NVD CVE-2026-135202",
+          "checked_at": "2026-11-26T06:27:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "summary",
+            "action",
+            "cvss",
+            "fix_status"
+          ]
+        },
+        {
+          "id": "kyberkit-135202",
+          "kind": "researcher_report",
+          "url": "https://kyberkit.com/en/articles/wp-connect-plugins-backdoor-cve-2026-135202",
+          "label": "Kyberkit, third-party note on CVE-2026-135202",
+          "checked_at": "2026-11-26T06:32:12Z",
+          "supports": [
+            "affected",
+            "summary"
+          ]
+        },
+        {
+          "id": "codelake-clr-2026-3762",
+          "kind": "researcher_report",
+          "url": "https://research.codelake.dev/advisories/clr-2026-3762/",
+          "label": "CodeLake CLR-2026-3762, third-party note",
+          "checked_at": "2026-11-26T06:32:12Z",
+          "supports": [
+            "affected",
+            "summary"
+          ]
+        },
+        {
+          "id": "epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-135202",
+          "label": "FIRST EPSS for CVE-2026-135202",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "cisa-kev-feed",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "bsky-aman",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/aman179102.bsky.social/post/3n34oofe76c24",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-infosecbriefly",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/infosecbriefly.bsky.social/post/3n34k5ecv372l",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cisco-expressway",
+      "product": "Cisco Expressway Series",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "CISA added this to KEV on 20 November 2026 (federal due date 23 November). Only clustered deployments are affected. A fix is available; Cisco says there is no workaround.",
+      "cves": [
+        "CVE-2026-76466"
+      ],
+      "affected": "Clustered Cisco Expressway-C and Expressway-E, virtual and appliance, running a vulnerable release: X15.5.3 and earlier. X14 and earlier must migrate to a fixed release. Non-clustered deployments are not described as affected.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Cisco Expressway",
+          "version": "X15.5.20",
+          "platform": null,
+          "branch": "X15.5",
+          "cves": [
+            "CVE-2026-76466"
+          ],
+          "source_ids": [
+            "cisco-sa-vcs-static-cred-hr7ewz8t"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-76466 affects clustered Cisco Expressway-C and Expressway-E. CISA added it to the KEV catalog on 2026-11-20, with a catalog due date of 2026-11-23. Cisco says there is no workaround, and on 23 November 2026 said Cisco does not have direct evidence of active exploitation. This edition records exploitation as reported from the KEV listing, not as vendor-confirmed.",
+      "action": "Upgrade clustered Expressway-C and Expressway-E to X15.5.20 or later. X14 and earlier must migrate to a fixed release; Cisco does not name a specific X14 patch here.",
+      "exploitation": {
+        "status": "reported",
+        "source_ids": [
+          "cisa-kev-feed"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-76466",
+          "listed": true,
+          "date_added": "2026-11-20",
+          "source_ids": [
+            "cisa-kev-feed"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-76466",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "psirt@cisco.com",
+          "source_ids": [
+            "cisco-sa-vcs-static-cred-hr7ewz8t"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-76466",
+          "probability": 0.01116,
+          "score_date": "2026-11-25",
+          "source_ids": [
+            "epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "cisco-sa-vcs-static-cred-hr7ewz8t",
+          "kind": "vendor_advisory",
+          "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t",
+          "label": "Cisco SA cisco-sa-vcs-static-cred-hr7EWZ8t",
+          "checked_at": "2026-11-26T06:31:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "fixes",
+            "summary",
+            "action",
+            "exploitation",
+            "fix_status",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev-feed",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "kev",
+            "cves",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "nvd-76466",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-76466",
+          "label": "NVD CVE-2026-76466",
+          "checked_at": "2026-11-26T06:27:00Z",
+          "supports": [
+            "cves",
+            "summary"
+          ]
+        },
+        {
+          "id": "epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-76466",
+          "label": "FIRST EPSS for CVE-2026-76466",
+          "checked_at": "2026-11-26T06:26:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "bsky-captech",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/captechgroup.com/post/3n32of7yh452b",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-captech",
+          "kind": "social_report",
+          "url": "https://mastodon.social/@CapTechGroup/117671502734671829",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
           ]
         }
       ]
