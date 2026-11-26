@@ -98,3 +98,17 @@ def test_build_cache_writes_wake_rows_once(tmp_path):
     assert build_cache(cache, token=None, now=later + timedelta(minutes=30), fetcher=fetcher, products_path=products, wake_body=body) == 0
     assert json.loads((cache / "wake.json").read_text())["rows"] == []
     assert not body.exists()
+
+
+def test_feeds_workflow_keeps_the_test_wake_separate_from_scheduled_runs():
+    from pathlib import Path
+    import re
+    text = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "feeds.yml").read_text()
+    steps = {match.group(1): match.group(2) for match in re.finditer(r"- name: ([^\n]+)\n((?:        [^\n]*\n|\n)*)", text)}
+    for name in ("Restore the cache from the feed-cache branch", "Fetch public discovery feeds",
+                 "Publish the cache to the feed-cache branch", "Wake the editorial routine for new KEV entries or covered-vendor advisories"):
+        assert steps[name].startswith("        if: ${{ !inputs.test_wake }}\n")
+    test_step = steps["Send a test wake (manual test_wake runs only)"]
+    assert test_step.startswith("        if: ${{ inputs.test_wake }}\n")
+    assert '{"reason":"test","total":0,"rows":[]}' in test_step and "woken" not in test_step
+    assert "-K \"$RUNNER_TEMP/wake-curl.conf\"" in test_step and "echo \"$WAKE_SECRET" not in test_step

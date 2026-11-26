@@ -9,6 +9,12 @@
 #   PATCH_THESE_WAKE_URL     the webhook URL
 #   PATCH_THESE_WAKE_SECRET  sent as "Authorization: Bearer <secret>"
 # Without both, the step logs a notice and skips. A row wakes the routine once.
+#
+# Test the wake path by hand: run this workflow with test_wake=true. That run
+# skips the fetch and the cache entirely (nothing is read from or written to
+# feed-cache, woken.json is untouched) and POSTs {"reason":"test","total":0,"rows":[]}
+# with the same secrets. It logs the HTTP status and fails if the POST fails
+# or either secret is missing. Scheduled runs never take this path.
 
 name: Discovery feeds
 
@@ -16,6 +22,11 @@ on:
   schedule:
     - cron: "*/30 * * * *"
   workflow_dispatch:
+    inputs:
+      test_wake:
+        description: "Only send a test wake (reason: test); skip the fetch and the cache"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -42,6 +53,7 @@ jobs:
         run: python -m pip install -r requirements.txt
 
       - name: Restore the cache from the feed-cache branch
+        if: ${{ !inputs.test_wake }}
         run: |
           mkdir -p "$RUNNER_TEMP/feed-cache"
           if git fetch --depth=1 origin feed-cache; then
@@ -52,11 +64,13 @@ jobs:
           fi
 
       - name: Fetch public discovery feeds
+        if: ${{ !inputs.test_wake }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/fetch_feeds.py --output "$RUNNER_TEMP/feed-cache" --wake-body "$RUNNER_TEMP/wake-body.json"
 
       - name: Publish the cache to the feed-cache branch
+        if: ${{ !inputs.test_wake }}
         env:
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
@@ -75,6 +89,7 @@ jobs:
           git push --force origin "$commit:refs/heads/feed-cache"
 
       - name: Wake the editorial routine for new KEV entries or covered-vendor advisories
+        if: ${{ !inputs.test_wake }}
         env:
           WAKE_URL: ${{ secrets.PATCH_THESE_WAKE_URL }}
           WAKE_SECRET: ${{ secrets.PATCH_THESE_WAKE_SECRET }}
@@ -97,3 +112,28 @@ jobs:
             echo "::warning title=Wake failed::The wake POST failed; the rows stay in wake.json for the next scheduled run."
           fi
           rm -f "$RUNNER_TEMP/wake-curl.conf"
+
+      - name: Send a test wake (manual test_wake runs only)
+        if: ${{ inputs.test_wake }}
+        env:
+          WAKE_URL: ${{ secrets.PATCH_THESE_WAKE_URL }}
+          WAKE_SECRET: ${{ secrets.PATCH_THESE_WAKE_SECRET }}
+        run: |
+          if [ -z "$WAKE_URL" ] || [ -z "$WAKE_SECRET" ]; then
+            echo "::error title=Test wake failed::PATCH_THESE_WAKE_URL or PATCH_THESE_WAKE_SECRET is not set."
+            exit 1
+          fi
+          printf 'header = "Authorization: Bearer %s"\n' "$WAKE_SECRET" > "$RUNNER_TEMP/wake-curl.conf"
+          set +e
+          status=$(curl -sS --max-time 20 -X POST -H "Content-Type: application/json" \
+            -K "$RUNNER_TEMP/wake-curl.conf" --data-binary '{"reason":"test","total":0,"rows":[]}' \
+            -o /dev/null -w '%{http_code}' "$WAKE_URL" 2>/dev/null)
+          code=$?
+          set -e
+          rm -f "$RUNNER_TEMP/wake-curl.conf"
+          echo "Test wake HTTP status: ${status:-none} (curl exit $code)"
+          if [ "$code" -ne 0 ] || [ "${status:-0}" -lt 200 ] || [ "${status:-0}" -ge 300 ]; then
+            echo "::error title=Test wake failed::The test wake POST failed (HTTP ${status:-none}, curl exit $code)."
+            exit 1
+          fi
+          echo "::notice title=Test wake sent::The webhook accepted the test wake (HTTP $status)."
