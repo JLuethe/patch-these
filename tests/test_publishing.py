@@ -370,3 +370,15 @@ def test_verified_items_keep_primary_sources_first_on_the_card(publication):
     home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
     sources_line = between(home, 'id="item-new-server"').split('<p class="sources">', 1)[1].split("</p>", 1)[0]
     assert "vendor.example/advisory" in sources_line and "x.com/example/status/99" not in sources_line
+
+
+def test_a_quiet_check_is_shown_separately_from_the_last_content_change(publication):
+    edition = latest(publication)
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    assert "Last checked" not in home
+    edition["last_checked_at"] = f"{fx.DAY_TWO}T22:00:00Z"
+    save(publication, edition)
+    home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    meta = home.split('class="hero-meta"', 1)[1].split("</div>", 1)[0]
+    assert "Updated 2 Mar 2030 · 6:00 AM PST" in meta
+    assert "Last checked 2 Mar 2030 · 2:00 PM PST" in meta

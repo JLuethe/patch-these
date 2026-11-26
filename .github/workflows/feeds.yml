@@ -1,4 +1,7 @@
 # Refresh the discovery cache. This is not an edition and it does not deploy the site.
+# The cache lives on the feed-cache branch, one force-pushed commit with
+# latest.json, kev-new.json, kev-seen.json and status.json at its root.
+# Nothing is committed to main.
 
 name: Discovery feeds
 
@@ -31,19 +34,35 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
 
+      - name: Restore the cache from the feed-cache branch
+        run: |
+          mkdir -p "$RUNNER_TEMP/feed-cache"
+          if git fetch --depth=1 origin feed-cache; then
+            git archive FETCH_HEAD | tar -x -C "$RUNNER_TEMP/feed-cache"
+            git rev-parse 'FETCH_HEAD^{tree}' > "$RUNNER_TEMP/previous-tree"
+          else
+            echo "::notice::No feed-cache branch yet; starting a new cache."
+          fi
+
       - name: Fetch public discovery feeds
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python scripts/fetch_feeds.py
+        run: python scripts/fetch_feeds.py --output "$RUNNER_TEMP/feed-cache"
 
-      - name: Commit the cache when it changed
+      - name: Publish the cache to the feed-cache branch
+        env:
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
         run: |
-          git add feeds/cache
-          if git diff --cached --quiet; then
+          export GIT_INDEX_FILE="$RUNNER_TEMP/feed-cache.index"
+          rm -f "$GIT_INDEX_FILE"
+          git --work-tree="$RUNNER_TEMP/feed-cache" add -A .
+          tree=$(git write-tree)
+          if [ -f "$RUNNER_TEMP/previous-tree" ] && [ "$tree" = "$(cat "$RUNNER_TEMP/previous-tree")" ]; then
             echo "Feed cache unchanged."
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Update the discovery feed cache"
-          git push
+          commit=$(git commit-tree "$tree" -m "Discovery feed cache $(date -u +%Y-%m-%dT%H:%M:%SZ)")
+          git push --force origin "$commit:refs/heads/feed-cache"

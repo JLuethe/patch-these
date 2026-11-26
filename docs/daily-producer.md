@@ -15,12 +15,13 @@ The main job of each run is finding new things on X, Bluesky and Mastodon, espec
 ## Each run
 
 1. Scan X, Bluesky and Mastodon for posts since the previous run, newest first. For each credible new lead, publish a verified item if a quick look finds a primary source that confirms it. Otherwise publish it right away as `verification: "early_signal"`. Do not hold a lead back while chasing confirmation; a later run can promote it.
-2. Read `feeds/cache/latest.json` and `feeds/cache/kev-new.json` from the latest `main`. Those rows are discovery leads and can confirm or promote an early signal. A fact in the edition still has to come from the primary source the row links to. The cache does not establish a version, a score, or exploitation.
+2. Read the feed cache from the `feed-cache` branch (not `main`): `git fetch origin feed-cache`, then `git show origin/feed-cache:latest.json`, `git show origin/feed-cache:kev-new.json`, and `git show origin/feed-cache:status.json` to see which sources are stale. Those rows are discovery leads and can confirm or promote an early signal. A fact in the edition still has to come from the primary source the row links to. The cache does not establish a version, a score, or exploitation.
 3. Recheck a prior Act now or Act soon item only when the cache, CISA KEV, or a social post shows a relevant change for that item's product or CVE, such as a new advisory or release from that vendor, a new KEV entry, or a report of a new fix or exploitation. Then reopen the primary vendor page, and if a newer security fix exists or the advice changed, publish a correction on that prior edition. Do not re-read every vendor page on every run. The 6 AM run does one full recheck of the most recent edition's Act now and Act soon items when time allows.
 4. Promote an early signal to `verified` under the same item id once a primary source confirms the facts, and append a `corrections` entry that says what was confirmed.
 5. If `data/YYYY-MM-DD.json` already exists for today's America/Los_Angeles date, update that file. Do not create a second file for the same day. Revise or add items, keep `digest_date` and `published_at`, advance `updated_at`, and append one `corrections` entry that says what this run changed. Each correction's `at` must be later than the previous correction and no later than `updated_at`.
 6. The first run of a new America/Los_Angeles calendar day creates that day's file. A quiet day still gets a valid empty edition.
 7. Publish an ordinary update with `python scripts/publish_direct.py data/YYYY-MM-DD.json` from a checkout of `main`. Use a pull request instead when the change touches the schema or these rules, or when you are not sure.
+8. A run that finds nothing new may set the edition's optional `last_checked_at` to the current UTC time and publish it with `publish_direct.py`. Leave `updated_at` and `corrections` alone, because nothing a reader sees changed except the "Last checked" line. Skip this if you would rather save the Pages run; the field is optional.
 
 ## Cost
 
@@ -240,15 +241,26 @@ Use a pull request for a schema change, a change to this document, or an item yo
 
 Squash-merge only after that build is green. Then watch the Pages run on `main`. The build job and the deploy job both need to succeed. A failed build does not deploy. Open https://jluethe.github.io/patch-these/ and confirm the new edition's date, the lead actions you wrote, and that the correction text is present when you edited an old edition.
 
-A direct publish skips the pull request. Pages still builds `main` after the push, runs the same tests and `--check`, and deploys only if that build succeeds. Commits that only update `feeds/cache/` do not start Pages.
+A direct publish skips the pull request. Pages still builds `main` after the push, runs the same tests and `--check`, and deploys only if that build succeeds. The feed cache lives on the `feed-cache` branch, so cache refreshes never create commits on `main` and never start Pages.
 
 If deploy fails because Pages is not set to GitHub Actions, stop and report that. Do not invent a second fix.
 
 ## Discovery cache
 
-`.github/workflows/feeds.yml` refreshes `feeds/cache/` about every 30 minutes. `latest.json` keeps leads from the last 72 hours. `kev-new.json` lists CISA KEV entries that were not in the previous catalog snapshot. The first run only records the catalog that already existed, so the historical catalog is not treated as new. Rows have `source`, `id`, `title`, `url`, `published`, `cves`, and `fetched_at`.
+`.github/workflows/feeds.yml` refreshes the cache about every 30 minutes and force-pushes it as a single commit to the `feed-cache` branch. Nothing is committed to `main`. Read it with:
 
-Included feeds, confirmed by a direct request: CISA KEV JSON, Microsoft MSRC update-guide RSS, Chrome Releases, the Mozilla security blog, Cisco PSIRT, Fortinet PSIRT, Palo Alto security advisories, Ubuntu USN, the Arch Linux advisory Atom feed, Jenkins advisories, GitHub reviewed advisories at critical and high severity, and Hacker News stories whose titles mention CVE, zero-day, or patch. The Hacker News row points at the discussion on news.ycombinator.com, not the outbound link.
+```bash
+git fetch origin feed-cache
+git show origin/feed-cache:latest.json
+git show origin/feed-cache:kev-new.json
+git show origin/feed-cache:status.json
+```
+
+`status.json` has one record per source with `last_ok` (the last successful fetch, carried forward when a fetch fails), `last_attempt`, `last_error`, and `tracked_since`. A source with no success for more than 24 hours gets a `::warning::` annotation on the workflow run. One feed being down does not fail the job; the job fails only when no source at all can be fetched. A failed source keeps its previous rows in `latest.json` until they age out. Treat a stale source's vendor as needing a direct check.
+
+`latest.json` keeps leads from the last 72 hours. `kev-new.json` lists CISA KEV entries that were not in the previous catalog snapshot. The first run only records the catalog that already existed, so the historical catalog is not treated as new. Rows have `source`, `id`, `title`, `url`, `published`, `cves`, and `fetched_at`.
+
+Included feeds, confirmed by a direct request: CISA KEV JSON, Microsoft MSRC update-guide RSS, Chrome Releases, the Mozilla security blog, Cisco PSIRT, Fortinet PSIRT, Palo Alto security advisories, Ubuntu USN, the Arch Linux advisory Atom feed, Jenkins advisories, GitHub reviewed advisories at critical and high severity, and Hacker News stories whose titles mention a CVE id from this year or last year (built from the current date), zero-day, or patch. The Hacker News row points at the discussion on news.ycombinator.com, not the outbound link.
 
 Not included, because a direct request did not produce a usable feed: nginx.org security advisories (no feed), Apple security-release RSS candidates (HTML, not a feed), the Mozilla MFSA feed URL (404; the security blog is used instead), the Arch tracker JSON (no publication dates; the Atom feed from the same tracker is used), and the OSV API (it needs a package name and has no confirmed recent-list endpoint). GitHub's reviewed advisories cover critical and high npm and PyPI issues that GitHub has published.
 

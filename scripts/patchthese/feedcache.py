@@ -250,3 +250,41 @@ def content_signature(items: list[dict]) -> list[tuple]:
         (item["source"], item["id"], item["title"], item["url"], item.get("published"), tuple(item.get("cves") or []))
         for item in items
     )
+
+
+STALE_AFTER = timedelta(hours=24)
+
+
+def hn_cve_years(now: datetime) -> list[int]:
+    """CVE id years to search on Hacker News: this year and last year.
+
+    CVE ids carry the year they were reserved, so last year's ids keep
+    appearing well into the new year. Both are always searched.
+    """
+    return [now.year, now.year - 1]
+
+
+def update_source_status(previous: dict, ok: list[str], failed: dict[str, str], fetched_at: str) -> dict:
+    """Per-source health. last_ok carries forward when a source fails this run."""
+    sources = {name: dict(record) for name, record in (previous.get("sources") or {}).items()}
+    for name in ok:
+        record = sources.setdefault(name, {"tracked_since": fetched_at})
+        record.update(last_ok=fetched_at, last_attempt=fetched_at, last_error=None)
+    for name, error in failed.items():
+        record = sources.setdefault(name, {"tracked_since": fetched_at, "last_ok": None})
+        record.setdefault("last_ok", None)
+        record.update(last_attempt=fetched_at, last_error=error)
+    return {"checked_at": fetched_at, "stale_after_hours": int(STALE_AFTER.total_seconds() // 3600), "sources": {key: sources[key] for key in sorted(sources)}}
+
+
+def stale_sources(status: dict, now: datetime, *, after: timedelta = STALE_AFTER) -> list[tuple[str, str | None]]:
+    """Sources whose last success (or tracking start, if never) is older than `after`."""
+    stale = []
+    for name, record in (status.get("sources") or {}).items():
+        reference = record.get("last_ok") or record.get("tracked_since")
+        if not reference:
+            continue
+        stamp = datetime.fromisoformat(reference.replace("Z", "+00:00"))
+        if now - stamp > after:
+            stale.append((name, record.get("last_ok")))
+    return stale

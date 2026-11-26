@@ -35,6 +35,10 @@
     "updated_at": {
       "$ref": "#/$defs/timestamp"
     },
+    "last_checked_at": {
+      "description": "Optional. When an editorial run last checked for news for this edition, even if nothing changed. A quiet run may advance it without touching updated_at. Must not precede published_at.",
+      "$ref": "#/$defs/timestamp"
+    },
     "corrections": {
       "type": "array",
       "items": {
@@ -567,4 +571,3 @@
     }
   }
 }
-

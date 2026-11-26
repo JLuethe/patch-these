@@ -395,3 +395,11 @@ def test_early_signal_from_one_social_post_stays_valid_in_new_editions(edition):
     signal["sources"][0]["supports"].append("exploitation")
     with pytest.raises(ValidationError, match="cannot support exploitation"):
         validate_payload(edition)
+
+
+def test_last_checked_at_is_optional_and_cannot_precede_publication(edition):
+    edition["last_checked_at"] = "2026-11-26T09:00:00Z"
+    validate_payload(edition)
+    edition["last_checked_at"] = "2026-11-26T03:00:00Z"
+    with pytest.raises(ValidationError, match="last_checked_at must not precede published_at"):
+        validate_payload(edition)

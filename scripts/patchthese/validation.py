@@ -235,6 +235,8 @@ def validate_payload(payload: dict, expected_date: str | None = None) -> None:
     published = _time(payload["published_at"])
     updated = _time(payload["updated_at"])
     _require(published <= updated, "updated_at must not precede published_at")
+    if payload.get("last_checked_at") is not None:
+        _require(published <= _time(payload["last_checked_at"]), "last_checked_at must not precede published_at")
     # The editorial date and UTC publication date need not match across timezones.
 
     ids = [item["id"] for item in payload["items"]]

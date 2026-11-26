@@ -94,7 +94,7 @@ The check runs weekly rather than on every pull request so network availability 
 
 The **Pages** workflow runs the tests and `python scripts/build_site.py --check` in the build job. The deploy job needs that build, so a bad push to `main` fails before the site is published. Pull requests are built with read-only repository permissions. A successful push to `main` deploys through a separate job with Pages and identity-token permissions. Commits that only change `feeds/**` do not start Pages. Pull-request runs have separate concurrency groups and cannot cancel production deployment. Official actions are pinned to verified commit SHAs; review upstream releases before updating the pins.
 
-`feeds/cache/` is a discovery cache written by the **Discovery feeds** workflow. A row there is a lead. The edition still cites the primary source that supports each fact.
+The `feed-cache` branch holds the discovery cache written by the **Discovery feeds** workflow (`git fetch origin feed-cache && git show origin/feed-cache:latest.json`). It is not committed to `main`. A row there is a lead. The edition still cites the primary source that supports each fact.
 
 GitHub Pages must use GitHub Actions as its source: **Settings → Pages → Build and deployment → Source: GitHub Actions**. After enabling it, merge the reviewed change and check deployment. If an earlier deployment failed because Pages was not enabled, rerun Pages after fixing that setting.
 

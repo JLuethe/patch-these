@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 _reports/
 .pytest_cache/
+# The discovery cache lives on the feed-cache branch, not main.
+feeds/cache/
