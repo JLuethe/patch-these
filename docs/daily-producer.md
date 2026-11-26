@@ -6,21 +6,25 @@ Ordinary updates are committed straight to `main` by `scripts/publish_direct.py`
 
 ## Cadence
 
-Run about every 2 hours from 6 AM through 10 PM America/Los_Angeles, every day. Keep each run short. History is still one dated page per calendar day.
+Run about every 4 hours, at 6 AM, 10 AM, 2 PM, 6 PM and 10 PM America/Los_Angeles, every day. Keep each run short. History is still one dated page per calendar day.
+
+## Focus
+
+The main job of each run is finding new things on X, Bluesky and Mastodon, especially very fresh posts that are not validated yet, and publishing them quickly as early signals. Rechecking older items is secondary and driven by the discovery cache. An older item may go stale between checks; readers can research further from its sources.
 
 ## Each run
 
-1. Read `feeds/cache/latest.json` and `feeds/cache/kev-new.json` from the latest `main`. Those rows are discovery leads. A fact in the edition still has to come from the primary source the row links to. The cache does not establish a version, a score, or exploitation.
-2. Recheck the most recent edition's Act now and Act soon items. Reopen each primary vendor page. If a newer security fix exists or the advice changed, publish a correction on that prior edition before you write today's new items.
-3. Do a quick social scan for anything newer than the cache and the previous run.
-4. Put a new credible lead in the edition as `verification: "early_signal"` when a primary source has not confirmed it yet. Promote that same item id to `verified` once a primary source confirms the facts, and append a `corrections` entry that says what was confirmed.
+1. Scan X, Bluesky and Mastodon for posts since the previous run, newest first. For each credible new lead, publish a verified item if a quick look finds a primary source that confirms it. Otherwise publish it right away as `verification: "early_signal"`. Do not hold a lead back while chasing confirmation; a later run can promote it.
+2. Read `feeds/cache/latest.json` and `feeds/cache/kev-new.json` from the latest `main`. Those rows are discovery leads and can confirm or promote an early signal. A fact in the edition still has to come from the primary source the row links to. The cache does not establish a version, a score, or exploitation.
+3. Recheck a prior Act now or Act soon item only when the cache, CISA KEV, or a social post shows a relevant change for that item's product or CVE, such as a new advisory or release from that vendor, a new KEV entry, or a report of a new fix or exploitation. Then reopen the primary vendor page, and if a newer security fix exists or the advice changed, publish a correction on that prior edition. Do not re-read every vendor page on every run. The 6 AM run does one full recheck of the most recent edition's Act now and Act soon items when time allows.
+4. Promote an early signal to `verified` under the same item id once a primary source confirms the facts, and append a `corrections` entry that says what was confirmed.
 5. If `data/YYYY-MM-DD.json` already exists for today's America/Los_Angeles date, update that file. Do not create a second file for the same day. Revise or add items, keep `digest_date` and `published_at`, advance `updated_at`, and append one `corrections` entry that says what this run changed. Each correction's `at` must be later than the previous correction and no later than `updated_at`.
 6. The first run of a new America/Los_Angeles calendar day creates that day's file. A quiet day still gets a valid empty edition.
 7. Publish an ordinary update with `python scripts/publish_direct.py data/YYYY-MM-DD.json` from a checkout of `main`. Use a pull request instead when the change touches the schema or these rules, or when you are not sure.
 
 ## Cost
 
-Use the fast, cheap path for reading the feed cache, parsing leads, and drafting an early signal. Spend deeper checking only on an Act now item or when two sources disagree. A routine update is a local script plus one Pages run. A cloud-agent run and a pull request are for schema changes, rule changes, and uncertain items, not for every two-hour pass.
+Use the fast, cheap path for scanning social posts, reading the feed cache, parsing leads, and drafting an early signal. Spend deeper checking only on an Act now item or when two sources disagree. A routine update is a local script plus one Pages run. A cloud-agent run and a pull request are for schema changes, rule changes, and uncertain items, not for every four-hour pass.
 
 ## Dates
 
