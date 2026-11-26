@@ -20,6 +20,8 @@ After editing an issue's JSON, refresh the generated Markdown digests and README
 python scripts/build_site.py --write-generated
 ```
 
+CI runs `python scripts/build_site.py --check`, which fails when the committed digest Markdown or README briefing differs from what the JSON generates. Run it locally before pushing if you want the same check.
+
 Review those changes along with the source JSON in your pull request. Keep the README's generated briefing markers in place. Do not manually maintain separate versions of the same briefing in Markdown, README, and JSON. CI evaluates the source model and generated output; a matching copy of a claim is not independent verification.
 
 ## Author an issue
@@ -41,13 +43,13 @@ Keep an item's `id` stable across editions and corrections for the same product 
 | `affected` | Supported affected range or scope, or `null` when unknown. |
 | `fix_status` | `available`, `unavailable`, `unknown`, or `not_applicable`. |
 | `fixes` | Objects containing `component`, `version`, `platform`, `branch`, `cves`, and `source_ids`. Unknown platform or branch can be null. |
-| `exploitation` | `status` (`confirmed`, `reported`, or `unknown`) and supporting `source_ids`. |
+| `exploitation` | `status` (`confirmed`, `reported`, or `unknown`) and supporting `source_ids`. Optional `by_cve`: a list of `{cve, status, source_ids}` records. Use it when an item's CVEs differ, for example one exploited CVE fixed in an earlier release alongside a new CVE with unknown exploitation. The item-level `status` must equal the strongest per-CVE status, and reader-facing labels then name only the affected CVEs. |
 | `kev` | Per-CVE objects: `cve`, `listed` (true, false, or null), `date_added`, and `source_ids`. |
 | `cvss` | Objects: `cve`, `score`, `version`, `authority`, and `source_ids`. Unknown metadata stays null. |
 | `epss` | Objects: `cve`, numeric `probability` (0–1), `score_date`, and `source_ids`. An unrecorded historical score date stays null. |
 | `sources` | Objects: `id`, `kind`, `url`, `label`, `checked_at`, and `supports`. |
 
-Use source IDs local to each item and reference the sources supporting each fact. `supports` names the supported fields, such as `fixes`, `kev`, or `cvss`. `checked_at` records a check of the source content; do not populate it merely because a URL returned HTTP 200 or because the issue is being rebuilt.
+Use source IDs local to each item and reference the sources supporting each fact. `supports` names the supported fields, such as `fixes`, `kev`, or `cvss`. `checked_at` records a check of the source content; do not populate it merely because a URL returned HTTP 200 or because the issue is being rebuilt. Editions dated after 25 November 2026 must record `checked_at` on every source except `social_report` sources; validation fails otherwise. The first edition was migrated from schema 1 and keeps its unknown check times.
 
 Keep urgency separate from patch availability. An exploited issue without a patch may require immediate mitigation, replacement, or investigation. Known KEV entries and confirmed exploitation must not be classified Monitor. Missing remediation research does not imply low risk.
 

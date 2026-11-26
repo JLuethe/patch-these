@@ -48,7 +48,7 @@ Audience views and feeds include Both items. Filtering does not alter an item's 
 
 ## Exploitation, KEV, and scores
 
-Exploitation status is `confirmed`, `reported`, or `unknown`, with source references. Unknown means the briefing has not established the status. It does not mean exploitation has not occurred.
+Exploitation status is `confirmed`, `reported`, or `unknown`, with source references. Unknown means the briefing has not established the status. It does not mean exploitation has not occurred. When an item covers several CVEs whose exploitation differs, each CVE gets its own status, and reader-facing labels name only the CVEs with confirmed or reported exploitation.
 
 KEV membership is a separate per-CVE fact: `listed` is true, false, or unknown, with a date added when known. A vulnerability can be exploited without appearing in KEV. Do not infer `listed: false` from an absence of reporting or from an exploitation status of unknown.
 

@@ -8,7 +8,7 @@ from urllib.parse import urljoin, urlsplit
 import markdown
 import nh3
 
-from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, human_date, human_time, ordered_items, root_path, timestamp
+from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, ordered_items, root_path, timestamp
 
 _CLEANER_OPTIONS = dict(
     tags={"p", "a", "strong", "em", "code", "pre", "ul", "ol", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "br", "table", "thead", "tbody", "tr", "th", "td"},
@@ -56,7 +56,14 @@ def item_detail(item: dict) -> str:
             rows.append(f'<tr><td>{escape(scope)}</td><td><code>{escape(fix["version"])}</code></td><td>{escape(", ".join(fix["cves"]) or "See advisory")}<br>{refs}</td></tr>')
         blocks.append('<div class="table-scroll"><table><caption>Fixed releases and their scope</caption><thead><tr><th scope="col">Component / platform / branch</th><th scope="col">Version</th><th scope="col">Applies to / evidence</th></tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>')
     exploitation = item["exploitation"]
-    blocks.append(f'<p><strong>Exploitation:</strong> {escape(exploitation["status"].capitalize())}. {source_refs(item, exploitation["source_ids"])}</p>')
+    if exploitation.get("by_cve"):
+        cve_rows = "".join(
+            f'<li>{escape(record["cve"])}: {escape(record["status"].capitalize())}. {source_refs(item, record["source_ids"])}</li>'
+            for record in exploitation["by_cve"]
+        )
+        blocks.append(f'<p><strong>Exploitation:</strong></p><ul>{cve_rows}</ul>')
+    else:
+        blocks.append(f'<p><strong>Exploitation:</strong> {escape(exploitation["status"].capitalize())}. {source_refs(item, exploitation["source_ids"])}</p>')
     for entry in item["kev"]:
         state = "Listed" if entry["listed"] is True else "Not listed at the recorded check" if entry["listed"] is False else "Membership not established"
         when = f'; added {escape(entry["date_added"])}' if entry["date_added"] else ""
@@ -90,10 +97,9 @@ def item_card(item: dict, *, interactive: bool = True) -> str:
     checked = [source["checked_at"] for source in primary if source["checked_at"]]
     check_label = f'Latest source check: {human_time(max(checked, key=timestamp))}' if checked else "Source check time not recorded"
     labels = []
-    if item["exploitation"]["status"] == "confirmed":
-        labels.append("Exploitation confirmed")
-    elif item["exploitation"]["status"] == "reported":
-        labels.append("Exploitation reported")
+    exploitation = exploitation_label(item)
+    if exploitation:
+        labels.append(exploitation)
     if any(row["listed"] is True for row in item["kev"]):
         labels.append("KEV listed")
     if item["fix_status"] == "unavailable":

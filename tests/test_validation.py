@@ -143,3 +143,70 @@ def test_loader_ignores_schema_checks_filename_and_rejects_duplicate_keys(tmp_pa
     day.write_text('{"schema_version": 2, "schema_version": 1}')
     with pytest.raises(ValidationError, match="duplicate JSON key"):
         load_editions(tmp_path)
+
+
+def _two_cve_item(edition):
+    item = edition["items"][0]
+    item["cves"].append("CVE-2026-99998")
+    item["kev"].append({"cve": "CVE-2026-99998", "listed": None, "date_added": None, "source_ids": []})
+    item["priority"] = "act_now"
+    return item
+
+
+def test_per_cve_exploitation_must_match_the_item_status(edition):
+    item = _two_cve_item(edition)
+    item["exploitation"] = {"status": "confirmed", "source_ids": ["advisory"], "by_cve": [
+        {"cve": "CVE-2026-99999", "status": "confirmed", "source_ids": ["advisory"]},
+        {"cve": "CVE-2026-99998", "status": "unknown", "source_ids": []},
+    ]}
+    validate_payload(edition)
+    item["exploitation"]["status"] = "reported"
+    with pytest.raises(ValidationError, match="must equal the strongest per-CVE status 'confirmed'"):
+        validate_payload(edition)
+
+
+@pytest.mark.parametrize("record, message", [
+    ({"cve": "CVE-2026-88888", "status": "unknown", "source_ids": []}, "CVE outside this item"),
+    ({"cve": "CVE-2026-99998", "status": "reported", "source_ids": []}, "needs a source"),
+    ({"cve": "CVE-2026-99999", "status": "unknown", "source_ids": []}, "duplicate exploitation.by_cve"),
+])
+def test_per_cve_exploitation_records_are_checked(edition, record, message):
+    item = _two_cve_item(edition)
+    item["exploitation"] = {"status": "confirmed", "source_ids": ["advisory"], "by_cve": [
+        {"cve": "CVE-2026-99999", "status": "confirmed", "source_ids": ["advisory"]}, record,
+    ]}
+    with pytest.raises(ValidationError, match=message):
+        validate_payload(edition)
+
+
+def test_per_cve_exploitation_sources_must_support_exploitation(edition):
+    item = _two_cve_item(edition)
+    item["sources"][0]["supports"].remove("exploitation")
+    item["exploitation"] = {"status": "unknown", "source_ids": [], "by_cve": [
+        {"cve": "CVE-2026-99999", "status": "unknown", "source_ids": ["advisory"]},
+    ]}
+    with pytest.raises(ValidationError, match="does not declare support for exploitation"):
+        validate_payload(edition)
+
+
+def _next_day(edition):
+    edition.update(digest_date="2026-11-26", coverage_start="2026-11-26", coverage_end="2026-11-26",
+                   published_at="2026-11-27T04:00:00Z", updated_at="2026-11-27T05:00:00Z")
+
+
+def test_new_editions_must_record_when_evidence_was_checked(edition):
+    validate_payload(edition)  # The migrated first edition may lack check times.
+    _next_day(edition)
+    with pytest.raises(ValidationError, match="source 'advisory' needs checked_at"):
+        validate_payload(edition)
+    edition["items"][0]["sources"][0]["checked_at"] = "2026-11-27T03:00:00Z"
+    validate_payload(edition)
+
+
+def test_social_discovery_posts_do_not_need_check_times(edition):
+    _next_day(edition)
+    item = edition["items"][0]
+    item["sources"][0]["checked_at"] = "2026-11-27T03:00:00Z"
+    item["sources"].append({"id": "post", "kind": "social_report", "url": "https://x.com/example/status/1",
+                            "label": "Discussed on X", "checked_at": None, "supports": ["summary"]})
+    validate_payload(edition)

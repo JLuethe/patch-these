@@ -53,6 +53,36 @@ def root_path(site_url: str, path: str = "") -> str:
     return f"{base}/{path.lstrip('/')}"
 
 
+def exploited_cves(item: dict) -> list[str] | None:
+    """CVEs carrying the item's exploitation status, or None when it applies to the whole item.
+
+    Returns a list only when per-CVE records show that the item-level status is
+    narrower than the item: for example, one exploited CVE among several.
+    """
+    exploitation = item["exploitation"]
+    by_cve = exploitation.get("by_cve")
+    if not by_cve or exploitation["status"] == "unknown":
+        return None
+    matching = [record["cve"] for record in by_cve if record["status"] == exploitation["status"]]
+    if set(matching) >= set(item["cves"]):
+        return None
+    return matching
+
+
+def exploitation_label(item: dict) -> str | None:
+    """Reader-facing exploitation label, scoped to specific CVEs when that is more accurate."""
+    status = item["exploitation"]["status"]
+    if status not in {"confirmed", "reported"}:
+        return None
+    label = f"Exploitation {status}"
+    scoped = exploited_cves(item)
+    if scoped is None:
+        return label
+    if len(scoped) <= 2:
+        return f"{label} for {' and '.join(scoped)}"
+    return f"{label} for {len(scoped)} of {len(item['cves'])} CVEs"
+
+
 def for_audience(item: dict, audience: str | None) -> bool:
     return audience is None or item["audience"] in {audience, "both"}
 

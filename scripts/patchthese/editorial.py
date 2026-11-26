@@ -57,7 +57,11 @@ def markdown_digest(edition: dict, site_url: str) -> str:
                     scope = " / ".join(str(v) for v in (fix["component"], fix["platform"], fix["branch"]) if v)
                     cves = "; " + ", ".join(fix["cves"]) if fix["cves"] else ""
                     rows += [f"- {md_text(scope)}: {md_code(fix['version'])}{cves}."]
-            rows += ["", "**Exploitation:** " + item["exploitation"]["status"] + "."]
+            by_cve = item["exploitation"].get("by_cve")
+            if by_cve:
+                rows += ["", "**Exploitation:** " + "; ".join(f"{record['cve']} {record['status']}" for record in by_cve) + "."]
+            else:
+                rows += ["", "**Exploitation:** " + item["exploitation"]["status"] + "."]
             for kev in item["kev"]:
                 status = "listed" if kev["listed"] is True else "not listed" if kev["listed"] is False else "not established"
                 added = f"; added {kev['date_added']}" if kev["date_added"] else ""

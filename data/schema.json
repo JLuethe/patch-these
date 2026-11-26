@@ -242,6 +242,34 @@
         },
         "source_ids": {
           "$ref": "#/$defs/source_ids"
+        },
+        "by_cve": {
+          "description": "Optional per-CVE exploitation status. When present, the item-level status must equal the strongest per-CVE status, and every listed CVE must belong to the item.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "cve",
+              "status",
+              "source_ids"
+            ],
+            "properties": {
+              "cve": {
+                "$ref": "#/$defs/cve"
+              },
+              "status": {
+                "enum": [
+                  "confirmed",
+                  "reported",
+                  "unknown"
+                ]
+              },
+              "source_ids": {
+                "$ref": "#/$defs/source_ids"
+              }
+            }
+          }
         }
       }
     },
