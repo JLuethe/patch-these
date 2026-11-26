@@ -6,9 +6,15 @@ The briefings are curated, not a complete inventory of vulnerabilities. A missin
 
 ## Discovery and evidence
 
+The briefing is updated every 4 hours, at 6 AM, 10 AM, 2 PM, 6 PM and 10 PM Pacific time, every day. Each calendar day has one dated edition, updated in place, with a corrections log.
+
+Each run looks first for new security issues on X, Bluesky and Mastodon, especially fresh posts that may not be fully validated yet. Unconfirmed leads are published as Early signals: not yet verified, with no hard patch recommendation. A patch recommendation, a confirmed exploitation status, or a CISA KEV listing is added only after a primary source confirms it: a vendor advisory, CISA KEV, NVD, FIRST EPSS, or the original researcher.
+
+Official sources also arrive through a feed cache refreshed about every 30 minutes, including CISA KEV, vendor advisories, GitHub advisories, and Hacker News. Earlier urgent items are rechecked when those official feeds show a change for that product, so older items can lag between checks.
+
 Social posts are discovery leads. They are not evidence of exploitation, of a fixed version, or of who is affected. Those claims are verified against primary sources: vendor advisories, government alerts, original researcher reports, CVE records, and score services. A popular post is not that evidence.
 
-From 26 November 2026 the daily scan looks for security issues raised on X, Bluesky and Mastodon:
+Social discovery uses:
 
 - X search.
 - Bluesky public post search.
@@ -22,7 +28,7 @@ Source kinds are `vendor_advisory`, `government_alert`, `researcher_report`, `so
 
 `checked_at` means the source content was checked. It is not the source publication date, the digest publication date, or the date an automated HTTP request succeeded. Historical records with no preserved verification timestamp retain `null`. Unknown information is never replaced by a guessed timestamp, score, affected range, or fixed version.
 
-The current repository validates structure and builds the publication. It does not automatically collect social posts or prove the truth of source claims. An editor must check the evidence before publishing.
+The current repository validates structure, caches official feeds, and builds the publication. It does not automatically collect social posts or prove the truth of source claims. An editor must check the evidence before publishing.
 
 ## Urgency and action
 
@@ -70,7 +76,7 @@ EPSS estimates exploitation probability over the next 30 days. It is not proof t
 
 `published_at` records initial publication. `updated_at` records a meaningful editorial revision. Corrections include a timestamp, a plain-language explanation, and affected item IDs. Record changes to versions, affected scope, sources, exploitation status, or urgency so readers can see what changed. Rebuilding unchanged content must not invent a new editorial update time.
 
-One America/Los_Angeles calendar day is one edition file. A later run on that same day updates the file and appends another correction. Corrections on one edition are ordered: each `at` is at or after the previous correction and no later than `updated_at`. The first run of a new calendar day creates that day's file. A day with nothing new to verify is still published as an empty edition.
+One America/Los_Angeles calendar day is one edition file. Runs at 6 AM, 10 AM, 2 PM, 6 PM and 10 PM Pacific update that day's file and append a correction when something changes. Corrections on one edition are ordered: each `at` is at or after the previous correction and no later than `updated_at`. The first run of a new calendar day creates that day's file. A day with nothing new to verify is still published as an empty edition.
 
 The weekly link checker detects missing local links and public HTTP 404/410 responses. Authentication barriers, throttling, server errors, network failures, and unauthenticated social pages are explicitly inconclusive. A reachable URL does not validate a claim. Inconclusive results need manual review and remain in the workflow report.
 

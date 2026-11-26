@@ -13,8 +13,9 @@ AUDIENCES = {"applications_and_servers": "Apps & servers", "end_users": "My comp
 ACTIONS = {"update": "Update", "mitigate": "Mitigate", "replace": "Replace", "rotate": "Rotate credentials", "investigate": "Check applicability"}
 REPO = "https://github.com/JLuethe/patch-these"
 DESCRIPTION = (
-    "A daily, plain-English briefing of security issues raised on X, Bluesky and Mastodon, "
-    "checked against vendor advisories, CISA KEV and EPSS, and turned into what to patch. "
+    "A plain-English security briefing, updated every 4 hours from 6 AM to 10 PM Pacific. "
+    "It finds new issues on X, Bluesky and Mastodon, publishes unconfirmed leads as early signals, "
+    "and recommends patches only after a vendor advisory, CISA KEV, or NVD confirms them. "
     "No exploit details."
 )
 X_HOSTS = {"x.com", "www.x.com", "twitter.com", "www.twitter.com", "mobile.twitter.com"}

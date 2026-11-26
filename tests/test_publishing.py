@@ -55,10 +55,12 @@ def test_site_credits_the_maintainer(publication):
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "index.html").read_text()
     assert home.count('By <a href="https://github.com/JLuethe">John Luethe</a>') == 2
-    assert "security issues raised on X, Bluesky and Mastodon" in home
+    assert "updated every 4 hours from 6 AM to 10 PM Pacific" in home
+    assert "finds new issues on X, Bluesky and Mastodon" in home
     assert "No exploit details." in home
     feed = (output / "feed.xml").read_text()
-    assert "security issues raised on X, Bluesky and Mastodon" in feed
+    assert "updated every 4 hours from 6 AM to 10 PM Pacific" in feed
+    assert "finds new issues on X, Bluesky and Mastodon" in feed
     assert "Maintained by [John Luethe](https://github.com/JLuethe)." in (ROOT / "README.md").read_text()
 
 

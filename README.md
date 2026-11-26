@@ -1,6 +1,6 @@
 # patch-these
 
-A daily, plain-English briefing of security issues raised on X, Bluesky and Mastodon, checked against vendor advisories, CISA KEV and EPSS, and turned into what to patch. No exploit details.
+A plain-English security briefing, updated every 4 hours from 6 AM to 10 PM Pacific. It looks for new issues on X, Bluesky and Mastodon, publishes unconfirmed leads as early signals, and recommends patches only after a vendor advisory, CISA KEV, NVD, or another primary source confirms them. No exploit details.
 
 Maintained by [John Luethe](https://github.com/JLuethe).
 
@@ -46,7 +46,7 @@ Each edition has one editable source: `data/YYYY-MM-DD.json`. JSON Schema and se
 
 The site is plain static HTML, CSS, and a small local script for optional filters. All briefing content and source links work without JavaScript. Saved products stay in the reader's browser; there are no accounts, analytics, or installation scans.
 
-The repository provides validation and publishing, plus a weekly link check. It does not currently include an automated news collector. A person or external producer prepares the JSON; [CONTRIBUTING.md](CONTRIBUTING.md) defines that contract. A link responding successfully does not by itself verify a claim.
+Editions are updated in place through the day, at 6 AM, 10 AM, 2 PM, 6 PM and 10 PM Pacific, with a corrections log. Official sources arrive through a feed cache refreshed about every 30 minutes. A person still prepares the edition JSON; [CONTRIBUTING.md](CONTRIBUTING.md) defines that contract. The repository provides validation and publishing, plus a weekly link check. A link responding successfully does not by itself verify a claim.
 
 ## Develop and publish an edition
 

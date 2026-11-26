@@ -119,6 +119,9 @@ h1 { margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 500; font-size:
 .hero-copy h1 em { color: var(--accent); font-weight: 500; }
 .hero-meta { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin-top: 0.9rem; font-size: 0.76rem; color: var(--muted); }
 .hero-meta p { margin: 0.25rem 0; }
+.how-this-works { margin: 0 0 1.6rem; max-width: 44rem; }
+.how-this-works h2 { margin: 0 0 0.4rem; font-size: 0.72rem; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.how-this-works p { margin: 0; font-size: 0.85rem; line-height: 1.7; color: var(--muted); }
 .edition-stats { display: flex; gap: 1.65rem; padding: 0 0 0.2rem 1.8rem; border-left: 1px solid var(--line-strong); }
 .stat { min-width: 56px; }
 .stat strong, .stat .stat-number { display: block; font-family: var(--serif); font-size: 2.15rem; font-weight: 500; line-height: 1.25; letter-spacing: -0.05em; }
