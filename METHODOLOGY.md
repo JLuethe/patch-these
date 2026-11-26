@@ -6,11 +6,19 @@ The briefings are curated, not a complete inventory of vulnerabilities. A missin
 
 ## Discovery and evidence
 
-Social posts can draw attention to an issue. Vendor advisories, government alerts, original researcher reports, CVE records, and score services provide evidence for specific claims. A popular post is not evidence of exploitation or proof that a particular version is fixed.
+Social posts are discovery leads. They are not evidence of exploitation, of a fixed version, or of who is affected. Those claims are verified against primary sources: vendor advisories, government alerts, original researcher reports, CVE records, and score services. A popular post is not that evidence.
+
+From 26 November 2026 the daily scan looks for security issues raised on X, Bluesky and Mastodon:
+
+- X search.
+- Bluesky public post search.
+- Public Mastodon hashtag timelines via mastodon.social. Those timelines include federated posts from infosec.exchange and other servers.
+
+The 25 November 2026 edition was discovered through X only. Later editions may link posts from any of the three. Posts are linked, not copied. The briefing does not paste the text, attach screenshots, or embed media.
 
 Each JSON source record has an ID, a source kind, a URL, a label, the fields it supports, and a `checked_at` timestamp when a content check was actually performed. Fixes, exploitation reports, KEV membership, CVSS, and EPSS refer to those IDs. A remediation guide can support an action without substantiating the incident timeline; those claims may need different sources.
 
-Source kinds are `vendor_advisory`, `government_alert`, `researcher_report`, `social_report`, `score_service`, and `cve_record`. Social sources remain visible as discovery or reported evidence. The November 25, 2026 issue was discovered through X; future issues may use other platforms. Posts are linked, not copied.
+Source kinds are `vendor_advisory`, `government_alert`, `researcher_report`, `social_report`, `score_service`, and `cve_record`. A `social_report` URL is an X status, a bsky.app post, or a Mastodon status permalink. `checked_at` may stay null for those posts.
 
 `checked_at` means the source content was checked. It is not the source publication date, the digest publication date, or the date an automated HTTP request succeeded. Historical records with no preserved verification timestamp retain `null`. Unknown information is never replaced by a guessed timestamp, score, affected range, or fixed version.
 

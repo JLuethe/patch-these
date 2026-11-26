@@ -13,7 +13,7 @@ import pytest
 from patchthese.editorial import markdown_digest
 from patchthese.feeds import ATOM, build_feed
 from patchthese.publishing import StaleGeneratedFiles, build_site, stale_generated_files
-from patchthese.rendering import render_markdown
+from patchthese.rendering import render_markdown, source_link
 from patchthese.validation import load_editions
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,8 +55,23 @@ def test_site_credits_the_maintainer(publication):
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "index.html").read_text()
     assert home.count('By <a href="https://github.com/JLuethe">John Luethe</a>') == 2
+    assert "security issues raised on X, Bluesky and Mastodon" in home
     assert "No exploit details." in home
+    feed = (output / "feed.xml").read_text()
+    assert "security issues raised on X, Bluesky and Mastodon" in feed
     assert "Maintained by [John Luethe](https://github.com/JLuethe)." in (ROOT / "README.md").read_text()
+
+
+def test_social_source_labels_name_the_platform():
+    assert "X · Discussed" in source_link({
+        "kind": "social_report", "url": "https://x.com/example/status/1", "label": "Discussed",
+    })
+    assert "Bluesky · Discussed" in source_link({
+        "kind": "social_report", "url": "https://bsky.app/profile/example.bsky.social/post/3abc", "label": "Discussed",
+    })
+    assert "Mastodon · Discussed" in source_link({
+        "kind": "social_report", "url": "https://infosec.exchange/@example/123", "label": "Discussed",
+    })
 
 
 def test_empty_edition_is_an_explicit_quiet_day(publication):

@@ -51,6 +51,8 @@ Keep an item's `id` stable across editions and corrections for the same product 
 
 Use source IDs local to each item and reference the sources supporting each fact. `supports` names the supported fields, such as `fixes`, `kev`, or `cvss`. `checked_at` records a check of the source content; do not populate it merely because a URL returned HTTP 200 or because the issue is being rebuilt. Editions dated after 25 November 2026 must record `checked_at` on every source except `social_report` sources; validation fails otherwise. The first edition was migrated from schema 1 and keeps its unknown check times.
 
+A `social_report` is a discovery lead, not a primary source. Accepted URLs are an X status (`x.com` or `twitter.com`), a Bluesky post (`bsky.app/profile/…/post/…`), or a Mastodon status permalink (`https://<server>/@user/<id>`, including federated posts from infosec.exchange and other servers that appear on mastodon.social). Link the post. Do not paste it, screenshot it, or embed its media. `checked_at` may be null.
+
 Keep urgency separate from patch availability. An exploited issue without a patch may require immediate mitigation, replacement, or investigation. Known KEV entries and confirmed exploitation must not be classified Monitor. Missing remediation research does not imply low risk.
 
 Do not infer non-exploitation from silence, infer KEV non-membership from a post, use one CVE's fix for another, or assume every platform and release branch uses the same version. Explain uncertainty in reader-facing text when it changes the recommended action.

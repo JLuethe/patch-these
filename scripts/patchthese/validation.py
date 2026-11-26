@@ -16,6 +16,8 @@ from urllib.parse import urlsplit
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from .common import social_platform
+
 SCHEMA_PATH = Path(__file__).resolve().parents[2] / "data" / "schema.json"
 EDITION_FILE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}\.json$")
 EXPLOITATION_RANK = {"confirmed": 0, "reported": 1, "unknown": 2}
@@ -80,6 +82,11 @@ def _validate_item(item: dict, updated: datetime, *, require_check_times: bool =
             and not any(char.isspace() for char in url),
             f"{where}: source URLs must use HTTPS without credentials or whitespace",
         )
+        if source["kind"] == "social_report":
+            _require(
+                social_platform(url) is not None,
+                f"{where}: social_report URL must be an X, Bluesky, or Mastodon status permalink",
+            )
         if require_check_times and source["kind"] != "social_report":
             _require(
                 source["checked_at"] is not None,

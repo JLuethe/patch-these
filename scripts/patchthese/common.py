@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import date, datetime
+import re
 from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
 
@@ -11,7 +12,16 @@ PRIORITY_ORDER = {key: index for index, key in enumerate(PRIORITIES)}
 AUDIENCES = {"applications_and_servers": "Apps & servers", "end_users": "My computer", "both": "Everyone & operators"}
 ACTIONS = {"update": "Update", "mitigate": "Mitigate", "replace": "Replace", "rotate": "Rotate credentials", "investigate": "Check applicability"}
 REPO = "https://github.com/JLuethe/patch-these"
-DESCRIPTION = "A calm briefing of security updates: what applies to you, why it matters, and what to do next."
+DESCRIPTION = (
+    "A daily, plain-English briefing of security issues raised on X, Bluesky and Mastodon, "
+    "checked against vendor advisories, CISA KEV and EPSS, and turned into what to patch. "
+    "No exploit details."
+)
+X_HOSTS = {"x.com", "www.x.com", "twitter.com", "www.twitter.com", "mobile.twitter.com"}
+BLUESKY_HOSTS = {"bsky.app", "www.bsky.app"}
+_X_STATUS = re.compile(r"^/[^/]+/status/\d+$")
+_BLUESKY_POST = re.compile(r"^/profile/[^/]+/post/[^/]+$")
+_MASTODON_STATUS = re.compile(r"^/(?:@[^/]+/\d+|users/[^/]+/statuses/\d+)$")
 
 
 def human_date(value: str) -> str:
@@ -36,6 +46,20 @@ def coverage(edition: dict) -> str:
     if (a.year, a.month) == (b.year, b.month):
         return f"{a.day}–{b.day} {b.strftime('%B %Y')}"
     return f"{human_date(start)} – {human_date(end)}"
+
+
+def social_platform(url: str) -> str | None:
+    """Return X, Bluesky, or Mastodon when url is a public status permalink."""
+    parsed = urlsplit(url)
+    host = (parsed.hostname or "").lower()
+    path = parsed.path.rstrip("/") or "/"
+    if host in X_HOSTS and _X_STATUS.match(path):
+        return "X"
+    if host in BLUESKY_HOSTS and _BLUESKY_POST.match(path):
+        return "Bluesky"
+    if host not in X_HOSTS | BLUESKY_HOSTS and _MASTODON_STATUS.match(path):
+        return "Mastodon"
+    return None
 
 
 def normalize_site_url(value: str) -> str:

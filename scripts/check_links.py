@@ -24,8 +24,12 @@ from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from patchthese.common import X_HOSTS, social_platform  # noqa: E402
+
 SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "_site", "_reports", ".pytest_cache"}
-AUTH_GATED_HOSTS = {"x.com", "www.x.com", "twitter.com", "www.twitter.com", "mobile.twitter.com"}
+# X is gated by host: the whole site sits behind a login wall. Bluesky and Mastodon
+# are gated by status permalink so a normal page on those servers is still checked.
 USER_AGENT = "patch-these-link-checker/1.0 (+https://github.com/JLuethe/patch-these)"
 
 
@@ -125,8 +129,13 @@ def collect_links(root: Path) -> tuple[dict[str, set[str]], dict[str, set[str]]]
     return dict(external), dict(local)
 
 
-def classify_http(status_code: int, hostname: str) -> str:
-    if hostname.lower() in AUTH_GATED_HOSTS:
+def unauthenticated_social(url: str, hostname: str = "") -> bool:
+    host = (hostname or urlsplit(url).hostname or "").lower()
+    return host in X_HOSTS or social_platform(url) is not None
+
+
+def classify_http(status_code: int, hostname: str, url: str = "") -> str:
+    if unauthenticated_social(url, hostname):
         return "inconclusive"
     if 200 <= status_code < 300:
         return "available"
@@ -154,12 +163,12 @@ def check_external(
                 status_code = response.status
                 final_url = response.geturl()
             result.update(
-                status=classify_http(status_code, host),
+                status=classify_http(status_code, host, url),
                 status_code=status_code,
                 final_url=final_url,
                 detail=(
                     "An unauthenticated social page may be a login screen; the post was not verified."
-                    if host.lower() in AUTH_GATED_HOSTS
+                    if unauthenticated_social(url, host)
                     else "HTTP response received; source claims were not verified."
                 ),
             )
@@ -168,11 +177,11 @@ def check_external(
             error.close()
             retry = status_code in {408, 425, 429} or status_code >= 500
             result.update(
-                status=classify_http(status_code, host),
+                status=classify_http(status_code, host, url),
                 status_code=status_code,
                 detail=(
                     "An unauthenticated social-post response cannot establish whether the post exists."
-                    if host.lower() in AUTH_GATED_HOSTS
+                    if unauthenticated_social(url, host)
                     else "Authentication, throttling, or server failure is inconclusive."
                     if status_code not in {404, 410}
                     else f"The public server returned HTTP {status_code}."
