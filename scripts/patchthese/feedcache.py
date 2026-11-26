@@ -4,13 +4,31 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
+import json
 import re
 import xml.etree.ElementTree as ET
 
 CVE_RE = re.compile(r"CVE-\d{4}-\d{4,}")
 WINDOW_HOURS = 72
 MAX_ITEMS = 300
-FIELDS = ("source", "id", "title", "url", "published", "cves", "fetched_at")
+FIELDS = ("source", "id", "title", "url", "published", "cves", "fetched_at", "advisory_lines")
+TEXT_LIMIT = 240
+# Feeds published by the vendor itself. A line taken from one of these may be
+# cited for that vendor's product; everything else is a lead only.
+VENDOR_FEEDS = frozenset({
+    "msrc", "chrome-releases", "mozilla-security", "cisco-psirt", "fortinet-psirt",
+    "palo-alto", "ubuntu-usn", "arch-linux", "jenkins-advisories",
+})
+VERSION = r"v?\d+(?:\.\d+)+(?:[-.+]?[A-Za-z0-9]+)*"
+FIXED_RE = re.compile(
+    rf"\b(?:fixed in|fixed version|patched in|resolved in|upgrade to|update to|updated to)\s*(?:version\s+|release\s+|:\s*)?(?P<version>{VERSION})",
+    re.IGNORECASE,
+)
+AFFECTED_RE = re.compile(
+    rf"\b(?:versions?\s+)?(?:prior to|before|earlier than|up to and including|through|below)\s+(?:version\s+)?(?P<version>{VERSION})",
+    re.IGNORECASE,
+)
+TAG_RE = re.compile(r"<[^>]+>")
 
 
 def extract_cves(*texts: str | None) -> list[str]:
@@ -77,6 +95,87 @@ def _item(source: str, item_id: str, title: str, url: str | None, published: str
     }
 
 
+def _short(value: str | None) -> str | None:
+    if not value:
+        return None
+    value = " ".join(str(value).split())
+    return value if len(value) <= TEXT_LIMIT else value[: TEXT_LIMIT - 1].rstrip() + "…"
+
+
+def lines_from_text(source: str, url: str | None, *texts: str | None) -> dict | None:
+    """Conservative affected/fixed strings from a feed item's own title and summary.
+
+    Only exact phrases such as "fixed in 1.2.3" or "versions before 1.2.3" are
+    taken. Confidence is always "low": a feed summary is a pointer to the
+    advisory, not the advisory.
+    """
+    text = " ".join(TAG_RE.sub(" ", value) for value in texts if value)
+    if not text.strip():
+        return None
+    fixed = [match.group(0) for match in FIXED_RE.finditer(text)]
+    affected = [match.group(0) for match in AFFECTED_RE.finditer(text)]
+    if not fixed and not affected:
+        return None
+    unique = lambda values: list(dict.fromkeys(" ".join(value.split()) for value in values))[:3]
+    return {
+        "affected": _short("; ".join(unique(affected))) if affected else None,
+        "fixed": _short("; ".join(unique(fixed))) if fixed else None,
+        "notes": None,
+        "extracted_from": url,
+        "origin": "vendor_feed" if source in VENDOR_FEEDS else "third_party_feed",
+        "confidence": "low",
+    }
+
+
+def lines_from_github(advisory: dict) -> dict | None:
+    """Affected ranges and first patched versions from the GitHub advisory API."""
+    affected, fixed = [], []
+    for vulnerability in advisory.get("vulnerabilities") or []:
+        if not isinstance(vulnerability, dict):
+            continue
+        package = vulnerability.get("package") or {}
+        name = " ".join(str(part) for part in (package.get("ecosystem"), package.get("name")) if part)
+        if not name:
+            continue
+        span = vulnerability.get("vulnerable_version_range")
+        if span:
+            affected.append(f"{name} {span}")
+        patched = vulnerability.get("first_patched_version")
+        if isinstance(patched, dict):
+            patched = patched.get("identifier")
+        if patched:
+            fixed.append(f"{name} {patched}")
+    if not affected and not fixed:
+        return None
+    return {
+        "affected": _short("; ".join(affected)) if affected else None,
+        "fixed": _short("; ".join(fixed)) if fixed else "No patched version listed",
+        "notes": None,
+        "extracted_from": advisory.get("html_url"),
+        "origin": "github_advisory_api",
+        "confidence": "high",
+    }
+
+
+def lines_from_kev(vuln: dict) -> dict:
+    vendor = " ".join(str(part) for part in (vuln.get("vendorProject"), vuln.get("product")) if part)
+    notes = []
+    if vuln.get("requiredAction"):
+        notes.append(f"Required action: {vuln['requiredAction']}")
+    if vuln.get("dueDate"):
+        notes.append(f"Federal due date: {vuln['dueDate']}")
+    if vuln.get("knownRansomwareCampaignUse"):
+        notes.append(f"Known ransomware use: {vuln['knownRansomwareCampaignUse']}")
+    return {
+        "affected": _short(vendor) or None,
+        "fixed": None,
+        "notes": _short(". ".join(notes)) or None,
+        "extracted_from": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "origin": "cisa_kev",
+        "confidence": "high",
+    }
+
+
 def parse_feed_xml(payload: bytes | str, source: str) -> list[dict]:
     """Parse an RSS 2.0 or Atom document into normalized leads."""
     if isinstance(payload, str):
@@ -111,6 +210,9 @@ def _parse_atom(root: ET.Element, source: str) -> list[dict]:
         summary = _child_text(entry, "summary") or _child_text(entry, "content")
         item = _item(source, item_id, title, url, published, extract_cves(title, summary, item_id))
         if item:
+            lines = lines_from_text(source, item["url"], title, summary)
+            if lines:
+                item["advisory_lines"] = lines
             items.append(item)
     return items
 
@@ -127,6 +229,9 @@ def _parse_rss(root: ET.Element, source: str) -> list[dict]:
         description = _child_text(node, "description")
         item = _item(source, item_id, title, url, published, extract_cves(title, description, item_id))
         if item:
+            lines = lines_from_text(source, item["url"], title, description)
+            if lines:
+                item["advisory_lines"] = lines
             items.append(item)
     return items
 
@@ -148,6 +253,7 @@ def parse_kev(payload: dict) -> list[dict]:
             [cve],
         )
         if item:
+            item["advisory_lines"] = lines_from_kev(vuln)
             items.append(item)
     return items
 
@@ -176,6 +282,9 @@ def parse_github_advisories(payload: list) -> list[dict]:
             cves,
         )
         if item:
+            lines = lines_from_github(advisory)
+            if lines:
+                item["advisory_lines"] = lines
             items.append(item)
     return items
 
@@ -240,6 +349,9 @@ def apply_fetched_at(items: list[dict], previous: list[dict], fetched_at: str) -
     for item in items:
         copy = dict(item)
         copy["fetched_at"] = old.get((item["source"], item["id"]), fetched_at)
+        if copy.get("advisory_lines"):
+            # When the line was read from the feed; the producer cites it with this time.
+            copy["advisory_lines"] = {**copy["advisory_lines"], "checked_at": copy["fetched_at"]}
         stamped.append({key: copy.get(key) for key in FIELDS})
     return stamped
 
@@ -247,7 +359,8 @@ def apply_fetched_at(items: list[dict], previous: list[dict], fetched_at: str) -
 def content_signature(items: list[dict]) -> list[tuple]:
     """Identity of a cache ignoring fetched_at, so a quiet run does not rewrite the file."""
     return sorted(
-        (item["source"], item["id"], item["title"], item["url"], item.get("published"), tuple(item.get("cves") or []))
+        (item["source"], item["id"], item["title"], item["url"], item.get("published"), tuple(item.get("cves") or []),
+         json.dumps(item.get("advisory_lines"), sort_keys=True))
         for item in items
     )
 

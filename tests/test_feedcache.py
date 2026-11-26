@@ -3,6 +3,7 @@
 from datetime import datetime, timezone
 
 from patchthese.feedcache import (
+    lines_from_text,
     apply_fetched_at,
     content_signature,
     dedupe,
@@ -64,6 +65,10 @@ def test_atom_and_rss_keep_https_links_and_cves():
         "url": "https://example.invalid/adv/1",
         "published": "2026-11-26T12:00:00Z",
         "cves": ["CVE-2026-1000"],
+        "advisory_lines": {
+            "affected": None, "fixed": "Fixed in 1.2.3", "notes": None,
+            "extracted_from": "https://example.invalid/adv/1", "origin": "third_party_feed", "confidence": "low",
+        },
     }]
     rss = parse_feed_xml(RSS, "example-rss")
     assert rss[0]["cves"] == ["CVE-2026-2000"]
@@ -194,3 +199,50 @@ def test_build_cache_fails_only_when_every_source_fails(tmp_path):
     now = datetime(2026, 11, 26, 13, 0, tzinfo=timezone.utc)
     assert build_cache(tmp_path, token=None, now=now, fetcher=_fake_fetcher(everything)) == 1
     assert build_cache(tmp_path, token=None, now=now, fetcher=_fake_fetcher({"cisa-kev"})) == 0
+
+
+def test_github_advisory_lines_use_ranges_and_first_patched_versions():
+    rows = parse_github_advisories([{
+        "ghsa_id": "GHSA-aaaa-bbbb-cccc", "cve_id": "CVE-2026-5000", "summary": "Example package issue",
+        "html_url": "https://github.com/advisories/GHSA-aaaa-bbbb-cccc", "published_at": "2026-11-26T01:00:00Z",
+        "vulnerabilities": [
+            {"package": {"ecosystem": "npm", "name": "example"}, "vulnerable_version_range": "< 2.4.1", "first_patched_version": "2.4.1"},
+            {"package": {"ecosystem": "pip", "name": "other"}, "vulnerable_version_range": ">= 1.0, < 1.3", "first_patched_version": {"identifier": "1.3"}},
+        ],
+    }])
+    stamped = apply_fetched_at(rows, [], "2026-11-26T02:00:00Z")
+    lines = stamped[0]["advisory_lines"]
+    assert lines["affected"] == "npm example < 2.4.1; pip other >= 1.0, < 1.3"
+    assert lines["fixed"] == "npm example 2.4.1; pip other 1.3"
+    assert lines["origin"] == "github_advisory_api" and lines["confidence"] == "high"
+    assert lines["extracted_from"] == "https://github.com/advisories/GHSA-aaaa-bbbb-cccc"
+    assert lines["checked_at"] == "2026-11-26T02:00:00Z"
+
+
+def test_kev_lines_keep_vendor_product_required_action_and_due_date():
+    rows = parse_kev({"vulnerabilities": [{
+        "cveID": "CVE-2026-7000", "dateAdded": "2026-11-26", "vulnerabilityName": "Example bypass",
+        "vendorProject": "Example", "product": "Gateway", "requiredAction": "Apply mitigations per vendor instructions.", "dueDate": "2026-12-17",
+    }]})
+    lines = rows[0]["advisory_lines"]
+    assert lines["affected"] == "Example Gateway" and lines["fixed"] is None
+    assert "Apply mitigations per vendor instructions." in lines["notes"] and "2026-12-17" in lines["notes"]
+    assert lines["origin"] == "cisa_kev"
+
+
+def test_feed_text_lines_are_conservative_and_low_confidence():
+    rss = """<?xml version="1.0"?><rss version="2.0"><channel><item>
+      <title>Jenkins Security Advisory 2026-11-26</title><link>https://www.jenkins.io/security/advisory/2026-11-26/</link>
+      <guid>jenkins-1</guid><pubDate>Thu, 26 Nov 2026 18:00:00 GMT</pubDate>
+      <description>&lt;p&gt;Jenkins weekly versions before 2.540 are affected. Fixed in 2.540 and LTS 2.528.3.&lt;/p&gt;</description>
+    </item><item>
+      <title>Plain post</title><link>https://www.jenkins.io/blog/plain/</link><guid>jenkins-2</guid>
+      <pubDate>Thu, 26 Nov 2026 18:00:00 GMT</pubDate><description>We improved the docs for version 3.</description>
+    </item></channel></rss>"""
+    rows = parse_feed_xml(rss, "jenkins-advisories")
+    lines = rows[0]["advisory_lines"]
+    assert lines["affected"] == "versions before 2.540"
+    assert lines["fixed"] == "Fixed in 2.540"
+    assert lines["origin"] == "vendor_feed" and lines["confidence"] == "low"
+    assert "advisory_lines" not in rows[1]
+    assert lines_from_text("hacker-news", None, "Upgrade to 1.2.3 now")["origin"] == "third_party_feed"
