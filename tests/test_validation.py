@@ -121,6 +121,20 @@ def test_invalid_dates_probabilities_and_source_urls_fail(edition, change):
         validate_payload(edition)
 
 
+def test_one_edition_accepts_repeated_same_day_corrections(edition):
+    edition["updated_at"] = "2026-11-26T08:00:00Z"
+    edition["corrections"] = [
+        {"at": "2026-11-26T06:00:00Z", "summary": "First pass added a fix.", "item_ids": ["example-service"]},
+        {"at": "2026-11-26T07:00:00Z", "summary": "Second pass the same day corrected the version.", "item_ids": ["example-service"]},
+    ]
+    validate_payload(edition)
+    edition["corrections"].append(
+        {"at": "2026-11-26T06:30:00Z", "summary": "This one is out of order.", "item_ids": []}
+    )
+    with pytest.raises(ValidationError, match="chronological"):
+        validate_payload(edition)
+
+
 def test_duplicate_ids_and_unknown_featured_items_fail(edition):
     edition["items"].append(deepcopy(edition["items"][0]))
     with pytest.raises(ValidationError, match="duplicate item id"):

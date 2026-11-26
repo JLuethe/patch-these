@@ -70,6 +70,8 @@ EPSS estimates exploitation probability over the next 30 days. It is not proof t
 
 `published_at` records initial publication. `updated_at` records a meaningful editorial revision. Corrections include a timestamp, a plain-language explanation, and affected item IDs. Record changes to versions, affected scope, sources, exploitation status, or urgency so readers can see what changed. Rebuilding unchanged content must not invent a new editorial update time.
 
+One America/Los_Angeles calendar day is one edition file. A later run on that same day updates the file and appends another correction. Corrections on one edition are ordered: each `at` is at or after the previous correction and no later than `updated_at`. The first run of a new calendar day creates that day's file. A day with nothing new to verify is still published as an empty edition.
+
 The weekly link checker detects missing local links and public HTTP 404/410 responses. Authentication barriers, throttling, server errors, network failures, and unauthenticated social pages are explicitly inconclusive. A reachable URL does not validate a claim. Inconclusive results need manual review and remain in the workflow report.
 
 ## Scope and reuse

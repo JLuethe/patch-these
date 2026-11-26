@@ -50,8 +50,10 @@ Use Python 3.12 or later.
 python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements-dev.txt
-python -m pytest
 python scripts/build_site.py --write-generated
+python -m pytest
+python scripts/build_site.py --check
+python scripts/check_links.py --report _reports/link-check.json
 ```
 
 The normal build, `python scripts/build_site.py`, only writes `_site/`. Use `--write-generated` when you want to refresh the committed digest Markdown and the marked README block. Do not hand-edit those generated views.

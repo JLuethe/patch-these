@@ -4,6 +4,14 @@ Paste this whole document to the agent, then paste that day's researched finding
 
 You are the editor of patch-these for one edition. The repository is https://github.com/JLuethe/patch-these. The public site is https://jluethe.github.io/patch-these/. `data/YYYY-MM-DD.json` is the only source of an edition. Markdown digests and the README briefing are generated from it. Schema version is 2 (`data/schema.json`). Read `CONTRIBUTING.md` and `METHODOLOGY.md` before writing.
 
+## Each run
+
+The producer runs about every 6 hours, around 1 AM, 7 AM, 1 PM, and 7 PM America/Los_Angeles. History is one dated page per calendar day.
+
+1. Start by rechecking the most recent edition's Act now and Act soon items. Reopen each primary vendor page. If a newer security fix exists or the advice changed, publish a correction on that prior edition before you write today's new items.
+2. If `data/YYYY-MM-DD.json` already exists for today's America/Los_Angeles date, update that file. Do not create a second file for the same day. Revise or add items, keep `digest_date` and `published_at`, advance `updated_at`, and append one `corrections` entry that says what this run changed. Each correction's `at` must be later than the previous correction and no later than `updated_at`.
+3. The first run of a new America/Los_Angeles calendar day creates that day's file. A quiet day still gets a valid empty edition.
+
 ## Dates
 
 The editorial date is the calendar date in America/Los_Angeles when the edition is published. Name the file `data/YYYY-MM-DD.json` with that date, and set `digest_date` to the same date.
@@ -28,23 +36,39 @@ Reuse an existing id when the item is the same product or component. Saved-produ
 
 Existing ids:
 
+- `1password`
+- `airbyte-core-images`
 - `azure-api-management-classic`
 - `bytebase-dbhub-mcp`
+- `checkpoint-security-management`
 - `chrome-desktop`
+- `cisco-expressway`
 - `danfoss-ak-sm-800a`
 - `drupal-core`
 - `firefox-thunderbird`
 - `geoserver`
+- `ghostscript`
+- `hex-pm`
+- `hpe-airwave`
 - `idunno-anticsrf`
+- `java-se`
 - `jenkins-plugins`
 - `juniper-session-smart`
+- `linux-nfsd`
+- `microsoft-visio`
 - `mitel-micollab`
 - `monai-label`
 - `nable-mail-assure`
+- `nginx-http2`
 - `omarchy-dell-xps-touchpad-haptics`
 - `optimizely-web-experimentation`
+- `pyjwt`
 - `simple-git`
+- `virtuemart`
+- `vm2`
 - `vmware-vcenter`
+- `wp-connect-plugins`
+- `wp-rocket`
 - `xen-orchestra`
 
 A new product gets a new lowercase slug, `[a-z0-9]+(-[a-z0-9]+)*`.
@@ -57,7 +81,7 @@ A new product gets a new lowercase slug, `[a-z0-9]+(-[a-z0-9]+)*`.
 | --- | --- |
 | `act_now` | Confirmed exploitation, a KEV listing, or another documented reason to act immediately if affected. |
 | `act_soon` | A supported fix or mitigation to schedule, with no documented reason in this edition to treat it as immediate. |
-| `monitor` | Applicability or a fix is not established. This does not mean safe. |
+| `monitor` | Applicability or a fix is not established. This does not mean safe. A confirmed incident or breach is never Monitor. |
 
 `action_type` is one of `update`, `mitigate`, `replace`, `rotate`, `investigate`.
 
@@ -74,7 +98,9 @@ Keep them separate.
 
 When the CVEs in one item differ, set `exploitation.by_cve` to one record per CVE in the item: `{cve, status, source_ids}`. The item status must equal the strongest per-CVE status (`confirmed` over `reported` over `unknown`). A confirmed or reported per-CVE row needs its own source. Do not copy one CVE's status onto another.
 
-`kev` is one object per CVE: `listed` true, false, or null; `date_added` only when `listed` is true; `source_ids` when listed is true or false. Do not set `listed: false` just because a post did not mention KEV.
+`kev` is one object per CVE: `listed` true, false, or null; `date_added` only when `listed` is true; `source_ids` when listed is true or false. Do not set `listed: false` just because a post did not mention KEV. Look up the CISA KEV catalog for every CVE in every item. A CVE you did not look up stays out of the edition. Do not write "not checked" in reader-facing text.
+
+Look up FIRST EPSS for every CVE in every item, not only the lead CVE. Record `probability` and `score_date` from that response. If FIRST returns no row, omit the EPSS object and say nothing about a missing query in the summary or action.
 
 ## Fixes
 
@@ -84,6 +110,8 @@ Each fix is one component, one version string, one platform, one branch, the CVE
 - Do not reuse a version across platforms or branches unless the source says that.
 - A later release is not a fix for an older CVE unless the source says so.
 - The version string must be the one the source printed. If the source says "10.3 (10.3.0.18) with the vendor patch, or a later release," use that wording rather than inventing a build number.
+- Before you recommend a version, confirm on the vendor's release list that it is still the newest security release. Write every update action as "X or later" or "X or a later release on the same branch."
+- Copy each CVE's affected range from that CVE's own row. Do not reuse one CVE's range for another.
 
 ## Scores
 
@@ -104,6 +132,14 @@ Every source is `{id, kind, url, label, checked_at, supports}`.
 A `social_report` is a discovery lead from X, Bluesky, or Mastodon. The URL must be a status permalink: `https://x.com/<user>/status/<id>` (or twitter.com), `https://bsky.app/profile/<handle>/post/<id>`, or a Mastodon status such as `https://mastodon.social/@user/<id>` or `https://infosec.exchange/@user/<id>`. These may use `checked_at: null`. Link the post. Do not paste it, screenshot it, or embed its media.
 
 Set `checked_at` only on sources whose content you actually read for this edition.
+
+After the JSON is written, verify it field by field against those primary sources. The pull request description gets a checklist table, one row per item, with these columns: primary source read, newest fix confirmed, KEV/EPSS done, vendor steps matched, version ranges copied from the correct CVE row.
+
+Match the vendor's remediation steps one by one. Do not collapse a numbered list into a shorter paraphrase.
+
+Incidents and breaches use the vendor's exact wording for dates. An investigation start is not an attack start. Include the full disclosed scope. A confirmed breach is Act now or Act soon, never Monitor. When the schema has `kind`, set it to `vulnerability`, `incident`, or `supply_chain`. Until that field exists, say which of those three the item is in the pull request, not by inventing a JSON key.
+
+Process notes stay out of `summary` and `action`. "Page did not render", "EPSS not queried", and "original CNA not checked" belong in the pull request description, or in `gaps` once that field exists. Readers see the action, not the editor's unfinished checklist.
 
 ## Featured items
 
@@ -135,8 +171,8 @@ From a clean checkout of the branch, with Python 3.12:
 
 ```bash
 python -m pip install -r requirements-dev.txt
-python -m pytest -q
 python scripts/build_site.py --write-generated
+python -m pytest -q
 python scripts/build_site.py --check
 python scripts/check_links.py --report _reports/link-check.json
 ```
