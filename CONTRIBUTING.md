@@ -8,17 +8,15 @@ Use Python 3.12 and install the build and test dependencies:
 
 ```bash
 python -m pip install -r requirements-dev.txt
+python scripts/build_site.py --write-generated
 python -m pytest -q
-python scripts/build_site.py
+python scripts/build_site.py --check
+python scripts/check_links.py --report _reports/link-check.json
 ```
 
 The normal build validates JSON sources and writes `_site/`. It does not edit tracked files. Inspect the generated homepage, an issue page, feeds, and JSON output before publishing. Generated HTML is not committed.
 
-After editing an issue's JSON, refresh the generated Markdown digests and README briefing explicitly:
-
-```bash
-python scripts/build_site.py --write-generated
-```
+After editing an issue's JSON, refresh the generated Markdown digests and README briefing first, then run the tests, `--check`, and the link check, in that order.
 
 CI runs `python scripts/build_site.py --check`, which fails when the committed digest Markdown or README briefing differs from what the JSON generates. Run it locally before pushing if you want the same check.
 
@@ -66,9 +64,9 @@ Before publishing:
 1. Confirm the product, affected scope, CVEs, and applicable release branches against the sources.
 2. Confirm that versions, exploitation claims, and scores have the appropriate sources and dates, or are explicitly unknown.
 3. Check urgency and action together. Review the lead actions and both audience views.
-4. Run tests and build the site. Refresh generated Markdown and the README briefing with `--write-generated` when the source changes.
+4. Refresh generated Markdown with `--write-generated`, then run `pytest`, then `python scripts/build_site.py --check`, then the link check.
 
-For a correction, update `updated_at` and append a record to `corrections` with `at`, `summary`, and `item_ids`. Explain what readers need to reconsider. Preserve the historical publication date and avoid silently rewriting consequential facts.
+For a correction, update `updated_at` and append a record to `corrections` with `at`, `summary`, and `item_ids`. Explain what readers need to reconsider. Preserve the historical publication date and avoid silently rewriting consequential facts. One calendar day in America/Los_Angeles is one file. Later runs that day append another correction. Each correction is dated after the previous one and no later than `updated_at`. The first run of a new calendar day creates that day's file. A quiet day is a valid empty edition.
 
 ## Link checks
 
