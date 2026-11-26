@@ -32,7 +32,9 @@ Keep an item's `id` stable across editions and corrections for the same product 
 
 | Field | Meaning |
 | --- | --- |
-| `id`, `product` | Stable item identifier and reader-facing product name. |
+| `id`, `product` | Stable item identifier and reader-facing product name. The generated product index groups appearances by this id. |
+| `kind` | Optional. `vulnerability`, `incident`, or `supply_chain`. |
+| `gaps` | Optional, on the edition or an item. Verification notes. Not the customer action. |
 | `audience` | `applications_and_servers`, `end_users`, or `both`. |
 | `priority`, `priority_reason` | `act_now`, `act_soon`, or `monitor`, with an explanation of the urgency. |
 | `action_type` | `update`, `mitigate`, `replace`, `rotate`, or `investigate`. |

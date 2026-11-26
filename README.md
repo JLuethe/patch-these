@@ -13,7 +13,7 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 [Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-26.md) · [Structured data](data/2026-11-26.json)
 
-Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 8:00 AM PST.
+Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 8:02 AM PST.
 
 ### For everyone
 

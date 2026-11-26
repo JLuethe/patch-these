@@ -1,0 +1,348 @@
+{
+  "products": [
+    {
+      "id": "1password",
+      "product": "1Password",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "1password"
+        }
+      ]
+    },
+    {
+      "id": "airbyte-core-images",
+      "product": "Airbyte Core",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "airbyte-core-images"
+        }
+      ]
+    },
+    {
+      "id": "azure-api-management-classic",
+      "product": "Azure API Management Classic",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "azure-api-management-classic"
+        }
+      ]
+    },
+    {
+      "id": "bytebase-dbhub-mcp",
+      "product": "Bytebase DBHub MCP",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "bytebase-dbhub-mcp"
+        }
+      ]
+    },
+    {
+      "id": "checkpoint-security-management",
+      "product": "Check Point Security Management",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "checkpoint-security-management"
+        }
+      ]
+    },
+    {
+      "id": "chrome-desktop",
+      "product": "Google Chrome",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "chrome-desktop"
+        }
+      ]
+    },
+    {
+      "id": "cisco-expressway",
+      "product": "Cisco Expressway Series",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "cisco-expressway"
+        }
+      ]
+    },
+    {
+      "id": "danfoss-ak-sm-800a",
+      "product": "Danfoss AK-SM 800A",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "danfoss-ak-sm-800a"
+        }
+      ]
+    },
+    {
+      "id": "drupal-core",
+      "product": "Drupal core",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "drupal-core"
+        }
+      ]
+    },
+    {
+      "id": "firefox-thunderbird",
+      "product": "Firefox and Thunderbird",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "firefox-thunderbird"
+        }
+      ]
+    },
+    {
+      "id": "geoserver",
+      "product": "GeoServer",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "geoserver"
+        }
+      ]
+    },
+    {
+      "id": "ghostscript",
+      "product": "Artifex Ghostscript",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "ghostscript"
+        }
+      ]
+    },
+    {
+      "id": "hex-pm",
+      "product": "Hex.pm",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "hex-pm"
+        }
+      ]
+    },
+    {
+      "id": "hpe-airwave",
+      "product": "HPE AirWave",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "hpe-airwave"
+        }
+      ]
+    },
+    {
+      "id": "idunno-anticsrf",
+      "product": "Idunno.AntiCsrf",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "idunno-anticsrf"
+        }
+      ]
+    },
+    {
+      "id": "java-se",
+      "product": "Java SE / OpenJDK",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "java-se"
+        }
+      ]
+    },
+    {
+      "id": "jenkins-plugins",
+      "product": "Jenkins plugins",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "jenkins-plugins"
+        },
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "jenkins-plugins"
+        }
+      ]
+    },
+    {
+      "id": "juniper-session-smart",
+      "product": "Juniper Session Smart",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "juniper-session-smart"
+        }
+      ]
+    },
+    {
+      "id": "linux-nfsd",
+      "product": "Linux kernel NFS server (nfsd)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "linux-nfsd"
+        }
+      ]
+    },
+    {
+      "id": "microsoft-visio",
+      "product": "Microsoft Office Visio",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "microsoft-visio"
+        }
+      ]
+    },
+    {
+      "id": "mitel-micollab",
+      "product": "Mitel MiCollab",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "mitel-micollab"
+        }
+      ]
+    },
+    {
+      "id": "monai-label",
+      "product": "MONAI Label",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "monai-label"
+        }
+      ]
+    },
+    {
+      "id": "nable-mail-assure",
+      "product": "N-able Mail Assure / SpamExperts",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "nable-mail-assure"
+        }
+      ]
+    },
+    {
+      "id": "nginx-http2",
+      "product": "F5 NGINX Open Source and NGINX Plus",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "nginx-http2"
+        }
+      ]
+    },
+    {
+      "id": "omarchy-dell-xps-touchpad-haptics",
+      "product": "Omarchy dell-xps-touchpad-haptics",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "omarchy-dell-xps-touchpad-haptics"
+        }
+      ]
+    },
+    {
+      "id": "optimizely-web-experimentation",
+      "product": "Optimizely Web Experimentation",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "optimizely-web-experimentation"
+        }
+      ]
+    },
+    {
+      "id": "pyjwt",
+      "product": "PyJWT",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "pyjwt"
+        }
+      ]
+    },
+    {
+      "id": "simple-git",
+      "product": "simple-git",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "simple-git"
+        }
+      ]
+    },
+    {
+      "id": "virtuemart",
+      "product": "VirtueMart",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "virtuemart"
+        }
+      ]
+    },
+    {
+      "id": "vm2",
+      "product": "vm2",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "vm2"
+        }
+      ]
+    },
+    {
+      "id": "vmware-vcenter",
+      "product": "VMware vCenter",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "vmware-vcenter"
+        }
+      ]
+    },
+    {
+      "id": "wp-connect-plugins",
+      "product": "WP connect WordPress plugins",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "wp-connect-plugins"
+        }
+      ]
+    },
+    {
+      "id": "wp-rocket",
+      "product": "WP Rocket",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "wp-rocket"
+        }
+      ]
+    },
+    {
+      "id": "xen-orchestra",
+      "product": "Xen Orchestra",
+      "appearances": [
+        {
+          "digest_date": "2026-11-25",
+          "item_id": "xen-orchestra"
+        }
+      ]
+    }
+  ]
+}

@@ -137,9 +137,9 @@ After the JSON is written, verify it field by field against those primary source
 
 Match the vendor's remediation steps one by one. Do not collapse a numbered list into a shorter paraphrase.
 
-Incidents and breaches use the vendor's exact wording for dates. An investigation start is not an attack start. Include the full disclosed scope. A confirmed breach is Act now or Act soon, never Monitor. When the schema has `kind`, set it to `vulnerability`, `incident`, or `supply_chain`. Until that field exists, say which of those three the item is in the pull request, not by inventing a JSON key.
+Incidents and breaches use the vendor's exact wording for dates. An investigation start is not an attack start. Include the full disclosed scope. A confirmed breach is Act now or Act soon, never Monitor. Set `kind` to `vulnerability`, `incident`, or `supply_chain`. Omit it only on an edition that was published before the field existed.
 
-Process notes stay out of `summary` and `action`. "Page did not render", "EPSS not queried", and "original CNA not checked" belong in the pull request description, or in `gaps` once that field exists. Readers see the action, not the editor's unfinished checklist.
+Process notes stay out of `summary` and `action`. "Page did not render", "EPSS not queried", and "original CNA not checked" belong in the pull request description, or in the edition or item `gaps` field. Readers see the action. `gaps` may appear only under a labeled verification-notes line.
 
 ## Featured items
 

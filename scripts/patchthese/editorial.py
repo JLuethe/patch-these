@@ -30,6 +30,8 @@ def md_url(value: str) -> str:
 
 def markdown_digest(edition: dict, site_url: str) -> str:
     rows = [f"# {human_date(edition['digest_date'])}", "", "<!-- Generated from data/" + edition["digest_date"] + ".json. Edit the JSON, then run python scripts/build_site.py --write-generated. -->", "", f"Coverage: {coverage(edition)}.", "", f"Updated: {human_time(edition['updated_at'])}.", "", "Urgency describes when to act if affected. The action may be an update, mitigation, replacement, or credential rotation. Missing information is marked as unknown."]
+    if edition.get("gaps"):
+        rows += ["", f"**Verification notes:** {md_text(edition['gaps'])}"]
     if not edition["items"]:
         rows += ["", "No new verified items in this edition. This does not establish that your software has no outstanding updates."]
     if edition["corrections"]:
@@ -48,7 +50,11 @@ def markdown_digest(edition: dict, site_url: str) -> str:
             continue
         rows += ["", f"## {label}"]
         for item in items:
-            rows += ["", f"### {md_text(item['product'])}", "", f"**{ACTIONS[item['action_type']]} · {AUDIENCES[item['audience']]}**", "", md_text(item["summary"]), "", f"**What to do:** {md_text(item['action'])}", "", f"**Why:** {md_text(item['priority_reason'])}", "", f"**Applies to:** {md_text(item['affected'] or 'Affected versions not confirmed. Check the advisory before deciding whether this applies to your installation.')}"]
+            kind = {"vulnerability": "Vulnerability", "incident": "Incident", "supply_chain": "Supply chain"}.get(item.get("kind") or "")
+            lead = " · ".join(part for part in (kind, ACTIONS[item["action_type"]], AUDIENCES[item["audience"]]) if part)
+            rows += ["", f"### {md_text(item['product'])}", "", f"**{lead}**", "", md_text(item["summary"]), "", f"**What to do:** {md_text(item['action'])}", "", f"**Why:** {md_text(item['priority_reason'])}", "", f"**Applies to:** {md_text(item['affected'] or 'Affected versions not confirmed. Check the advisory before deciding whether this applies to your installation.')}"]
+            if item.get("gaps"):
+                rows += ["", f"**Verification notes:** {md_text(item['gaps'])}"]
             if item["cves"]:
                 rows += ["", "**CVEs:** " + ", ".join(item["cves"])]
             if item["fixes"]:

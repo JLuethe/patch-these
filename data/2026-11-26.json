@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-25",
   "coverage_end": "2026-11-26",
   "published_at": "2026-11-26T15:12:00Z",
-  "updated_at": "2026-11-26T16:00:00Z",
+  "updated_at": "2026-11-26T16:02:17Z",
   "corrections": [
     {
       "at": "2026-11-26T16:00:00Z",
@@ -21,6 +21,14 @@
         "pyjwt",
         "microsoft-visio",
         "1password"
+      ]
+    },
+    {
+      "at": "2026-11-26T16:02:17Z",
+      "summary": "Items now record a kind. 1Password is an incident and Airbyte Core is a supply-chain compromise. Checks that did not change the customer action are labeled verification notes.",
+      "item_ids": [
+        "1password",
+        "airbyte-core-images"
       ]
     }
   ],
@@ -305,7 +313,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "F5 article K000163926 did not render, so no NGINX Plus version is named for CVE-2026-132779."
     },
     {
       "id": "airbyte-core-images",
@@ -455,7 +465,8 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "supply_chain"
     },
     {
       "id": "checkpoint-security-management",
@@ -603,7 +614,8 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability"
     },
     {
       "id": "virtuemart",
@@ -761,7 +773,9 @@
             "exploitation"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "The hotfix build VirtueMart offers for 4.0 and later was not named."
     },
     {
       "id": "wp-rocket",
@@ -889,7 +903,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "The Patchstack page was not re-opened when the action was changed to say or later."
     },
     {
       "id": "hpe-airwave",
@@ -1047,7 +1063,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "The HPE support page was not used. This item follows the CSAF bulletin."
     },
     {
       "id": "jenkins-plugins",
@@ -1247,7 +1265,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "The 2026-11-25 Jenkins advisory was not re-opened when the action was changed to say or a later release."
     },
     {
       "id": "vm2",
@@ -1395,7 +1415,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "GitHub advisory GHSA-x3v6-43hc-82mc shows 3.12.1 beside affected versions through 3.12.0. Its narrative still says no patched version was identified. npm publishes 3.12.1."
     },
     {
       "id": "pyjwt",
@@ -1511,7 +1533,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "The PyJWT release page was not opened, and a Red Hat Ansible Automation Platform fix was not established."
     },
     {
       "id": "microsoft-visio",
@@ -1662,7 +1686,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "vulnerability",
+      "gaps": "The Microsoft 365 Apps for Enterprise build was not listed in the MSRC API. The action points at the Office security releases page."
     },
     {
       "id": "1password",
@@ -1730,7 +1756,9 @@
             "summary"
           ]
         }
-      ]
+      ],
+      "kind": "incident"
     }
-  ]
+  ],
+  "gaps": "Verification notes on individual items record checks that did not change the customer action, including the F5 NGINX Plus article that did not render."
 }

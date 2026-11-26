@@ -249,3 +249,14 @@ def test_social_report_rejects_a_url_that_is_not_a_status(edition, url):
                             "label": "Not a status", "checked_at": None, "supports": ["summary"]})
     with pytest.raises(ValidationError, match="X, Bluesky, or Mastodon status"):
         validate_payload(edition)
+
+
+def test_kind_and_gaps_are_optional_and_a_bad_kind_fails(edition):
+    validate_payload(edition)
+    edition["gaps"] = "One vendor page did not render."
+    edition["items"][0]["kind"] = "supply_chain"
+    edition["items"][0]["gaps"] = "The release list was checked after the first draft."
+    validate_payload(edition)
+    edition["items"][0]["kind"] = "breach"
+    with pytest.raises(ValidationError):
+        validate_payload(edition)

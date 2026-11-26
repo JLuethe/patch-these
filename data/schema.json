@@ -49,6 +49,12 @@
       "maxItems": 3,
       "uniqueItems": true
     },
+    "gaps": {
+      "description": "Optional edition-level verification notes. Not a customer action.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
     "items": {
       "type": "array",
       "items": {
@@ -437,6 +443,14 @@
           "minLength": 1,
           "pattern": "\\S"
         },
+        "kind": {
+          "description": "Optional item kind. Omitted on editions written before the field existed.",
+          "enum": [
+            "vulnerability",
+            "incident",
+            "supply_chain"
+          ]
+        },
         "audience": {
           "enum": [
             "applications_and_servers",
@@ -504,6 +518,12 @@
           "pattern": "\\S"
         },
         "action": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "gaps": {
+          "description": "Optional item-level verification notes. Not a customer action.",
           "type": "string",
           "minLength": 1,
           "pattern": "\\S"
