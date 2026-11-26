@@ -20,7 +20,7 @@ The editorial date is the calendar date in America/Los_Angeles when the edition 
 
 ## What the findings may contain
 
-Products, CVE ids, X post URLs, advisory URLs, scores, and actions. Use only those facts. If a fact was not in the findings and you did not read a source that states it, leave it null, unknown, or omit the score record. Never invent an affected range, a fixed version, a CVSS score, an EPSS probability, a KEV date, or a check time.
+Products, CVE ids, social post URLs (X, Bluesky, and Mastodon), advisory URLs, scores, and actions. Social posts are discovery leads. Verify the claim against a primary source before you publish a fix, a score, or an exploitation status. Use only those facts. If a fact was not in the findings and you did not read a source that states it, leave it null, unknown, or omit the score record. Never invent an affected range, a fixed version, a CVSS score, an EPSS probability, a KEV date, or a check time.
 
 ## Stable product ids
 
@@ -99,7 +99,9 @@ Every source is `{id, kind, url, label, checked_at, supports}`.
 
 `supports` lists the claim fields that source actually backs, such as `fixes`, `kev`, `cvss`, `epss`, `exploitation`, `affected`, `summary`, `action`. Every `source_ids` entry on a fact must name a source whose `supports` includes that fact's field.
 
-`checked_at` is an RFC 3339 timestamp of when the source content was read. It is not the publication date and not the time a URL returned HTTP 200. For any edition dated after 2026-11-25, every source except `social_report` must have `checked_at`, and that timestamp must be at or before `updated_at`. X posts are `social_report` and may use `checked_at: null`. Link the post. Do not paste it, screenshot it, or embed its media.
+`checked_at` is an RFC 3339 timestamp of when the source content was read. It is not the publication date and not the time a URL returned HTTP 200. For any edition dated after 2026-11-25, every source except `social_report` must have `checked_at`, and that timestamp must be at or before `updated_at`.
+
+A `social_report` is a discovery lead from X, Bluesky, or Mastodon. The URL must be a status permalink: `https://x.com/<user>/status/<id>` (or twitter.com), `https://bsky.app/profile/<handle>/post/<id>`, or a Mastodon status such as `https://mastodon.social/@user/<id>` or `https://infosec.exchange/@user/<id>`. These may use `checked_at: null`. Link the post. Do not paste it, screenshot it, or embed its media.
 
 Set `checked_at` only on sources whose content you actually read for this edition.
 
@@ -157,7 +159,7 @@ This is a defensive briefing. State the impact in one sentence and spend the res
 
 Do not publish exploit code, proof-of-concept code, payloads, attack steps, or links to exploit kits, exploit-db, Packet Storm, or proof-of-concept repositories. A vendor advisory may contain those details; do not copy them. You may link the advisory itself.
 
-Do not copy an X post. Link it.
+Do not copy a social post from X, Bluesky, or Mastodon. Link it.
 
 Do not describe an issue as exploited unless a source you read says so. Do not describe a version as fixed unless a source you read names that version for that CVE and that branch.
 

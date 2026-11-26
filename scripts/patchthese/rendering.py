@@ -8,7 +8,7 @@ from urllib.parse import urljoin, urlsplit
 import markdown
 import nh3
 
-from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, ordered_items, root_path, timestamp
+from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, ordered_items, root_path, social_platform, timestamp
 
 _CLEANER_OPTIONS = dict(
     tags={"p", "a", "strong", "em", "code", "pre", "ul", "ol", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "br", "table", "thead", "tbody", "tr", "th", "td"},
@@ -32,7 +32,12 @@ def render_markdown(text: str, *, relative_base: str | None = None) -> str:
 
 
 def source_link(source: dict, label: str | None = None) -> str:
-    return f'<a class="source-link" href="{escape(source["url"], quote=True)}" rel="noopener noreferrer">{escape(label or source["label"])}</a>'
+    text = label or source["label"]
+    if source.get("kind") == "social_report":
+        platform = social_platform(source.get("url", ""))
+        if platform:
+            text = f"{platform} · {text}"
+    return f'<a class="source-link" href="{escape(source["url"], quote=True)}" rel="noopener noreferrer">{escape(text)}</a>'
 
 
 def source_refs(item: dict, ids: list[str]) -> str:
@@ -83,7 +88,11 @@ def item_detail(item: dict) -> str:
     for source in item["sources"]:
         status = f'Checked {human_time(source["checked_at"])}' if source["checked_at"] else "Check time not recorded"
         support = ", ".join(source["supports"]).replace("_", " ")
-        rows.append(f'<li>{source_link(source)} <span class="muted">— {escape(source["kind"].replace("_", " "))}. {escape(status)}. Supports: {escape(support or "discovery")}.</span></li>')
+        if source["kind"] == "social_report":
+            kind_label = f"{social_platform(source['url']) or 'Social'} post"
+        else:
+            kind_label = source["kind"].replace("_", " ")
+        rows.append(f'<li>{source_link(source)} <span class="muted">— {escape(kind_label)}. {escape(status)}. Supports: {escape(support or "discovery")}.</span></li>')
     blocks.append('<h4>Evidence and source checks</h4><ul class="sources">' + "".join(rows) + '</ul>')
     return "".join(blocks)
 
@@ -140,7 +149,7 @@ def page(title: str, body: str, site_url: str, path: str, *, description: str = 
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{escape(title)}"><meta name="twitter:description" content="{escape(description)}"><meta name="twitter:image" content="{escape(site_url + '/assets/social-card.png')}">{article_meta}
 <script src="{href('assets/app.js')}" defer></script></head>
 <body class="{escape(body_class)}"{dates}><a class="skip" href="#main">Skip to content</a>
-<div class="wrap"><header class="site-header"><div class="header-top"><div class="brand"><a class="wordmark" href="{href('')}">patch-these<span aria-hidden="true">.</span></a><p class="byline">By <a href="https://github.com/JLuethe">John Luethe</a></p></div><nav class="main-nav" aria-label="Main"><a href="{href('')}">Latest briefing</a><a href="{href('archive/')}">Archive</a><a href="{href('methodology/')}">Our method</a><a href="{href('subscribe/')}">Subscribe <span aria-hidden="true">↗</span></a></nav></div><p class="project-blurb">patch-these is a daily, plain-English briefing of security issues raised on X, checked against vendor advisories, CISA KEV and EPSS, and turned into what to patch. No exploit details.</p></header>
+<div class="wrap"><header class="site-header"><div class="header-top"><div class="brand"><a class="wordmark" href="{href('')}">patch-these<span aria-hidden="true">.</span></a><p class="byline">By <a href="https://github.com/JLuethe">John Luethe</a></p></div><nav class="main-nav" aria-label="Main"><a href="{href('')}">Latest briefing</a><a href="{href('archive/')}">Archive</a><a href="{href('methodology/')}">Our method</a><a href="{href('subscribe/')}">Subscribe <span aria-hidden="true">↗</span></a></nav></div><p class="project-blurb">{escape(DESCRIPTION)}</p></header>
 <main id="main">{body}</main>
 <footer class="site-footer"><div><a class="wordmark" href="{href('')}">patch-these.</a><p>By <a href="https://github.com/JLuethe">John Luethe</a></p><p>Curated, not complete. Unofficial. Verify the vendor advisory before acting.</p><p class="muted">Not professional advice. Not affiliated with CISA, FIRST, or any vendor. EPSS is a probability, not a certainty.</p></div><div class="feed-links"><a href="{href('subscribe/')}">Atom feeds</a><a href="{href('latest.json')}">Latest JSON</a><a href="{href('data/schema.json')}">Data schema</a><a href="{escape(REPO)}">GitHub</a><a href="{escape(REPO + '/blob/main/LICENSE')}">Content: CC BY 4.0</a><a href="{escape(REPO + '/blob/main/LICENSE-CODE')}">Code: MIT</a></div></footer></div></body></html>'''
 

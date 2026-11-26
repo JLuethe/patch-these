@@ -1,6 +1,6 @@
 # patch-these
 
-A calm security briefing: what applies to you, why it matters, and what to do next.
+A daily, plain-English briefing of security issues raised on X, Bluesky and Mastodon, checked against vendor advisories, CISA KEV and EPSS, and turned into what to patch. No exploit details.
 
 Maintained by [John Luethe](https://github.com/JLuethe).
 

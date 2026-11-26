@@ -107,6 +107,45 @@ def test_social_login_page_is_not_verified_even_when_http_200():
     assert check_links.classify_http(200, "x.com") == "inconclusive"
 
 
+class _SocialResponse:
+    def __init__(self, url):
+        self.status = 200
+        self._url = url
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        return False
+
+    def geturl(self):
+        return self._url
+
+
+@pytest.mark.parametrize("url", [
+    "https://bsky.app/profile/example.bsky.social/post/3abc",
+    "https://mastodon.social/@example/123456",
+    "https://mastodon.social/@example@infosec.exchange/123456",
+    "https://infosec.exchange/@example/123456",
+    "https://infosec.exchange/users/example/statuses/123456",
+])
+def test_bluesky_and_mastodon_posts_are_inconclusive_when_unauthenticated(url):
+    def opened(request, timeout):
+        return _SocialResponse(request.full_url)
+
+    result = check_links.check_external(url, opener=opened, sleeper=lambda _: None)
+    assert result["status"] == "inconclusive"
+    assert "not verified" in result["detail"]
+
+
+def test_a_normal_page_on_a_mastodon_server_is_still_checked():
+    def missing(request, timeout):
+        raise HTTPError(request.full_url, 404, "Unavailable", {}, None)
+
+    result = check_links.check_external("https://infosec.exchange/about", opener=missing, sleeper=lambda _: None)
+    assert result["status"] == "dead"
+
+
 def test_missing_local_link_fails_and_leaves_report(tmp_path):
     (tmp_path / "README.md").write_text("[Missing](missing.md)", encoding="utf-8")
     report = tmp_path / "report.json"

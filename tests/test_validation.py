@@ -203,10 +203,35 @@ def test_new_editions_must_record_when_evidence_was_checked(edition):
     validate_payload(edition)
 
 
-def test_social_discovery_posts_do_not_need_check_times(edition):
+@pytest.mark.parametrize("url", [
+    "https://x.com/example/status/1",
+    "https://twitter.com/example/status/1",
+    "https://bsky.app/profile/example.bsky.social/post/3abc",
+    "https://mastodon.social/@example/123456",
+    "https://mastodon.social/@example@infosec.exchange/123456",
+    "https://infosec.exchange/@example/123456",
+    "https://infosec.exchange/users/example/statuses/123456",
+])
+def test_social_discovery_posts_do_not_need_check_times(edition, url):
     _next_day(edition)
     item = edition["items"][0]
     item["sources"][0]["checked_at"] = "2026-11-27T03:00:00Z"
-    item["sources"].append({"id": "post", "kind": "social_report", "url": "https://x.com/example/status/1",
-                            "label": "Discussed on X", "checked_at": None, "supports": ["summary"]})
+    item["sources"].append({"id": "post", "kind": "social_report", "url": url,
+                            "label": "Discussed in public", "checked_at": None, "supports": ["summary"]})
     validate_payload(edition)
+
+
+@pytest.mark.parametrize("url", [
+    "https://vendor.example/advisory",
+    "https://bsky.app/profile/example.bsky.social",
+    "https://mastodon.social/explore",
+    "https://x.com/example",
+])
+def test_social_report_rejects_a_url_that_is_not_a_status(edition, url):
+    _next_day(edition)
+    item = edition["items"][0]
+    item["sources"][0]["checked_at"] = "2026-11-27T03:00:00Z"
+    item["sources"].append({"id": "post", "kind": "social_report", "url": url,
+                            "label": "Not a status", "checked_at": None, "supports": ["summary"]})
+    with pytest.raises(ValidationError, match="X, Bluesky, or Mastodon status"):
+        validate_payload(edition)

@@ -122,6 +122,7 @@
           "$ref": "#/$defs/slug"
         },
         "kind": {
+          "description": "social_report is a discovery lead only: an X status (x.com or twitter.com), a bsky.app post, or a Mastodon status permalink (including posts from infosec.exchange and other servers seen via mastodon.social). Link the post. Do not paste it. checked_at may be null.",
           "enum": [
             "vendor_advisory",
             "government_alert",
