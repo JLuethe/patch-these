@@ -222,7 +222,7 @@ def test_check_mode_fails_when_generated_views_are_stale(publication):
     edition = edition_at(publication)
     edition["items"][0]["action"] = edition["items"][0]["action"] + " Then confirm the version."
     (publication / "data" / f"{edition['digest_date']}.json").write_text(json.dumps(edition))
-    with pytest.raises(StaleGeneratedFiles, match=r"digests/2026-11-25\.md, README\.md"):
+    with pytest.raises(StaleGeneratedFiles, match=rf"digests/{edition['digest_date']}\.md, README\.md"):
         build_site(publication, site_url=SITE_URL, check_generated=True)
 
     build_site(publication, site_url=SITE_URL, write_generated=True)
@@ -237,7 +237,7 @@ def test_committed_generated_views_match_the_json():
 
 def test_exploitation_label_names_only_the_exploited_cves(publication):
     output = build_site(publication, site_url=SITE_URL)
-    home = (output / "index.html").read_text()
+    home = (output / "digests" / "2026-11-25" / "index.html").read_text()
     chrome = home[home.index('id="item-chrome-desktop"'):]
     chrome = chrome[:chrome.index("</article>")]
     assert "Exploitation confirmed for CVE-2026-125350" in chrome
