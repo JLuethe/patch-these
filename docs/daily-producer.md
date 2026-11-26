@@ -143,6 +143,10 @@ Every source is `{id, kind, url, label, checked_at, supports}`.
 
 `checked_at` is an RFC 3339 timestamp of when the source content was read. It is not the publication date and not the time a URL returned HTTP 200. For any edition dated after 2026-11-25, every source except `social_report` must have `checked_at`, and that timestamp must be at or before `updated_at`.
 
+From the 2026-11-27 edition on, a `social_report` may support only text fields such as `summary`, `affected`, or `action`. It cannot list `exploitation`, `kev`, `fixes`, `cvss`, or `epss` in `supports`, so it can never be cited for those facts. Cite the primary source instead. Validation enforces this.
+
+Every CVE id that appears in `summary`, `action`, `steps`, or `priority_reason` must also be in the item's `cves` list (validation enforces this from the 2026-11-27 edition). If you name a CVE, you must have looked up its KEV and EPSS records; if you did not, refer to the advisory by its vendor id instead.
+
 A `social_report` is a discovery lead from X, Bluesky, or Mastodon. The URL must be a status permalink: `https://x.com/<user>/status/<id>` (or twitter.com), `https://bsky.app/profile/<handle>/post/<id>`, or a Mastodon status such as `https://mastodon.social/@user/<id>` or `https://infosec.exchange/@user/<id>`. These may use `checked_at: null`. Link the post. Do not paste it, screenshot it, or embed its media.
 
 Set `checked_at` only on sources whose content you actually read for this edition.
@@ -151,18 +155,20 @@ After the JSON is written, verify it field by field against those primary source
 
 Match the vendor's remediation steps one by one. Do not collapse a numbered list into a shorter paraphrase.
 
-Incidents and breaches use the vendor's exact wording for dates. An investigation start is not an attack start. Include the full disclosed scope. A confirmed breach is Act now or Act soon, never Monitor. Set `kind` to `vulnerability`, `incident`, or `supply_chain`. Omit it only on an edition that was published before the field existed.
+Incidents and breaches use the vendor's exact wording for dates. An investigation start is not an attack start. Include the full disclosed scope. A confirmed breach is Act now or Act soon, never Monitor. Set `kind` to `vulnerability`, `incident`, or `supply_chain`. Omit it only on an edition that was published before the field existed. The `exploitation` field on an incident means the breach and on a supply-chain item means the compromise. The site labels them "Breach confirmed" or "Compromise confirmed" (and "reported"), never "Exploitation confirmed".
 
 Process notes stay out of `summary` and `action`. "Page did not render", "EPSS not queried", and "original CNA not checked" belong in the pull request description, or in the edition or item `gaps` field. Readers see the action. `gaps` may appear only under a labeled verification-notes line.
 
 ## Early signals
 
-`verification` is optional. Omit it, or set `verified`, for a normal item. Set `early_signal` only for a lead that is not yet confirmed.
+Every item in an edition dated 2026-11-27 or later must set `verification` explicitly: `verified` for a confirmed item, `early_signal` for a lead that is not yet confirmed. Validation rejects a missing value. Older editions may omit it, and an omitted value there means `verified`.
+
+An early signal may rest on one credible social post. Do not wait for a second source and do not move or bury early signals. When an early signal has exactly one source, the site, the Markdown digest and the Atom feed add a "Single source" note next to "Not yet verified".
 
 An `early_signal` item must:
 
 - use `action_type` `investigate`, with no `fixes` and with `fix_status` other than `available`;
-- keep `exploitation.status` at `unknown` or `reported`, never `confirmed`, including every `by_cve` row;
+- keep `exploitation.status` at `unknown` or `reported`, never `confirmed`, including every `by_cve` row. `reported` needs a non-social source (for example a researcher or news report you read). A social post alone leaves it `unknown`; say what the posts claim in the summary instead;
 - not set `kev.listed` to true;
 - include at least one source, which may be a `social_report` alone;
 - set `gaps` to what is still unconfirmed;

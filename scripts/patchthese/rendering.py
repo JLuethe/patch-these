@@ -8,7 +8,7 @@ from urllib.parse import urljoin, urlsplit
 import markdown
 import nh3
 
-from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, is_early_signal, ordered_items, root_path, social_platform, timestamp
+from .common import ACTIONS, AUDIENCES, DESCRIPTION, PRIORITIES, REPO, coverage, exploitation_label, human_date, human_time, is_early_signal, ordered_items, root_path, social_platform, status_noun, timestamp, verification_labels
 
 _CLEANER_OPTIONS = dict(
     tags={"p", "a", "strong", "em", "code", "pre", "ul", "ol", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "br", "table", "thead", "tbody", "tr", "th", "td"},
@@ -66,9 +66,9 @@ def item_detail(item: dict) -> str:
             f'<li>{escape(record["cve"])}: {escape(record["status"].capitalize())}. {source_refs(item, record["source_ids"])}</li>'
             for record in exploitation["by_cve"]
         )
-        blocks.append(f'<p><strong>Exploitation:</strong></p><ul>{cve_rows}</ul>')
+        blocks.append(f'<p><strong>{status_noun(item)}:</strong></p><ul>{cve_rows}</ul>')
     else:
-        blocks.append(f'<p><strong>Exploitation:</strong> {escape(exploitation["status"].capitalize())}. {source_refs(item, exploitation["source_ids"])}</p>')
+        blocks.append(f'<p><strong>{status_noun(item)}:</strong> {escape(exploitation["status"].capitalize())}. {source_refs(item, exploitation["source_ids"])}</p>')
     for entry in item["kev"]:
         state = "Listed" if entry["listed"] is True else "Not listed at the recorded check" if entry["listed"] is False else "Membership not established"
         when = f'; added {escape(entry["date_added"])}' if entry["date_added"] else ""
@@ -121,7 +121,10 @@ def item_card(item: dict, digest_date: str, site_url: str, *, interactive: bool 
     evidence = " · ".join(labels) or "Check the affected scope"
     kind = ITEM_KINDS.get(item.get("kind") or "", "")
     kind_label = f'<span class="item-kind">{escape(kind)}</span>' if kind else ""
-    unverified = '<span class="unverified-label">Not yet verified</span>' if is_early_signal(item) else ""
+    unverified = "".join(
+        f'<span class="unverified-label">{escape(label)}</span>' if index == 0 else f'<span class="single-source-label">{escape(label)}</span>'
+        for index, label in enumerate(verification_labels(item))
+    )
     gaps = item.get("gaps")
     notes = f'<p class="verification-notes"><strong>Verification notes:</strong> {escape(gaps)}</p>' if gaps else ""
     permalink = escape(root_path(site_url, f"digests/{digest_date}/#item-{item['id']}"))

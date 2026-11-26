@@ -5,7 +5,7 @@ from __future__ import annotations
 from html import escape
 import xml.etree.ElementTree as ET
 
-from .common import ACTIONS, DESCRIPTION, PRIORITIES, human_date, is_early_signal, ordered_items, timestamp
+from .common import ACTIONS, DESCRIPTION, PRIORITIES, exploitation_label, human_date, is_early_signal, ordered_items, timestamp, verification_labels
 
 ATOM = "http://www.w3.org/2005/Atom"
 ET.register_namespace("", ATOM)
@@ -54,7 +54,10 @@ def build_feed(editions: list[dict], site_url: str, *, audience: str | None = No
         for item in items:
             primary = [source for source in item["sources"] if source["kind"] != "social_report"]
             sources = " · ".join(f'<a href="{escape(source["url"])}">{escape(source["label"])}</a>' for source in primary)
-            status = "Not yet verified" if is_early_signal(item) else f"{PRIORITIES[item['priority']]} · {ACTIONS[item['action_type']]}"
+            status = " · ".join(verification_labels(item)) if is_early_signal(item) else f"{PRIORITIES[item['priority']]} · {ACTIONS[item['action_type']]}"
+            evidence = exploitation_label(item)
+            if evidence:
+                status += f" · {evidence}"
             blocks.append(f'<h2><a href="{escape(link + "#item-" + item["id"])}">{escape(item["product"])}</a></h2><p><strong>{escape(status)}</strong></p><p>{escape(item["summary"])}</p><p><strong>What to do:</strong> {escape(item["action"])}</p><p><strong>Applies to:</strong> {escape(item["affected"] or "Affected versions not confirmed; check the advisory.")}</p><p><strong>Why:</strong> {escape(item["priority_reason"])}</p><p>{sources}</p>')
             if item["cves"]:
                 blocks.append('<p><strong>CVEs:</strong> ' + escape(", ".join(item["cves"])) + '</p>')

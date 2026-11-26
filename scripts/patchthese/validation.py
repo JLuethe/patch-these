@@ -24,6 +24,12 @@ EXPLOITATION_RANK = {"confirmed": 0, "reported": 1, "unknown": 2}
 # Editions up to this date were migrated from schema 1 and may lack check times.
 # Every later edition must record when each evidentiary source was checked.
 CHECK_TIMES_REQUIRED_AFTER = date(2026, 11, 25)
+# Editions dated on or after this day must state verification on every item,
+# list every CVE their text names, and keep social posts out of fact support.
+# Earlier editions were written before these rules and still validate unchanged.
+STRICT_VERIFICATION_FROM = date(2026, 11, 27)
+CVE_IN_TEXT = re.compile(r"CVE-\d{4}-\d{4,}")
+SOCIAL_FORBIDDEN_SUPPORT = ("exploitation", "kev", "fixes", "cvss", "epss")
 
 
 class ValidationError(ValueError):
@@ -63,12 +69,39 @@ def _source_refs(record: dict, sources: dict, field: str, where: str) -> None:
         )
 
 
-def _validate_item(item: dict, updated: datetime, *, require_check_times: bool = False) -> None:
+def _validate_strict(item: dict, where: str) -> None:
+    """Rules for editions dated on or after STRICT_VERIFICATION_FROM."""
+    _require(
+        item.get("verification") in {"verified", "early_signal"},
+        f"{where}: set verification to verified or early_signal; editions from "
+        f"{STRICT_VERIFICATION_FROM.isoformat()} must state it on every item",
+    )
+    cves = set(item["cves"])
+    for field in ("summary", "action", "priority_reason", "steps"):
+        value = item.get(field)
+        texts = value if isinstance(value, list) else [value] if value else []
+        for text in texts:
+            for cve in CVE_IN_TEXT.findall(text):
+                _require(cve in cves, f"{where}: {field} mentions {cve}, which is not in the item's cves list")
+    for source in item["sources"]:
+        if source["kind"] != "social_report":
+            continue
+        for field in SOCIAL_FORBIDDEN_SUPPORT:
+            _require(
+                field not in source["supports"],
+                f"{where}: source {source['id']!r} is a social_report and cannot support {field}; "
+                "cite the primary source instead",
+            )
+
+
+def _validate_item(item: dict, updated: datetime, *, require_check_times: bool = False, strict: bool = False) -> None:
     where = f"item {item['id']}"
     cves = set(item["cves"])
     source_ids = [source["id"] for source in item["sources"]]
     _require(len(source_ids) == len(set(source_ids)), f"{where}: duplicate source id")
     sources = {source["id"]: source for source in item["sources"]}
+    if strict:
+        _validate_strict(item, where)
 
     for source in sources.values():
         url = source["url"]
@@ -219,8 +252,9 @@ def validate_payload(payload: dict, expected_date: str | None = None) -> None:
         previous_correction = at
 
     require_check_times = edition_date > CHECK_TIMES_REQUIRED_AFTER
+    strict = edition_date >= STRICT_VERIFICATION_FROM
     for item in payload["items"]:
-        _validate_item(item, updated, require_check_times=require_check_times)
+        _validate_item(item, updated, require_check_times=require_check_times, strict=strict)
 
 
 def _unique_object(pairs: list[tuple]) -> dict:

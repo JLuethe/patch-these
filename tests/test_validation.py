@@ -324,3 +324,74 @@ def test_kind_and_gaps_are_optional_and_a_bad_kind_fails(edition):
     edition["items"][0]["kind"] = "breach"
     with pytest.raises(ValidationError):
         validate_payload(edition)
+
+
+# Rules for editions dated from STRICT_VERIFICATION_FROM (2026-11-27).
+
+def _strict_day(edition):
+    edition.update(digest_date="2026-11-27", coverage_start="2026-11-27", coverage_end="2026-11-27",
+                   published_at="2026-11-27T14:00:00Z", updated_at="2026-11-27T15:00:00Z")
+    for item in edition["items"]:
+        item.setdefault("verification", "verified")
+        for source in item["sources"]:
+            if source["kind"] != "social_report" and source["checked_at"] is None:
+                source["checked_at"] = "2026-11-27T13:00:00Z"
+
+
+def test_new_editions_must_state_verification_and_old_editions_need_not(edition):
+    validate_payload(edition)  # Before the cutoff, omitted verification still means verified.
+    _strict_day(edition)
+    validate_payload(edition)
+    del edition["items"][0]["verification"]
+    with pytest.raises(ValidationError, match="set verification to verified or early_signal"):
+        validate_payload(edition)
+    edition["items"][0]["verification"] = "early_signal"
+    with pytest.raises(ValidationError, match="early_signal"):
+        validate_payload(edition)  # Still bound by the early-signal rules (no patch).
+
+
+@pytest.mark.parametrize("field", ["summary", "action", "priority_reason"])
+def test_new_editions_must_list_every_cve_named_in_the_text(edition, field):
+    _strict_day(edition)
+    item = edition["items"][0]
+    item[field] = ["Also see CVE-2026-12345."] if field == "steps" else "Also see CVE-2026-12345."
+    with pytest.raises(ValidationError, match=f"{field} mentions CVE-2026-12345"):
+        validate_payload(edition)
+    # The same text is fine once the CVE is listed (no KEV/EPSS rows are invented here).
+    item["cves"].append("CVE-2026-12345")
+    validate_payload(edition)
+
+
+def test_cve_in_text_rule_does_not_apply_to_earlier_editions(edition):
+    edition["items"][0]["summary"] = "Also see CVE-2026-12345."
+    validate_payload(edition)
+
+
+@pytest.mark.parametrize("field", ["exploitation", "kev", "fixes", "cvss", "epss"])
+def test_social_posts_cannot_support_hard_facts(edition, field):
+    _strict_day(edition)
+    item = edition["items"][0]
+    item["sources"].append({"id": "post", "kind": "social_report", "url": "https://x.com/example/status/1",
+                            "label": "Discussed on X", "checked_at": None, "supports": ["summary", field]})
+    with pytest.raises(ValidationError, match=f"social_report and cannot support {field}"):
+        validate_payload(edition)
+    item["sources"][-1]["supports"] = ["summary"]
+    validate_payload(edition)
+
+
+def test_social_support_rule_does_not_apply_to_earlier_editions(edition):
+    edition["items"][0]["sources"].append({"id": "post", "kind": "social_report", "url": "https://x.com/example/status/1",
+                                           "label": "Discussed on X", "checked_at": None, "supports": ["summary", "epss"]})
+    validate_payload(edition)
+
+
+def test_early_signal_from_one_social_post_stays_valid_in_new_editions(edition):
+    _strict_day(edition)
+    signal = _early_signal(edition)
+    assert len(signal["sources"]) == 1 and signal["sources"][0]["kind"] == "social_report"
+    validate_payload(edition)
+    # It still cannot claim exploitation from that post, KEV, or a patch.
+    signal["exploitation"] = {"status": "reported", "source_ids": ["post"]}
+    signal["sources"][0]["supports"].append("exploitation")
+    with pytest.raises(ValidationError, match="cannot support exploitation"):
+        validate_payload(edition)

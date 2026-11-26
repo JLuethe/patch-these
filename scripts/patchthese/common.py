@@ -94,12 +94,25 @@ def exploited_cves(item: dict) -> list[str] | None:
     return matching
 
 
+# An incident or supply-chain compromise is not "exploitation" of a vulnerability.
+STATUS_NOUNS = {"incident": "Breach", "supply_chain": "Compromise"}
+
+
+def status_noun(item: dict) -> str:
+    """What the exploitation field means for this item's kind: Exploitation, Breach, or Compromise."""
+    return STATUS_NOUNS.get(item.get("kind") or "", "Exploitation")
+
+
 def exploitation_label(item: dict) -> str | None:
-    """Reader-facing exploitation label, scoped to specific CVEs when that is more accurate."""
+    """Reader-facing exploitation label, scoped to specific CVEs when that is more accurate.
+
+    Incidents say "Breach confirmed" and supply-chain items say "Compromise confirmed",
+    never "Exploitation confirmed".
+    """
     status = item["exploitation"]["status"]
     if status not in {"confirmed", "reported"}:
         return None
-    label = f"Exploitation {status}"
+    label = f"{status_noun(item)} {status}"
     scoped = exploited_cves(item)
     if scoped is None:
         return label
@@ -111,6 +124,18 @@ def exploitation_label(item: dict) -> str | None:
 def is_early_signal(item: dict) -> bool:
     """An unverified lead. Omitted verification means the item is verified."""
     return item.get("verification") == "early_signal"
+
+
+def is_single_source(item: dict) -> bool:
+    """An early signal resting on one source, usually one social post."""
+    return is_early_signal(item) and len(item["sources"]) == 1
+
+
+def verification_labels(item: dict) -> list[str]:
+    """Reader-facing verification state, empty for a verified item."""
+    if not is_early_signal(item):
+        return []
+    return ["Not yet verified"] + (["Single source"] if is_single_source(item) else [])
 
 
 def for_audience(item: dict, audience: str | None) -> bool:

@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from urllib.parse import quote
 
-from .common import ACTIONS, AUDIENCES, PRIORITIES, coverage, human_date, human_time, is_early_signal, ordered_items
+from .common import ACTIONS, AUDIENCES, PRIORITIES, coverage, human_date, human_time, is_early_signal, ordered_items, status_noun, verification_labels
 
 GENERATED_START = "<!-- BEGIN GENERATED EDITION -->"
 GENERATED_END = "<!-- END GENERATED EDITION -->"
@@ -48,7 +48,7 @@ def markdown_digest(edition: dict, site_url: str) -> str:
     if signals:
         rows += ["", "## Early signals: not yet verified", "", "These leads are not confirmed. Do not patch from this section.", ""]
         for item in signals:
-            rows += [f"- **Not yet verified. {md_text(item['product'])}:** {md_text(item['action'])}"]
+            rows += [f"- **{'. '.join(verification_labels(item))}. {md_text(item['product'])}:** {md_text(item['action'])}"]
     for priority, label in PRIORITIES.items():
         items = [item for item in ordered_items(edition) if item["priority"] == priority and not is_early_signal(item)]
         if not items:
@@ -70,9 +70,9 @@ def markdown_digest(edition: dict, site_url: str) -> str:
                     rows += [f"- {md_text(scope)}: {md_code(fix['version'])}{cves}."]
             by_cve = item["exploitation"].get("by_cve")
             if by_cve:
-                rows += ["", "**Exploitation:** " + "; ".join(f"{record['cve']} {record['status']}" for record in by_cve) + "."]
+                rows += ["", f"**{status_noun(item)}:** " + "; ".join(f"{record['cve']} {record['status']}" for record in by_cve) + "."]
             else:
-                rows += ["", "**Exploitation:** " + item["exploitation"]["status"] + "."]
+                rows += ["", f"**{status_noun(item)}:** " + item["exploitation"]["status"] + "."]
             for kev in item["kev"]:
                 status = "listed" if kev["listed"] is True else "not listed" if kev["listed"] is False else "not established"
                 added = f"; added {kev['date_added']}" if kev["date_added"] else ""

@@ -452,7 +452,7 @@
           ]
         },
         "verification": {
-          "description": "Optional. Omitted or verified means the item is confirmed enough to brief. early_signal is an unverified lead and cannot be featured or carry a patch.",
+          "description": "Required on every item in editions dated 2026-11-27 or later (enforced by scripts/patchthese/validation.py); older editions may omit it, meaning verified. early_signal is an unverified lead, publishable from one social post, and cannot be featured or carry a patch.",
           "enum": [
             "verified",
             "early_signal"

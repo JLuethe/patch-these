@@ -317,3 +317,17 @@ def test_exploitation_label_names_only_the_exploited_cves(publication):
     assert "CVE-2026-134401: Unknown." in chrome
     drupal = home[home.index('id="item-drupal-core"'):]
     assert '<p class="evidence">Exploitation confirmed ·' in drupal[:drupal.index("</article>")]
+
+
+def test_incidents_and_supply_chain_never_say_exploitation_confirmed():
+    from patchthese.common import exploitation_label, verification_labels
+    base = {"cves": [], "exploitation": {"status": "confirmed", "source_ids": ["a"]}, "sources": [{}]}
+    assert exploitation_label({**base, "kind": "vulnerability"}) == "Exploitation confirmed"
+    assert exploitation_label(base) == "Exploitation confirmed"
+    assert exploitation_label({**base, "kind": "incident"}) == "Breach confirmed"
+    assert exploitation_label({**base, "kind": "supply_chain"}) == "Compromise confirmed"
+    reported = {**base, "kind": "incident", "exploitation": {"status": "reported", "source_ids": ["a"]}}
+    assert exploitation_label(reported) == "Breach reported"
+    assert verification_labels({**base, "verification": "early_signal"}) == ["Not yet verified", "Single source"]
+    assert verification_labels({**base, "verification": "early_signal", "sources": [{}, {}]}) == ["Not yet verified"]
+    assert verification_labels({**base, "verification": "verified"}) == []
