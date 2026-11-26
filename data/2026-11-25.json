@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "digest_date": "2026-11-25",
+  "coverage_start": "2026-11-23",
+  "coverage_end": "2026-11-25",
+  "items": [
+    {
+      "id": "chrome-desktop",
+      "cve": ["CVE-2026-134401", "CVE-2026-125350"],
+      "product": "Google Chrome",
+      "affected": null,
+      "fixed_versions": ["158.0.8127.88", "158.0.8127.89", "157.0.8103.50"],
+      "cvss": {"CVE-2026-134401": 9.6},
+      "epss": {"CVE-2026-134401": "1.13%", "CVE-2026-125350": "6.80%"},
+      "kev": {"CVE-2026-134401": false, "CVE-2026-125350": null},
+      "priority": "patch_now",
+      "audience": "both",
+      "lower_relevance": false,
+      "summary": "CVE-2026-134401 is a Chrome sandbox escape via a crafted page, CVSS 9.6, EPSS 1.13%, and is not known to be exploited. The desktop stable update also covers exploited CVE-2026-125350 (EPSS 6.80%), which was fixed in 157.0.8103.50. Electron apps (VS Code, Slack, and Cursor) need their own updates.",
+      "action": "Install Chrome 158.0.8127.88 on Linux, or 158.0.8127.88 or 158.0.8127.89 on Windows and Mac. Update VS Code, Slack, and Cursor separately.",
+      "advisory_url": [
+        "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01734282054.html",
+        "https://msrc.microsoft.com/update-guide/en-US/advisory/CVE-2026-125350"
+      ],
+      "x_post_urls": ["https://x.com/ThreatWire_/status/2125140749788303633"]
+    },
+    {
+      "id": "drupal-core",
+      "cve": ["CVE-2026-132165"],
+      "product": "Drupal core",
+      "affected": null,
+      "fixed_versions": ["10.6.22", "11.3.22", "11.4.13"],
+      "cvss": null,
+      "epss": null,
+      "kev": "2026-11-24",
+      "priority": "patch_now",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "Drupal core CVE-2026-132165, rated Highly critical by Drupal. Actively exploited. Added to the CISA KEV catalog on 24 November 2026. Abuse of the installer can lead to a site takeover. End-of-life lines are not fixed.",
+      "action": "Update to 10.6.22, 11.3.22, or 11.4.13. Lock down /core/install.php and keep settings.php unwritable. End-of-life lines have no fix.",
+      "advisory_url": [
+        "https://www.drupal.org/sa-core-2026-017",
+        "https://www.cisa.gov/news-events/alerts/2026/11/24/cisa-adds-three-known-exploited-vulnerabilities-catalog"
+      ],
+      "x_post_urls": ["https://x.com/itsMikeKipruto/status/2125561622307500255"]
+    },
+    {
+      "id": "vmware-vcenter",
+      "cve": ["CVE-2026-123890", "CVE-2026-123903"],
+      "product": "VMware vCenter",
+      "affected": null,
+      "fixed_versions": ["9.1.2", "9.0.2.0300", "8.0 U3m", "VCF 5.2.5"],
+      "cvss": 9.8,
+      "epss": {"CVE-2026-123890": "5.01%"},
+      "kev": {"CVE-2026-123890": "2026-11-20", "CVE-2026-123903": false},
+      "priority": "patch_now",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "Authentication bypass, CVSS 9.8. CVE-2026-123890 is an exploited zero-day, KEV 20 November 2026, EPSS 5.01%. CVE-2026-123903 was published 24 November 2026. A public proof of concept has been reported for it, and it is not known to be exploited. There is no workaround.",
+      "action": "Update vCenter to 9.1.2, 9.0.2.0300, or 8.0 U3m, and VCF 5.2.5. Keep vCenter off the internet.",
+      "advisory_url": [
+        "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+      ],
+      "x_post_urls": ["https://x.com/securestep9/status/2125247521727373445"]
+    },
+    {
+      "id": "geoserver",
+      "cve": ["CVE-2026-120705", "CVE-2026-129243", "CVE-2026-129245"],
+      "product": "GeoServer",
+      "affected": null,
+      "fixed_versions": ["3.0.2", "2.28.6", "2.27.7"],
+      "cvss": null,
+      "epss": null,
+      "kev": null,
+      "priority": "patch_now",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "CVE-2026-120705 and CVE-2026-129243, with related critical CVE-2026-129245, are reported as a chain to unauthenticated remote code execution. Active exploitation has been reported.",
+      "action": "Update to 3.0.2, 2.28.6, or 2.27.7.",
+      "advisory_url": [
+        "https://geoserver.org/vulnerability/2026/11/23/cve-update.html",
+        "https://www.cyber.gc.ca/en/alerts-advisories/geoserver-security-advisory-av26-1207"
+      ],
+      "x_post_urls": ["https://x.com/UpwindMDR/status/2125583184477733167"]
+    },
+    {
+      "id": "juniper-session-smart",
+      "cve": ["CVE-2026-103406"],
+      "product": "Juniper Session Smart",
+      "affected": null,
+      "fixed_versions": ["7.0.5", "7.1.7", "7.2.3"],
+      "cvss": 9.8,
+      "epss": "0.86%",
+      "kev": "2026-11-25",
+      "priority": "patch_now",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "Juniper Session Smart CVE-2026-103406, CVSS 9.8, EPSS 0.86%. Added to the CISA KEV catalog on 25 November 2026. Unauthenticated command injection with root impact. There is no workaround.",
+      "action": "Update to 7.0.5, 7.1.7, or 7.2.3.",
+      "advisory_url": [
+        "https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog",
+        "https://www.cve.org/CVERecord?id=CVE-2026-103406"
+      ],
+      "x_post_urls": ["https://x.com/Rachidmarcil/status/2125611277271838887"]
+    },
+    {
+      "id": "monai-label",
+      "cve": ["CVE-2026-133968"],
+      "product": "MONAI Label",
+      "affected": "<=0.8.5",
+      "fixed_versions": ["0.8.6"],
+      "cvss": null,
+      "epss": "27.16%",
+      "kev": "2026-11-23",
+      "priority": "patch_now",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "MONAI Label CVE-2026-133968, rated critical, EPSS 27.16%. Added to the CISA KEV catalog on 23 November 2026. A path-traversal bug can write files. Affects 0.8.5 and earlier.",
+      "action": "Update to 0.8.6. Enable authentication until you do.",
+      "advisory_url": [
+        "https://github.com/Project-MONAI/MONAILabel/security/advisories/GHSA-qc22-rmgc-vg94",
+        "https://www.cisa.gov/news-events/alerts/2026/11/23/cisa-adds-two-known-exploited-vulnerabilities-catalog"
+      ],
+      "x_post_urls": ["https://x.com/northlineintel/status/2125014578840981650"]
+    },
+    {
+      "id": "nable-mail-assure",
+      "cve": ["CVE-2026-134624"],
+      "product": "N-able Mail Assure / SpamExperts",
+      "affected": null,
+      "fixed_versions": ["20261121.1943"],
+      "cvss": null,
+      "epss": "1.79%",
+      "kev": "2026-11-23",
+      "priority": "patch_now",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "N-able Mail Assure / SpamExperts CVE-2026-134624, EPSS 1.79%. Added to the CISA KEV catalog on 23 November 2026. Server-side request forgery in the LDAP sync check.",
+      "action": "Update to 20261121.1943.",
+      "advisory_url": [
+        "https://www.n-able.com/blog/mail-assure-incident-update",
+        "https://www.cve.org/CVERecord?id=CVE-2026-134624"
+      ],
+      "x_post_urls": ["https://x.com/northlineintel/status/2125014578840981650"]
+    },
+    {
+      "id": "azure-api-management-classic",
+      "cve": null,
+      "product": "Azure API Management Classic",
+      "affected": null,
+      "fixed_versions": [],
+      "cvss": null,
+      "epss": null,
+      "kev": null,
+      "priority": "patch_now",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "Microsoft found unauthorized access to secrets in Azure API Management Classic around 18 November 2026 and mitigated it on 19 November 2026. No CVE was found.",
+      "action": "Rotate all secrets and review logs.",
+      "advisory_url": [
+        "https://techcommunity.microsoft.com/blog/integrationsonazureblog/rotating-credentials-in-azure-api-management/4575478"
+      ],
+      "x_post_urls": []
+    },
+    {
+      "id": "simple-git",
+      "cve": ["CVE-2026-134815"],
+      "product": "simple-git",
+      "affected": null,
+      "fixed_versions": ["simple-git 4.1.0", "@simple-git/argv-parser 3.0.0"],
+      "cvss": "9.2 (4.0) / 8.1 (3.1)",
+      "epss": "0.74%",
+      "kev": null,
+      "priority": "patch_soon",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "npm simple-git CVE-2026-134815, CVSS 9.2 (4.0) / 8.1 (3.1), EPSS 0.74%. Argument injection if untrusted input reaches listRemote() or raw(). Proof-of-concept discussion has been reported.",
+      "action": "Update to simple-git 4.1.0 and @simple-git/argv-parser 3.0.0. Do not pass untrusted input to listRemote() or raw().",
+      "advisory_url": [
+        "https://www.cve.org/CVERecord?id=CVE-2026-134815",
+        "https://github.com/steveukx/git-js/releases/tag/simple-git%404.1.0"
+      ],
+      "x_post_urls": ["https://x.com/CheckmarxZero/status/2125233730541265282"]
+    },
+    {
+      "id": "firefox-thunderbird",
+      "cve": null,
+      "product": "Firefox and Thunderbird",
+      "affected": null,
+      "fixed_versions": [
+        "Firefox 161",
+        "Firefox ESR 153.8",
+        "Firefox ESR 115.46",
+        "Thunderbird 161",
+        "Thunderbird 153.8"
+      ],
+      "cvss": null,
+      "epss": null,
+      "kev": null,
+      "priority": "patch_soon",
+      "audience": "end_users",
+      "lower_relevance": false,
+      "summary": "Firefox and Thunderbird desktop update. This digest does not name individual CVEs.",
+      "action": "Update to Firefox 161, Firefox ESR 153.8, or Firefox ESR 115.46. Update to Thunderbird 161 or Thunderbird 153.8.",
+      "advisory_url": [
+        "https://www.mozilla.org/en-US/security/advisories/mfsa2026-131/",
+        "https://www.mozilla.org/en-US/security/advisories/mfsa2026-134/"
+      ],
+      "x_post_urls": ["https://x.com/kawn2020/status/2125521126692651473"]
+    },
+    {
+      "id": "omarchy-dell-xps-touchpad-haptics",
+      "cve": ["CVE-2026-134935"],
+      "product": "Omarchy dell-xps-touchpad-haptics",
+      "affected": null,
+      "fixed_versions": ["1.0.0-4"],
+      "cvss": 7.0,
+      "epss": "0.15%",
+      "kev": null,
+      "priority": "patch_soon",
+      "audience": "end_users",
+      "lower_relevance": false,
+      "summary": "Omarchy package dell-xps-touchpad-haptics CVE-2026-134935, CVSS 7.0, EPSS 0.15%. A local privilege issue.",
+      "action": "Update to 1.0.0-4.",
+      "advisory_url": [
+        "https://www.rapid7.com/db/vulnerabilities/cve-2026-134935/",
+        "https://github.com/omacom/omarchy-pkgs/pull/497"
+      ],
+      "x_post_urls": ["https://x.com/exploitgrid/status/2125227942183838022"]
+    },
+    {
+      "id": "jenkins-plugins-2026-11-25",
+      "cve": null,
+      "product": "Jenkins plugins",
+      "affected": null,
+      "fixed_versions": [
+        "4403.4405.va_b_cdb_b_d0b_89f",
+        "1436.1438.v3dc5ef7d16f2"
+      ],
+      "cvss": null,
+      "epss": null,
+      "kev": null,
+      "priority": "patch_soon",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "Jenkins plugin advisory 2026-11-25. 14 CVEs in 11 plugins, including sandbox bypasses in Pipeline: Groovy and Script Security. Individual CVE identifiers are not listed in this digest.",
+      "action": "Update Pipeline: Groovy to 4403.4405.va_b_cdb_b_d0b_89f and Script Security to 1436.1438.v3dc5ef7d16f2, and update the other affected plugins named in the advisory.",
+      "advisory_url": ["https://www.jenkins.io/security/advisory/2026-11-25/"],
+      "x_post_urls": ["https://x.com/jenkinsci/status/2125620568309572085"]
+    },
+    {
+      "id": "bytebase-dbhub-mcp",
+      "cve": ["CVE-2026-136441"],
+      "product": "Bytebase DBHub MCP",
+      "affected": null,
+      "fixed_versions": [],
+      "cvss": "ZDI CVSS 9.8",
+      "epss": "1.10%",
+      "kev": null,
+      "priority": "watch",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "Bytebase DBHub MCP CVE-2026-136441, ZDI CVSS 9.8, EPSS 1.10%. Unauthenticated authentication bypass. There is no patch.",
+      "action": "Restrict network access.",
+      "advisory_url": ["https://www.zerodayinitiative.com/advisories/ZDI-26-1067/"],
+      "x_post_urls": ["https://x.com/PrecursorUK/status/2125418238532112661"]
+    },
+    {
+      "id": "idunno-anticsrf",
+      "cve": ["CVE-2026-131914"],
+      "product": "Idunno.AntiCsrf",
+      "affected": null,
+      "fixed_versions": [],
+      "cvss": null,
+      "epss": "4.29%",
+      "kev": "2026-11-24",
+      "priority": "watch",
+      "audience": "applications_and_servers",
+      "lower_relevance": false,
+      "summary": "Idunno.AntiCsrf CVE-2026-131914, EPSS 4.29%. Added to the CISA KEV catalog on 24 November 2026. The library is abandoned and has no fix.",
+      "action": "Replace it.",
+      "advisory_url": [
+        "https://www.cisa.gov/news-events/alerts/2026/11/24/cisa-adds-three-known-exploited-vulnerabilities-catalog"
+      ],
+      "x_post_urls": ["https://x.com/mdisec/status/2125273469583773893"]
+    },
+    {
+      "id": "optimizely-web-experimentation",
+      "cve": ["CVE-2026-132224"],
+      "product": "Optimizely Web Experimentation",
+      "affected": null,
+      "fixed_versions": [],
+      "cvss": null,
+      "epss": null,
+      "kev": true,
+      "priority": "watch",
+      "audience": "applications_and_servers",
+      "lower_relevance": true,
+      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
+      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
+      "advisory_url": [],
+      "x_post_urls": []
+    },
+    {
+      "id": "mitel-micollab",
+      "cve": [
+        "CVE-2026-133275",
+        "CVE-2026-133303",
+        "CVE-2026-133311",
+        "CVE-2026-133323",
+        "CVE-2026-133324"
+      ],
+      "product": "Mitel MiCollab",
+      "affected": null,
+      "fixed_versions": [],
+      "cvss": null,
+      "epss": null,
+      "kev": true,
+      "priority": "watch",
+      "audience": "applications_and_servers",
+      "lower_relevance": true,
+      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
+      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
+      "advisory_url": [],
+      "x_post_urls": []
+    },
+    {
+      "id": "danfoss-ak-sm-800a",
+      "cve": ["CVE-2023-25914", "CVE-2023-25915", "CVE-2025-41450"],
+      "product": "Danfoss AK-SM 800A",
+      "affected": null,
+      "fixed_versions": [],
+      "cvss": null,
+      "epss": null,
+      "kev": true,
+      "priority": "watch",
+      "audience": "applications_and_servers",
+      "lower_relevance": true,
+      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
+      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
+      "advisory_url": [],
+      "x_post_urls": []
+    },
+    {
+      "id": "xen-orchestra",
+      "cve": ["CVE-2026-133469"],
+      "product": "Xen Orchestra",
+      "affected": null,
+      "fixed_versions": [],
+      "cvss": null,
+      "epss": null,
+      "kev": true,
+      "priority": "watch",
+      "audience": "applications_and_servers",
+      "lower_relevance": true,
+      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
+      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
+      "advisory_url": [],
+      "x_post_urls": []
+    }
+  ]
+}
