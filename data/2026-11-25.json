@@ -1,362 +1,1792 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "digest_date": "2026-11-25",
   "coverage_start": "2026-11-23",
   "coverage_end": "2026-11-25",
+  "published_at": "2026-11-26T04:37:59Z",
+  "updated_at": "2026-11-26T05:22:22Z",
+  "corrections": [
+    {
+      "at": "2026-11-26T05:22:22Z",
+      "summary": "Removed the unsupported Azure discovery and mitigation dates and scoped its guidance to affected Classic tiers. Added NSM, Mandiant, and the earlier Broadcom advisory. Separated action urgency from patch availability, corrected KEV unknown states, and mapped fixes to their components and CVEs. Historical scores retain their original attribution; unavailable score dates remain unknown.",
+      "item_ids": [
+        "azure-api-management-classic",
+        "idunno-anticsrf",
+        "vmware-vcenter",
+        "chrome-desktop",
+        "bytebase-dbhub-mcp",
+        "optimizely-web-experimentation",
+        "mitel-micollab",
+        "danfoss-ak-sm-800a",
+        "xen-orchestra"
+      ]
+    }
+  ],
+  "featured_item_ids": [
+    "chrome-desktop",
+    "drupal-core",
+    "vmware-vcenter"
+  ],
   "items": [
     {
       "id": "chrome-desktop",
-      "cve": ["CVE-2026-134401", "CVE-2026-125350"],
       "product": "Google Chrome",
-      "affected": null,
-      "fixed_versions": ["158.0.8127.88", "158.0.8127.89", "157.0.8103.50"],
-      "cvss": {"CVE-2026-134401": 9.6},
-      "epss": {"CVE-2026-134401": "1.13%", "CVE-2026-125350": "6.80%"},
-      "kev": {"CVE-2026-134401": false, "CVE-2026-125350": null},
-      "priority": "patch_now",
       "audience": "both",
-      "lower_relevance": false,
-      "summary": "CVE-2026-134401 is a Chrome sandbox escape via a crafted page, CVSS 9.6, EPSS 1.13%, and is not known to be exploited. The desktop stable update also covers exploited CVE-2026-125350 (EPSS 6.80%), which was fixed in 157.0.8103.50. Electron apps (VS Code, Slack, and Cursor) need their own updates.",
-      "action": "Install Chrome 158.0.8127.88 on Linux, or 158.0.8127.88 or 158.0.8127.89 on Windows and Mac. Update VS Code, Slack, and Cursor separately.",
-      "advisory_url": [
-        "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01734282054.html",
-        "https://msrc.microsoft.com/update-guide/en-US/advisory/CVE-2026-125350"
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "The current desktop release includes an exploited vulnerability fix and addresses a critical sandbox escape.",
+      "cves": [
+        "CVE-2026-134401",
+        "CVE-2026-125350"
       ],
-      "x_post_urls": ["https://x.com/ThreatWire_/status/2125140749788303633"]
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Google Chrome",
+          "version": "158.0.8127.88",
+          "platform": "Linux",
+          "branch": "Stable 158",
+          "cves": [
+            "CVE-2026-134401",
+            "CVE-2026-125350"
+          ],
+          "source_ids": [
+            "chrome-releases",
+            "msrc-record"
+          ]
+        },
+        {
+          "component": "Google Chrome",
+          "version": "158.0.8127.88",
+          "platform": "Windows / macOS",
+          "branch": "Stable 158",
+          "cves": [
+            "CVE-2026-134401",
+            "CVE-2026-125350"
+          ],
+          "source_ids": [
+            "chrome-releases",
+            "msrc-record"
+          ]
+        },
+        {
+          "component": "Google Chrome",
+          "version": "158.0.8127.89",
+          "platform": "Windows / macOS",
+          "branch": "Stable 158",
+          "cves": [
+            "CVE-2026-134401",
+            "CVE-2026-125350"
+          ],
+          "source_ids": [
+            "chrome-releases",
+            "msrc-record"
+          ]
+        },
+        {
+          "component": "Google Chrome",
+          "version": "157.0.8103.50",
+          "platform": null,
+          "branch": "Earlier fix for CVE-2026-125350 only",
+          "cves": [
+            "CVE-2026-125350"
+          ],
+          "source_ids": [
+            "msrc-record"
+          ]
+        }
+      ],
+      "summary": "The desktop update addresses CVE-2026-134401, a sandbox escape not known to be exploited in this edition, and includes the earlier fix for exploited CVE-2026-125350. Chrome updates do not update Chromium embedded in other applications; this edition does not establish which Electron applications are affected or fixed.",
+      "action": "Update Chrome to 158.0.8127.88 on Linux, or 158.0.8127.88 or 158.0.8127.89 on Windows and macOS. Check the separate vendor advisories and update channels for applications that embed Chromium.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "msrc-record"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-134401",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        },
+        {
+          "cve": "CVE-2026-125350",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-134401",
+          "score": 9.6,
+          "version": null,
+          "authority": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-134401",
+          "probability": 0.0113,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        },
+        {
+          "cve": "CVE-2026-125350",
+          "probability": 0.068,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/ThreatWire_/status/2125140749788303633",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "chrome-releases",
+          "kind": "vendor_advisory",
+          "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01734282054.html",
+          "label": "Chrome desktop stable update",
+          "checked_at": "2026-11-26T05:18:48Z",
+          "supports": [
+            "cves",
+            "summary",
+            "action",
+            "fixes"
+          ]
+        },
+        {
+          "id": "msrc-record",
+          "kind": "vendor_advisory",
+          "url": "https://msrc.microsoft.com/update-guide/en-US/advisory/CVE-2026-125350",
+          "label": "Microsoft advisory for CVE-2026-125350",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary",
+            "fixes",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "drupal-core",
-      "cve": ["CVE-2026-132165"],
       "product": "Drupal core",
-      "affected": null,
-      "fixed_versions": ["10.6.22", "11.3.22", "11.4.13"],
-      "cvss": null,
-      "epss": null,
-      "kev": "2026-11-24",
-      "priority": "patch_now",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "Drupal core CVE-2026-132165, rated Highly critical by Drupal. Actively exploited. Added to the CISA KEV catalog on 24 November 2026. Abuse of the installer can lead to a site takeover. End-of-life lines are not fixed.",
-      "action": "Update to 10.6.22, 11.3.22, or 11.4.13. Lock down /core/install.php and keep settings.php unwritable. End-of-life lines have no fix.",
-      "advisory_url": [
-        "https://www.drupal.org/sa-core-2026-017",
-        "https://www.cisa.gov/news-events/alerts/2026/11/24/cisa-adds-three-known-exploited-vulnerabilities-catalog"
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "CISA KEV listing and potential site takeover require prompt action on affected installations.",
+      "cves": [
+        "CVE-2026-132165"
       ],
-      "x_post_urls": ["https://x.com/itsMikeKipruto/status/2125561622307500255"]
+      "affected": "<10.6.22 || >=11.0.0 <11.3.22 || >=11.4.0 <11.4.13; unsupported release lines require migration to a supported branch.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Drupal core",
+          "version": "10.6.22",
+          "platform": null,
+          "branch": "10.6",
+          "cves": [
+            "CVE-2026-132165"
+          ],
+          "source_ids": [
+            "drupal-advisory"
+          ]
+        },
+        {
+          "component": "Drupal core",
+          "version": "11.3.22",
+          "platform": null,
+          "branch": "11.3",
+          "cves": [
+            "CVE-2026-132165"
+          ],
+          "source_ids": [
+            "drupal-advisory"
+          ]
+        },
+        {
+          "component": "Drupal core",
+          "version": "11.4.13",
+          "platform": null,
+          "branch": "11.4",
+          "cves": [
+            "CVE-2026-132165"
+          ],
+          "source_ids": [
+            "drupal-advisory"
+          ]
+        }
+      ],
+      "summary": "An installer weakness can allow a Drupal site takeover. Drupal rates the issue Highly critical, and CISA lists it as exploited. Unsupported release lines have no security fix.",
+      "action": "Update to 10.6.22, 11.3.22, or 11.4.13. Lock down /core/install.php and keep settings.php unwritable. End-of-life lines have no fix.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-132165",
+          "listed": true,
+          "date_added": "2026-11-24",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/itsMikeKipruto/status/2125561622307500255",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "drupal-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://www.drupal.org/sa-core-2026-017",
+          "label": "Drupal SA-CORE-2026-017",
+          "checked_at": "2026-11-26T05:18:48Z",
+          "supports": [
+            "cves",
+            "affected",
+            "summary",
+            "action",
+            "fixes",
+            "fix_status"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/news-events/alerts/2026/11/24/cisa-adds-three-known-exploited-vulnerabilities-catalog",
+          "label": "CISA KEV additions, 24 November",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "vmware-vcenter",
-      "cve": ["CVE-2026-123890", "CVE-2026-123903"],
       "product": "VMware vCenter",
-      "affected": null,
-      "fixed_versions": ["9.1.2", "9.0.2.0300", "8.0 U3m", "VCF 5.2.5"],
-      "cvss": 9.8,
-      "epss": {"CVE-2026-123890": "5.01%"},
-      "kev": {"CVE-2026-123890": "2026-11-20", "CVE-2026-123903": false},
-      "priority": "patch_now",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "Authentication bypass, CVSS 9.8. CVE-2026-123890 is an exploited zero-day, KEV 20 November 2026, EPSS 5.01%. CVE-2026-123903 was published 24 November 2026. A public proof of concept has been reported for it, and it is not known to be exploited. There is no workaround.",
-      "action": "Update vCenter to 9.1.2, 9.0.2.0300, or 8.0 U3m, and VCF 5.2.5. Keep vCenter off the internet.",
-      "advisory_url": [
-        "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "An exploited vCenter vulnerability affects a privileged management plane; the current cumulative releases also address the newer authentication bypass.",
+      "cves": [
+        "CVE-2026-123890",
+        "CVE-2026-123903"
       ],
-      "x_post_urls": ["https://x.com/securestep9/status/2125247521727373445"]
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "VMware vCenter",
+          "version": "9.1.2",
+          "platform": null,
+          "branch": "9.1",
+          "cves": [
+            "CVE-2026-123890",
+            "CVE-2026-123903"
+          ],
+          "source_ids": [
+            "broadcom-0011",
+            "broadcom-0010"
+          ]
+        },
+        {
+          "component": "VMware vCenter",
+          "version": "9.0.2.0300",
+          "platform": null,
+          "branch": "9.0",
+          "cves": [
+            "CVE-2026-123890",
+            "CVE-2026-123903"
+          ],
+          "source_ids": [
+            "broadcom-0011",
+            "broadcom-0010"
+          ]
+        },
+        {
+          "component": "VMware vCenter",
+          "version": "8.0 U3m",
+          "platform": null,
+          "branch": "8.0",
+          "cves": [
+            "CVE-2026-123890",
+            "CVE-2026-123903"
+          ],
+          "source_ids": [
+            "broadcom-0011",
+            "broadcom-0010"
+          ]
+        },
+        {
+          "component": "VMware Cloud Foundation",
+          "version": "5.2.5",
+          "platform": null,
+          "branch": "5.x",
+          "cves": [
+            "CVE-2026-123890",
+            "CVE-2026-123903"
+          ],
+          "source_ids": [
+            "broadcom-0011",
+            "broadcom-0010"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-123890 has reported exploitation and a recorded KEV addition on 20 November. The separate CVE-2026-123903 authentication bypass was disclosed on 24 November; exploitation of that newer issue is not established here. Broadcom lists cumulative updates and no workaround for the newer issue.",
+      "action": "Apply the cumulative update for your supported branch: vCenter 9.1.2, 9.0.2.0300, or 8.0 U3m; use VCF 5.2.5 for the affected Cloud Foundation branch. Follow the applicable Broadcom response matrix and keep management access restricted.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "broadcom-0010",
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-123890",
+          "listed": true,
+          "date_added": "2026-11-20",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-123903",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-123903",
+          "score": 9.8,
+          "version": "3",
+          "authority": "Broadcom",
+          "source_ids": [
+            "broadcom-0011"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-123890",
+          "probability": 0.0501,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/securestep9/status/2125247521727373445",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "broadcom-0011",
+          "kind": "vendor_advisory",
+          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+          "label": "Broadcom VMSA-2026-0011",
+          "checked_at": "2026-11-26T05:19:29Z",
+          "supports": [
+            "cves",
+            "summary",
+            "action",
+            "fixes",
+            "cvss"
+          ]
+        },
+        {
+          "id": "broadcom-0010",
+          "kind": "vendor_advisory",
+          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/securityadvisories/0/39495",
+          "label": "Broadcom earlier vCenter advisory",
+          "checked_at": "2026-11-26T05:18:48Z",
+          "supports": [
+            "cves",
+            "summary",
+            "fixes",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "label": "CISA Known Exploited Vulnerabilities catalog",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "geoserver",
-      "cve": ["CVE-2026-120705", "CVE-2026-129243", "CVE-2026-129245"],
       "product": "GeoServer",
-      "affected": null,
-      "fixed_versions": ["3.0.2", "2.28.6", "2.27.7"],
-      "cvss": null,
-      "epss": null,
-      "kev": null,
-      "priority": "patch_now",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "CVE-2026-120705 and CVE-2026-129243, with related critical CVE-2026-129245, are reported as a chain to unauthenticated remote code execution. Active exploitation has been reported.",
-      "action": "Update to 3.0.2, 2.28.6, or 2.27.7.",
-      "advisory_url": [
-        "https://geoserver.org/vulnerability/2026/11/23/cve-update.html",
-        "https://www.cyber.gc.ca/en/alerts-advisories/geoserver-security-advisory-av26-1207"
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "Reported active exploitation and unauthenticated code execution warrant prompt updates.",
+      "cves": [
+        "CVE-2026-120705",
+        "CVE-2026-129243",
+        "CVE-2026-129245"
       ],
-      "x_post_urls": ["https://x.com/UpwindMDR/status/2125583184477733167"]
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "GeoServer",
+          "version": "3.0.2",
+          "platform": null,
+          "branch": "3.0",
+          "cves": [
+            "CVE-2026-120705",
+            "CVE-2026-129243",
+            "CVE-2026-129245"
+          ],
+          "source_ids": [
+            "geoserver-advisory"
+          ]
+        },
+        {
+          "component": "GeoServer",
+          "version": "2.28.6",
+          "platform": null,
+          "branch": "2.28",
+          "cves": [
+            "CVE-2026-120705",
+            "CVE-2026-129243",
+            "CVE-2026-129245"
+          ],
+          "source_ids": [
+            "geoserver-advisory"
+          ]
+        },
+        {
+          "component": "GeoServer",
+          "version": "2.27.7",
+          "platform": null,
+          "branch": "2.27",
+          "cves": [
+            "CVE-2026-120705",
+            "CVE-2026-129243",
+            "CVE-2026-129245"
+          ],
+          "source_ids": [
+            "geoserver-advisory"
+          ]
+        }
+      ],
+      "summary": "These GeoServer issues are reported to enable unauthenticated remote code execution when combined. Active exploitation has been reported.",
+      "action": "Update to 3.0.2, 2.28.6, or 2.27.7.",
+      "exploitation": {
+        "status": "reported",
+        "source_ids": [
+          "cyber-centre"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-120705",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        },
+        {
+          "cve": "CVE-2026-129243",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        },
+        {
+          "cve": "CVE-2026-129245",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/UpwindMDR/status/2125583184477733167",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "geoserver-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://geoserver.org/vulnerability/2026/11/23/cve-update.html",
+          "label": "GeoServer vulnerability update",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary",
+            "action",
+            "fixes"
+          ]
+        },
+        {
+          "id": "cyber-centre",
+          "kind": "government_alert",
+          "url": "https://www.cyber.gc.ca/en/alerts-advisories/geoserver-security-advisory-av26-1207",
+          "label": "Canadian Centre for Cyber Security AV26-1207",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "juniper-session-smart",
-      "cve": ["CVE-2026-103406"],
       "product": "Juniper Session Smart",
-      "affected": null,
-      "fixed_versions": ["7.0.5", "7.1.7", "7.2.3"],
-      "cvss": 9.8,
-      "epss": "0.86%",
-      "kev": "2026-11-25",
-      "priority": "patch_now",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "Juniper Session Smart CVE-2026-103406, CVSS 9.8, EPSS 0.86%. Added to the CISA KEV catalog on 25 November 2026. Unauthenticated command injection with root impact. There is no workaround.",
-      "action": "Update to 7.0.5, 7.1.7, or 7.2.3.",
-      "advisory_url": [
-        "https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog",
-        "https://www.cve.org/CVERecord?id=CVE-2026-103406"
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "CISA KEV listing and unauthenticated root-level impact require immediate attention.",
+      "cves": [
+        "CVE-2026-103406"
       ],
-      "x_post_urls": ["https://x.com/Rachidmarcil/status/2125611277271838887"]
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Juniper Session Smart",
+          "version": "7.0.5",
+          "platform": null,
+          "branch": "7.0",
+          "cves": [
+            "CVE-2026-103406"
+          ],
+          "source_ids": [
+            "cve-record"
+          ]
+        },
+        {
+          "component": "Juniper Session Smart",
+          "version": "7.1.7",
+          "platform": null,
+          "branch": "7.1",
+          "cves": [
+            "CVE-2026-103406"
+          ],
+          "source_ids": [
+            "cve-record"
+          ]
+        },
+        {
+          "component": "Juniper Session Smart",
+          "version": "7.2.3",
+          "platform": null,
+          "branch": "7.2",
+          "cves": [
+            "CVE-2026-103406"
+          ],
+          "source_ids": [
+            "cve-record"
+          ]
+        }
+      ],
+      "summary": "An unauthenticated command-injection vulnerability can have root-level impact. It is recorded in CISA KEV, and no workaround is listed in this edition.",
+      "action": "Update to 7.0.5, 7.1.7, or 7.2.3.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-103406",
+          "listed": true,
+          "date_added": "2026-11-25",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-103406",
+          "score": 9.8,
+          "version": null,
+          "authority": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-103406",
+          "probability": 0.0086,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/Rachidmarcil/status/2125611277271838887",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog",
+          "label": "CISA KEV additions, 25 November",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "cve-record",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-103406",
+          "label": "CVE-2026-103406 record",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary",
+            "action",
+            "fixes"
+          ]
+        }
+      ]
     },
     {
       "id": "monai-label",
-      "cve": ["CVE-2026-133968"],
       "product": "MONAI Label",
-      "affected": "<=0.8.5",
-      "fixed_versions": ["0.8.6"],
-      "cvss": null,
-      "epss": "27.16%",
-      "kev": "2026-11-23",
-      "priority": "patch_now",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "MONAI Label CVE-2026-133968, rated critical, EPSS 27.16%. Added to the CISA KEV catalog on 23 November 2026. A path-traversal bug can write files. Affects 0.8.5 and earlier.",
-      "action": "Update to 0.8.6. Enable authentication until you do.",
-      "advisory_url": [
-        "https://github.com/Project-MONAI/MONAILabel/security/advisories/GHSA-qc22-rmgc-vg94",
-        "https://www.cisa.gov/news-events/alerts/2026/11/23/cisa-adds-two-known-exploited-vulnerabilities-catalog"
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "Known exploitation makes the update urgent for affected deployments.",
+      "cves": [
+        "CVE-2026-133968"
       ],
-      "x_post_urls": ["https://x.com/northlineintel/status/2125014578840981650"]
+      "affected": "<=0.8.5",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "MONAI Label",
+          "version": "0.8.6",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-133968"
+          ],
+          "source_ids": [
+            "monai-advisory"
+          ]
+        }
+      ],
+      "summary": "A path-traversal vulnerability can write files in MONAI Label 0.8.5 and earlier. The issue is recorded in CISA KEV.",
+      "action": "Update to 0.8.6. Enable authentication until you do.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-133968",
+          "listed": true,
+          "date_added": "2026-11-23",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-133968",
+          "probability": 0.2716,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/northlineintel/status/2125014578840981650",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "monai-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/Project-MONAI/MONAILabel/security/advisories/GHSA-qc22-rmgc-vg94",
+          "label": "MONAI Label GHSA-qc22-rmgc-vg94",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "affected",
+            "summary",
+            "action",
+            "fixes"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/news-events/alerts/2026/11/23/cisa-adds-two-known-exploited-vulnerabilities-catalog",
+          "label": "CISA KEV additions, 23 November",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "nable-mail-assure",
-      "cve": ["CVE-2026-134624"],
       "product": "N-able Mail Assure / SpamExperts",
-      "affected": null,
-      "fixed_versions": ["20261121.1943"],
-      "cvss": null,
-      "epss": "1.79%",
-      "kev": "2026-11-23",
-      "priority": "patch_now",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "N-able Mail Assure / SpamExperts CVE-2026-134624, EPSS 1.79%. Added to the CISA KEV catalog on 23 November 2026. Server-side request forgery in the LDAP sync check.",
-      "action": "Update to 20261121.1943.",
-      "advisory_url": [
-        "https://www.n-able.com/blog/mail-assure-incident-update",
-        "https://www.cve.org/CVERecord?id=CVE-2026-134624"
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "Recorded exploitation requires prompt remediation on affected installations.",
+      "cves": [
+        "CVE-2026-134624"
       ],
-      "x_post_urls": ["https://x.com/northlineintel/status/2125014578840981650"]
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Mail Assure / SpamExperts",
+          "version": "20261121.1943",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-134624"
+          ],
+          "source_ids": [
+            "nable-advisory"
+          ]
+        }
+      ],
+      "summary": "A server-side request-forgery vulnerability affects the LDAP sync check in Mail Assure / SpamExperts. It is recorded in CISA KEV.",
+      "action": "Update to 20261121.1943.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-134624",
+          "listed": true,
+          "date_added": "2026-11-23",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-134624",
+          "probability": 0.0179,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/northlineintel/status/2125014578840981650",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "nable-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://www.n-able.com/blog/mail-assure-incident-update",
+          "label": "N-able Mail Assure incident update",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary",
+            "action",
+            "fixes"
+          ]
+        },
+        {
+          "id": "cve-record",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-134624",
+          "label": "CVE-2026-134624 record",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/news-events/alerts/2026/11/23/cisa-adds-two-known-exploited-vulnerabilities-catalog",
+          "label": "CISA KEV additions, 23 November",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "azure-api-management-classic",
-      "cve": null,
       "product": "Azure API Management Classic",
-      "affected": null,
-      "fixed_versions": [],
-      "cvss": null,
-      "epss": null,
-      "kev": null,
-      "priority": "patch_now",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "Microsoft found unauthorized access to secrets in Azure API Management Classic around 18 November 2026 and mitigated it on 19 November 2026. No CVE was found.",
-      "action": "Rotate all secrets and review logs.",
-      "advisory_url": [
-        "https://techcommunity.microsoft.com/blog/integrationsonazureblog/rotating-credentials-in-azure-api-management/4575478"
-      ],
-      "x_post_urls": []
+      "priority": "act_now",
+      "action_type": "rotate",
+      "priority_reason": "Reported credential exposure requires rotation and investigation even after the provider has mitigated the service vulnerability.",
+      "cves": [],
+      "affected": "Affected Azure API Management Classic instances; NSM excludes V2 and Consumption tiers from this vulnerability guidance.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "NSM reports that attackers targeted APIM access tokens, secrets, and named values. Provider remediation does not remove the need to rotate exposed credentials. No CVE identifier is recorded in this edition.",
+      "action": "For affected Classic instances, rotate tokens and secrets, review access logs and the data behind the gateway, and verify the service update using NSM guidance. Contact the provider if the instance is not updated.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "nsm-alert"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "microsoft-rotation",
+          "kind": "vendor_advisory",
+          "url": "https://techcommunity.microsoft.com/blog/integrationsonazureblog/rotating-credentials-in-azure-api-management/4575478",
+          "label": "Microsoft APIM credential-rotation guidance",
+          "checked_at": null,
+          "supports": [
+            "action"
+          ]
+        },
+        {
+          "id": "nsm-alert",
+          "kind": "government_alert",
+          "url": "https://nsm.no/fagomrader/digital-sikkerhet/digital-hendelseshandtering/varsler-fra-nsm/nsm-deler-tiltak-mot-sarbarhet-i-azure-api-management",
+          "label": "NSM Azure API Management guidance",
+          "checked_at": "2026-11-26T05:19:29Z",
+          "supports": [
+            "affected",
+            "summary",
+            "action",
+            "exploitation",
+            "fix_status"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-git",
-      "cve": ["CVE-2026-134815"],
       "product": "simple-git",
-      "affected": null,
-      "fixed_versions": ["simple-git 4.1.0", "@simple-git/argv-parser 3.0.0"],
-      "cvss": "9.2 (4.0) / 8.1 (3.1)",
-      "epss": "0.74%",
-      "kev": null,
-      "priority": "patch_soon",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "npm simple-git CVE-2026-134815, CVSS 9.2 (4.0) / 8.1 (3.1), EPSS 0.74%. Argument injection if untrusted input reaches listRemote() or raw(). Proof-of-concept discussion has been reported.",
-      "action": "Update to simple-git 4.1.0 and @simple-git/argv-parser 3.0.0. Do not pass untrusted input to listRemote() or raw().",
-      "advisory_url": [
-        "https://www.cve.org/CVERecord?id=CVE-2026-134815",
-        "https://github.com/steveukx/git-js/releases/tag/simple-git%404.1.0"
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "A high-severity issue has available fixes; prioritize applications that pass untrusted data to these methods.",
+      "cves": [
+        "CVE-2026-134815"
       ],
-      "x_post_urls": ["https://x.com/CheckmarxZero/status/2125233730541265282"]
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "simple-git",
+          "version": "4.1.0",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-134815"
+          ],
+          "source_ids": [
+            "simple-git-release"
+          ]
+        },
+        {
+          "component": "@simple-git/argv-parser",
+          "version": "3.0.0",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-134815"
+          ],
+          "source_ids": [
+            "simple-git-release"
+          ]
+        }
+      ],
+      "summary": "Untrusted input passed to listRemote() or raw() can cause argument injection. Public proof-of-concept discussion has been reported; active exploitation is not established in this edition.",
+      "action": "Update to simple-git 4.1.0 and @simple-git/argv-parser 3.0.0. Do not pass untrusted input to listRemote() or raw().",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-134815",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-134815",
+          "score": 9.2,
+          "version": "4.0",
+          "authority": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        },
+        {
+          "cve": "CVE-2026-134815",
+          "score": 8.1,
+          "version": "3.1",
+          "authority": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-134815",
+          "probability": 0.0074,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/CheckmarxZero/status/2125233730541265282",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "cve-record",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-134815",
+          "label": "CVE-2026-134815 record",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary",
+            "action"
+          ]
+        },
+        {
+          "id": "simple-git-release",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/steveukx/git-js/releases/tag/simple-git%404.1.0",
+          "label": "simple-git 4.1.0 release",
+          "checked_at": null,
+          "supports": [
+            "fixes",
+            "action"
+          ]
+        }
+      ]
     },
     {
       "id": "firefox-thunderbird",
-      "cve": null,
       "product": "Firefox and Thunderbird",
-      "affected": null,
-      "fixed_versions": [
-        "Firefox 161",
-        "Firefox ESR 153.8",
-        "Firefox ESR 115.46",
-        "Thunderbird 161",
-        "Thunderbird 153.8"
-      ],
-      "cvss": null,
-      "epss": null,
-      "kev": null,
-      "priority": "patch_soon",
       "audience": "end_users",
-      "lower_relevance": false,
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "Security updates are available for the listed desktop release lines.",
+      "cves": [],
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Firefox",
+          "version": "161",
+          "platform": null,
+          "branch": "Release",
+          "cves": [],
+          "source_ids": [
+            "mozilla-131",
+            "mozilla-134"
+          ]
+        },
+        {
+          "component": "Firefox ESR",
+          "version": "153.8",
+          "platform": null,
+          "branch": "ESR 153",
+          "cves": [],
+          "source_ids": [
+            "mozilla-131",
+            "mozilla-134"
+          ]
+        },
+        {
+          "component": "Firefox ESR",
+          "version": "115.46",
+          "platform": null,
+          "branch": "ESR 115",
+          "cves": [],
+          "source_ids": [
+            "mozilla-131",
+            "mozilla-134"
+          ]
+        },
+        {
+          "component": "Thunderbird",
+          "version": "161",
+          "platform": null,
+          "branch": "Release",
+          "cves": [],
+          "source_ids": [
+            "mozilla-131",
+            "mozilla-134"
+          ]
+        },
+        {
+          "component": "Thunderbird",
+          "version": "153.8",
+          "platform": null,
+          "branch": "ESR 153",
+          "cves": [],
+          "source_ids": [
+            "mozilla-131",
+            "mozilla-134"
+          ]
+        }
+      ],
       "summary": "Firefox and Thunderbird desktop update. This digest does not name individual CVEs.",
       "action": "Update to Firefox 161, Firefox ESR 153.8, or Firefox ESR 115.46. Update to Thunderbird 161 or Thunderbird 153.8.",
-      "advisory_url": [
-        "https://www.mozilla.org/en-US/security/advisories/mfsa2026-131/",
-        "https://www.mozilla.org/en-US/security/advisories/mfsa2026-134/"
-      ],
-      "x_post_urls": ["https://x.com/kawn2020/status/2125521126692651473"]
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/kawn2020/status/2125521126692651473",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "mozilla-131",
+          "kind": "vendor_advisory",
+          "url": "https://www.mozilla.org/en-US/security/advisories/mfsa2026-131/",
+          "label": "Mozilla MFSA 2026-131",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "action",
+            "fixes"
+          ]
+        },
+        {
+          "id": "mozilla-134",
+          "kind": "vendor_advisory",
+          "url": "https://www.mozilla.org/en-US/security/advisories/mfsa2026-134/",
+          "label": "Mozilla MFSA 2026-134",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "action",
+            "fixes"
+          ]
+        }
+      ]
     },
     {
       "id": "omarchy-dell-xps-touchpad-haptics",
-      "cve": ["CVE-2026-134935"],
       "product": "Omarchy dell-xps-touchpad-haptics",
-      "affected": null,
-      "fixed_versions": ["1.0.0-4"],
-      "cvss": 7.0,
-      "epss": "0.15%",
-      "kev": null,
-      "priority": "patch_soon",
       "audience": "end_users",
-      "lower_relevance": false,
-      "summary": "Omarchy package dell-xps-touchpad-haptics CVE-2026-134935, CVSS 7.0, EPSS 0.15%. A local privilege issue.",
-      "action": "Update to 1.0.0-4.",
-      "advisory_url": [
-        "https://www.rapid7.com/db/vulnerabilities/cve-2026-134935/",
-        "https://github.com/omacom/omarchy-pkgs/pull/497"
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "A package update is available; this is relevant only to systems using the affected package.",
+      "cves": [
+        "CVE-2026-134935"
       ],
-      "x_post_urls": ["https://x.com/exploitgrid/status/2125227942183838022"]
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "dell-xps-touchpad-haptics",
+          "version": "1.0.0-4",
+          "platform": "Linux (Omarchy)",
+          "branch": null,
+          "cves": [
+            "CVE-2026-134935"
+          ],
+          "source_ids": [
+            "omarchy-update"
+          ]
+        }
+      ],
+      "summary": "A local privilege vulnerability affects the Omarchy dell-xps-touchpad-haptics package.",
+      "action": "Update to 1.0.0-4.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-134935",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-134935",
+          "score": 7.0,
+          "version": null,
+          "authority": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-134935",
+          "probability": 0.0015,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/exploitgrid/status/2125227942183838022",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "rapid7-record",
+          "kind": "researcher_report",
+          "url": "https://www.rapid7.com/db/vulnerabilities/cve-2026-134935/",
+          "label": "Rapid7 vulnerability record",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary"
+          ]
+        },
+        {
+          "id": "omarchy-update",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/omacom/omarchy-pkgs/pull/497",
+          "label": "Omarchy package update",
+          "checked_at": null,
+          "supports": [
+            "fixes",
+            "action"
+          ]
+        }
+      ]
     },
     {
-      "id": "jenkins-plugins-2026-11-25",
-      "cve": null,
+      "id": "jenkins-plugins",
       "product": "Jenkins plugins",
-      "affected": null,
-      "fixed_versions": [
-        "4403.4405.va_b_cdb_b_d0b_89f",
-        "1436.1438.v3dc5ef7d16f2"
-      ],
-      "cvss": null,
-      "epss": null,
-      "kev": null,
-      "priority": "patch_soon",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "Available plugin fixes address sandbox bypasses and other security issues in build infrastructure.",
+      "cves": [],
+      "affected": null,
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Pipeline: Groovy",
+          "version": "4403.4405.va_b_cdb_b_d0b_89f",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "jenkins-advisory"
+          ]
+        },
+        {
+          "component": "Script Security",
+          "version": "1436.1438.v3dc5ef7d16f2",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "jenkins-advisory"
+          ]
+        }
+      ],
       "summary": "Jenkins plugin advisory 2026-11-25. 14 CVEs in 11 plugins, including sandbox bypasses in Pipeline: Groovy and Script Security. Individual CVE identifiers are not listed in this digest.",
       "action": "Update Pipeline: Groovy to 4403.4405.va_b_cdb_b_d0b_89f and Script Security to 1436.1438.v3dc5ef7d16f2, and update the other affected plugins named in the advisory.",
-      "advisory_url": ["https://www.jenkins.io/security/advisory/2026-11-25/"],
-      "x_post_urls": ["https://x.com/jenkinsci/status/2125620568309572085"]
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/jenkinsci/status/2125620568309572085",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "jenkins-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://www.jenkins.io/security/advisory/2026-11-25/",
+          "label": "Jenkins security advisory, 25 November",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "action",
+            "fixes"
+          ]
+        }
+      ]
     },
     {
       "id": "bytebase-dbhub-mcp",
-      "cve": ["CVE-2026-136441"],
       "product": "Bytebase DBHub MCP",
-      "affected": null,
-      "fixed_versions": [],
-      "cvss": "ZDI CVSS 9.8",
-      "epss": "1.10%",
-      "kev": null,
-      "priority": "watch",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "Bytebase DBHub MCP CVE-2026-136441, ZDI CVSS 9.8, EPSS 1.10%. Unauthenticated authentication bypass. There is no patch.",
-      "action": "Restrict network access.",
-      "advisory_url": ["https://www.zerodayinitiative.com/advisories/ZDI-26-1067/"],
-      "x_post_urls": ["https://x.com/PrecursorUK/status/2125418238532112661"]
+      "priority": "act_now",
+      "action_type": "mitigate",
+      "priority_reason": "A critical network authentication bypass needs exposure reduction now; the absence of a patch does not reduce urgency.",
+      "cves": [
+        "CVE-2026-136441"
+      ],
+      "affected": null,
+      "fix_status": "unavailable",
+      "fixes": [],
+      "summary": "A critical network authentication-bypass vulnerability is reported for Bytebase DBHub MCP. No patch is recorded as available in the advisory used for this edition. Active exploitation is unknown.",
+      "action": "Restrict network access to trusted clients and keep the affected service off untrusted networks while tracking the vendor remediation.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-136441",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-136441",
+          "score": 9.8,
+          "version": null,
+          "authority": "ZDI",
+          "source_ids": [
+            "zdi-advisory"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-136441",
+          "probability": 0.011,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/PrecursorUK/status/2125418238532112661",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "zdi-advisory",
+          "kind": "researcher_report",
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-1067/",
+          "label": "Trend Micro ZDI-26-1067",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "summary",
+            "action",
+            "fix_status",
+            "cvss"
+          ]
+        }
+      ]
     },
     {
       "id": "idunno-anticsrf",
-      "cve": ["CVE-2026-131914"],
       "product": "Idunno.AntiCsrf",
-      "affected": null,
-      "fixed_versions": [],
-      "cvss": null,
-      "epss": "4.29%",
-      "kev": "2026-11-24",
-      "priority": "watch",
       "audience": "applications_and_servers",
-      "lower_relevance": false,
-      "summary": "Idunno.AntiCsrf CVE-2026-131914, EPSS 4.29%. Added to the CISA KEV catalog on 24 November 2026. The library is abandoned and has no fix.",
-      "action": "Replace it.",
-      "advisory_url": [
-        "https://www.cisa.gov/news-events/alerts/2026/11/24/cisa-adds-three-known-exploited-vulnerabilities-catalog"
+      "priority": "act_now",
+      "action_type": "replace",
+      "priority_reason": "Observed exploitation and the absence of a maintained fix require replacement and investigation now.",
+      "cves": [
+        "CVE-2026-131914"
       ],
-      "x_post_urls": ["https://x.com/mdisec/status/2125273469583773893"]
+      "affected": "Idunno.AntiCsrf 0.9.1.0 / 0.9.1 Beta and customized builds retaining the vulnerable implementation.",
+      "fix_status": "unavailable",
+      "fixes": [],
+      "summary": "An abandoned ASP.NET anti-CSRF library has a remotely exploitable deserialization flaw. Mandiant reports active exploitation, and no official patch is available.",
+      "action": "Replace Idunno.AntiCsrf with a supported anti-CSRF mechanism and investigate exposed applications for compromise. Follow Mandiant guidance when removing the component so request-forgery protection is retained.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev",
+          "mandiant-disclosure"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-131914",
+          "listed": true,
+          "date_added": "2026-11-24",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-131914",
+          "probability": 0.0429,
+          "score_date": null,
+          "source_ids": [
+            "x-discovery"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-discovery",
+          "kind": "social_report",
+          "url": "https://x.com/mdisec/status/2125273469583773893",
+          "label": "Original X discovery and reported scores",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "cvss",
+            "epss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/news-events/alerts/2026/11/24/cisa-adds-three-known-exploited-vulnerabilities-catalog",
+          "label": "CISA KEV additions, 24 November",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "mandiant-disclosure",
+          "kind": "researcher_report",
+          "url": "https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0048.md",
+          "label": "Mandiant MNDT-2026-0048",
+          "checked_at": "2026-11-26T05:19:29Z",
+          "supports": [
+            "cves",
+            "affected",
+            "summary",
+            "action",
+            "fix_status",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "optimizely-web-experimentation",
-      "cve": ["CVE-2026-132224"],
       "product": "Optimizely Web Experimentation",
-      "affected": null,
-      "fixed_versions": [],
-      "cvss": null,
-      "epss": null,
-      "kev": true,
-      "priority": "watch",
       "audience": "applications_and_servers",
-      "lower_relevance": true,
-      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
-      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
-      "advisory_url": [],
-      "x_post_urls": []
+      "priority": "act_now",
+      "action_type": "investigate",
+      "priority_reason": "Recorded known exploitation requires immediate investigation even while product-specific patch details are being established.",
+      "cves": [
+        "CVE-2026-132224"
+      ],
+      "affected": null,
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "The original edition records these CVEs as CISA KEV additions. Product-specific patch instructions were not captured; patch availability remains unknown here.",
+      "action": "If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-132224",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "label": "CISA Known Exploited Vulnerabilities catalog",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "mitel-micollab",
-      "cve": [
+      "product": "Mitel MiCollab",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "investigate",
+      "priority_reason": "Recorded known exploitation requires immediate investigation even while product-specific patch details are being established.",
+      "cves": [
         "CVE-2026-133275",
         "CVE-2026-133303",
         "CVE-2026-133311",
         "CVE-2026-133323",
         "CVE-2026-133324"
       ],
-      "product": "Mitel MiCollab",
       "affected": null,
-      "fixed_versions": [],
-      "cvss": null,
-      "epss": null,
-      "kev": true,
-      "priority": "watch",
-      "audience": "applications_and_servers",
-      "lower_relevance": true,
-      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
-      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
-      "advisory_url": [],
-      "x_post_urls": []
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "The original edition records these CVEs as CISA KEV additions. Product-specific patch instructions were not captured; patch availability remains unknown here.",
+      "action": "If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-133275",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-133303",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-133311",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-133323",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-133324",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "label": "CISA Known Exploited Vulnerabilities catalog",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "danfoss-ak-sm-800a",
-      "cve": ["CVE-2023-25914", "CVE-2023-25915", "CVE-2025-41450"],
       "product": "Danfoss AK-SM 800A",
-      "affected": null,
-      "fixed_versions": [],
-      "cvss": null,
-      "epss": null,
-      "kev": true,
-      "priority": "watch",
       "audience": "applications_and_servers",
-      "lower_relevance": true,
-      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
-      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
-      "advisory_url": [],
-      "x_post_urls": []
+      "priority": "act_now",
+      "action_type": "investigate",
+      "priority_reason": "Recorded known exploitation requires immediate investigation even while product-specific patch details are being established.",
+      "cves": [
+        "CVE-2023-25914",
+        "CVE-2023-25915",
+        "CVE-2025-41450"
+      ],
+      "affected": null,
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "The original edition records these CVEs as CISA KEV additions. Product-specific patch instructions were not captured; patch availability remains unknown here.",
+      "action": "If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2023-25914",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2023-25915",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2025-41450",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "label": "CISA Known Exploited Vulnerabilities catalog",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     },
     {
       "id": "xen-orchestra",
-      "cve": ["CVE-2026-133469"],
       "product": "Xen Orchestra",
-      "affected": null,
-      "fixed_versions": [],
-      "cvss": null,
-      "epss": null,
-      "kev": true,
-      "priority": "watch",
       "audience": "applications_and_servers",
-      "lower_relevance": true,
-      "summary": "Added to the CISA KEV catalog. Lower relevance for this briefing. No patch details are included here.",
-      "action": "Confirm it on the CISA KEV catalog and with the vendor. No patch details are included in this briefing.",
-      "advisory_url": [],
-      "x_post_urls": []
+      "priority": "act_now",
+      "action_type": "investigate",
+      "priority_reason": "Recorded known exploitation requires immediate investigation even while product-specific patch details are being established.",
+      "cves": [
+        "CVE-2026-133469"
+      ],
+      "affected": null,
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "The original edition records these CVEs as CISA KEV additions. Product-specific patch instructions were not captured; patch availability remains unknown here.",
+      "action": "If you run this product, investigate exposure now and obtain the vendor remediation instructions through its CISA KEV catalog entry. Missing patch details are an information gap, not a reason to defer action.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "cisa-kev"
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-133469",
+          "listed": true,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "label": "CISA Known Exploited Vulnerabilities catalog",
+          "checked_at": null,
+          "supports": [
+            "cves",
+            "kev",
+            "exploitation"
+          ]
+        }
+      ]
     }
   ]
 }

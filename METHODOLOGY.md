@@ -1,59 +1,73 @@
 # How patch-these is put together
 
-patch-these is a daily briefing of security issues raised and discussed on X (Twitter). Each item is cross-checked against official sources, then written as a short list of what to patch.
+patch-these helps people decide what security work needs their attention: update a product, mitigate exposure, replace an unsupported component, rotate credentials, or investigate an incident. Each item explains who is affected, why it matters, what to do, and which sources support the advice.
 
-The writing is calm and plain. The useful part is the fix: which version, which secret to rotate, or what to keep off the network.
+The briefings are curated, not a complete inventory of vulnerabilities. A missing item does not mean a product is safe.
 
-## Sources
+## Discovery and evidence
 
-These are the sources a digest draws on, when they have something to say about an item:
+Social posts can draw attention to an issue. Vendor advisories, government alerts, original researcher reports, CVE records, and score services provide evidence for specific claims. A popular post is not evidence of exploitation or proof that a particular version is fixed.
 
-- X (Twitter), where the issue was raised or discussed
-- [NVD](https://nvd.nist.gov/)
-- The vendor's own advisory
-- The [CISA Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
-- [FIRST EPSS](https://www.first.org/epss/)
+Each JSON source record has an ID, a source kind, a URL, a label, the fields it supports, and a `checked_at` timestamp when a content check was actually performed. Fixes, exploitation reports, KEV membership, CVSS, and EPSS refer to those IDs. A remediation guide can support an action without substantiating the incident timeline; those claims may need different sources.
 
-A figure, a fixed version, or a KEV date is included only when one of that day's sources stated it. Missing scores are left blank. They are not filled in later from somewhere else.
+Source kinds are `vendor_advisory`, `government_alert`, `researcher_report`, `social_report`, `score_service`, and `cve_record`. Social sources remain visible as discovery or reported evidence. The November 25, 2026 issue was discovered through X; future issues may use other platforms. Posts are linked, not copied.
 
-Future digests may also take issues raised on Bluesky, Mastodon, Reddit, and Hacker News. Those are not sources for the 25 November 2026 digest.
+`checked_at` means the source content was checked. It is not the source publication date, the digest publication date, or the date an automated HTTP request succeeded. Historical records with no preserved verification timestamp retain `null`. Unknown information is never replaced by a guessed timestamp, score, affected range, or fixed version.
 
-## What we leave out
+The current repository validates structure and builds the publication. It does not automatically collect social posts or prove the truth of source claims. An editor must check the evidence before publishing.
 
-This project is strictly defensive. Digests do not include exploit code, proof-of-concept code, payloads, or step-by-step attack detail.
+## Urgency and action
 
-An item names the issue, states the impact in a sentence, and spends the rest of its space on the fix. When a post is mostly a proof of concept, the digest links the post and does not repeat the technique.
+Urgency answers **when to act**. Action type answers **what to do**. A missing patch does not reduce the urgency of an exploited vulnerability.
 
-## How items are prioritized
+| Urgency | Meaning |
+| --- | --- |
+| **Act now** (`act_now`) | Confirmed exploitation, KEV membership, or another documented reason for urgent action in an affected environment. |
+| **Act soon** (`act_soon`) | A supported security improvement that should be scheduled, with no documented reason in this briefing to treat it as immediate. |
+| **Monitor** (`monitor`) | Follow developments or investigate applicability when the available evidence does not justify a stronger urgency. It does not mean safe. |
 
-Three labels, and only these:
+Action types are `update`, `mitigate`, `replace`, `rotate`, and `investigate`. An Act now item may require replacement or mitigation when a patch is unavailable. Each item includes a `priority_reason` explaining the editorial judgment.
 
-- **Patch now.** Actively exploited, or critical and widely deployed.
-- **Patch soon.** High severity with a patch.
-- **Watch.** No patch, or limited impact.
+Confirmed exploitation and confirmed KEV membership cannot be classified Monitor. Missing patch details remain unknown and do not establish low risk. Relevance depends on the reader's installed products, versions, exposure, and configuration; it is separate from urgency for affected readers.
 
-A CISA KEV listing is the actively exploited catalog, so it normally meets Patch now. When a KEV entry is lower relevance for the usual audience and the digest has no patch details, it is tagged Watch until a vendor advisory is in hand. The 25 November 2026 digest does this for four KEV additions and says so in the item.
+Fix availability is `available`, `unavailable`, `unknown`, or `not_applicable`. An empty list of fixes alone does not prove that no patch exists.
 
-## Who each section is for
+## Products, versions, and audiences
 
-Every item is written once, under one of three audience sections:
+A fixed version is tied to its component, relevant CVEs, release branch, platform, and supporting sources when known. Different fixes grouped into one editorial item are not interchangeable. Follow the vendor's supported upgrade path and use a later supported release where appropriate.
 
-- **Applications & servers.** People who run sites, services, appliances, CI, and the libraries those systems depend on.
-- **End users.** People updating the software on their own computers.
-- **Both.** The same issue matters to operators and to everyone else.
+Affected ranges remain `null` if they have not been established. Unknown does not mean unaffected. General advice to update a bundled application is not a claim that a particular release of that application fixes the vulnerability; that requires its own evidence.
 
-The publish-ready close of each digest, "Patch these", splits the same items into "For app and server owners" and "For everyone". An item marked Both appears in each half.
+Each item has one audience:
 
-## X posts
+- **Applications & servers:** people operating sites, services, appliances, CI, or software dependencies.
+- **End users:** people updating software on their computers.
+- **Both:** an item relevant to each audience.
 
-X posts are linked, not copied. The digest does not paste the text of a post. The link is there so you can read the post at the source.
+Audience views and feeds include Both items. Filtering does not alter an item's urgency.
 
-## Scores
+## Exploitation, KEV, and scores
 
-CVSS is a severity score. EPSS is a probability that a vulnerability will be exploited in the wild, not a certainty, and not a statement that exploitation has already happened. A low EPSS is not a reason to ignore a vulnerability that is already being used. A high EPSS is not, by itself, proof that it has been.
+Exploitation status is `confirmed`, `reported`, or `unknown`, with source references. Unknown means the briefing has not established the status. It does not mean exploitation has not occurred.
 
-## Disclaimer
+KEV membership is a separate per-CVE fact: `listed` is true, false, or unknown, with a date added when known. A vulnerability can be exploited without appearing in KEV. Do not infer `listed: false` from an absence of reporting or from an exploitation status of unknown.
 
-This briefing is curated, not complete. It is unofficial. It is not professional advice. It is not affiliated with CISA, FIRST, or any vendor.
+CVSS describes severity. Records identify the CVE, score, scoring version and authority when known, and sources. Scores from different versions or authorities are not silently combined.
 
-Verify anything you plan to act on against the vendor advisory. Where this page and a vendor disagree, the vendor wins. EPSS is a probability, not a certainty.
+EPSS estimates exploitation probability over the next 30 days. It is not proof that exploitation has happened. Each record stores a probability between 0 and 1, its score date when known, and its sources. Historical percentages without a preserved score date retain `null`; they must not be represented as today's score. Low EPSS does not justify ignoring observed exploitation.
+
+## Publication and corrections
+
+`data/YYYY-MM-DD.json` is the authoritative editorial input. The generator builds the website, feeds, and downloadable JSON from it. Markdown digests and the README briefing are generated copies, refreshed explicitly by the editor. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+`published_at` records initial publication. `updated_at` records a meaningful editorial revision. Corrections include a timestamp, a plain-language explanation, and affected item IDs. Record changes to versions, affected scope, sources, exploitation status, or urgency so readers can see what changed. Rebuilding unchanged content must not invent a new editorial update time.
+
+The weekly link checker detects missing local links and public HTTP 404/410 responses. Authentication barriers, throttling, server errors, network failures, and unauthenticated social pages are explicitly inconclusive. A reachable URL does not validate a claim. Inconclusive results need manual review and remain in the workflow report.
+
+## Scope and reuse
+
+This is a defensive briefing. It describes impact and remediation without publishing exploit code, payloads, or attack instructions. Keep explanations focused on decisions a reader can make.
+
+The project is unofficial and is not affiliated with CISA, FIRST, or any vendor. Check the applicable vendor advisory before acting. If it conflicts with this briefing, use the vendor's current guidance and report the discrepancy.
+
+Editorial writing and JSON data are licensed under [CC BY 4.0](LICENSE); attribute patch-these and link the issue used. The generator, scripts, styles, tests, schema, and workflow code are licensed under [MIT](LICENSE-CODE). Third-party source material remains subject to its own terms.

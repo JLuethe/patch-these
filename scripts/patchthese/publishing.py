@@ -1,0 +1,79 @@
+"""Build a complete static publication from validated editions."""
+# SPDX-License-Identifier: MIT
+from __future__ import annotations
+
+import json
+import shutil
+import tempfile
+from html import escape
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+from .common import REPO, human_date, normalize_site_url, root_path
+from .editorial import markdown_digest, replace_readme_block
+from .feeds import build_feed
+from .rendering import archive_body, briefing_body, page, render_markdown, subscribe_body
+from .validation import load_editions
+
+
+def build_site(root: Path, *, site_url: str = "https://jluethe.github.io/patch-these", write_generated: bool = False) -> Path:
+    root = Path(root)
+    site_url = normalize_site_url(site_url)
+    editions = load_editions(root / "data")
+    if not editions:
+        raise ValueError("Add at least one data/YYYY-MM-DD.json edition before building")
+    latest = editions[-1]
+    destination = root / "_site"
+    generated = {edition["digest_date"]: markdown_digest(edition, site_url) for edition in editions}
+    readme = None
+    if write_generated:
+        readme = replace_readme_block((root / "README.md").read_text(encoding="utf-8"), latest, site_url)
+    # Don't destroy the last successful build if validation or rendering fails.
+    with tempfile.TemporaryDirectory(prefix=".site-build-", dir=root) as temporary:
+        output = Path(temporary) / "site"
+        output.mkdir()
+        shutil.copytree(root / "assets", output / "assets")
+        for asset in ("style.css", "app.js", "social-card.png"):
+            if not (output / "assets" / asset).is_file():
+                raise ValueError(f"Missing publication asset: assets/{asset}")
+        def write(path: str, content: str) -> None:
+            target = output / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+        write("index.html", page("patch-these — know what needs attention", briefing_body(latest, site_url, latest=True), site_url, "/", edition=latest, body_class="home"))
+        for edition in editions:
+            date = edition["digest_date"]
+            write(f"digests/{date}/index.html", page(f"{human_date(date)} — patch-these", briefing_body(edition, site_url, latest=False), site_url, f"/digests/{date}/", edition=edition, body_class="digest"))
+            write(f"digests/{date}.md", generated[date])
+            write(f"data/{date}.json", json.dumps(edition, ensure_ascii=False, indent=2) + "\n")
+        latest_json = json.dumps(latest, ensure_ascii=False, indent=2) + "\n"
+        write("latest.json", latest_json)
+        write("data/latest.json", latest_json)
+        shutil.copyfile(root / "data" / "schema.json", output / "data" / "schema.json")
+        write("archive/index.html", page("All briefings — patch-these", archive_body(editions, site_url), site_url, "/archive/"))
+        write("subscribe/index.html", page("Subscribe — patch-these", subscribe_body(site_url), site_url, "/subscribe/"))
+        method = render_markdown((root / "METHODOLOGY.md").read_text(encoding="utf-8"), relative_base=REPO + "/blob/main/")
+        write("methodology/index.html", page("How this is made — patch-these", f'<article class="prose">{method}</article>', site_url, "/methodology/"))
+        missing = f'<section class="prose"><p class="eyebrow">404 / page not found</p><h1>This page isn’t in the briefing.</h1><p>Try the <a href="{escape(root_path(site_url))}">latest edition</a> or browse <a href="{escape(root_path(site_url, "archive/"))}">the archive</a>.</p></section>'
+        write("404.html", page("Page not found — patch-these", missing, site_url, "/404.html"))
+        for audience, path in [(None, "feed.xml"), ("end_users", "feeds/everyone.xml"), ("applications_and_servers", "feeds/operators.xml")]:
+            feed = build_feed(editions, site_url, audience=audience, feed_path=path)
+            ET.fromstring(feed)
+            write(path, feed)
+        write(".nojekyll", "")
+        # Static aliases and social metadata can be crawled without JavaScript.
+        sitemap = ET.Element("urlset", {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"})
+        for path in ["/", "/archive/", "/subscribe/", "/methodology/"] + [f"/digests/{edition['digest_date']}/" for edition in editions]:
+            entry = ET.SubElement(sitemap, "url")
+            ET.SubElement(entry, "loc").text = site_url + path
+        write("sitemap.xml", ET.tostring(sitemap, encoding="unicode", xml_declaration=True))
+        write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {site_url}/sitemap.xml\n")
+        if destination.exists():
+            shutil.rmtree(destination)
+        shutil.move(str(output), destination)
+    if write_generated:
+        (root / "digests").mkdir(exist_ok=True)
+        for date, content in generated.items():
+            (root / "digests" / f"{date}.md").write_text(content, encoding="utf-8")
+        (root / "README.md").write_text(readme, encoding="utf-8")
+    return destination

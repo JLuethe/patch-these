@@ -1,0 +1,514 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jluethe.github.io/patch-these/data/schema.json",
+  "title": "patch-these edition",
+  "description": "Canonical edition data. Sources are claim references; checked_at records a source check, not an automatic guarantee of every claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "digest_date",
+    "coverage_start",
+    "coverage_end",
+    "published_at",
+    "updated_at",
+    "corrections",
+    "featured_item_ids",
+    "items"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "digest_date": {
+      "$ref": "#/$defs/date"
+    },
+    "coverage_start": {
+      "$ref": "#/$defs/date"
+    },
+    "coverage_end": {
+      "$ref": "#/$defs/date"
+    },
+    "published_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "corrections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/correction"
+      }
+    },
+    "featured_item_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/slug"
+      },
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "cve": {
+      "type": "string",
+      "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/slug"
+      },
+      "uniqueItems": true
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "at",
+        "summary",
+        "item_ids"
+      ],
+      "properties": {
+        "at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "item_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "url",
+        "label",
+        "checked_at",
+        "supports"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "kind": {
+          "enum": [
+            "vendor_advisory",
+            "government_alert",
+            "researcher_report",
+            "social_report",
+            "score_service",
+            "cve_record"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "checked_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "supports": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "fix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "component",
+        "version",
+        "platform",
+        "branch",
+        "cves",
+        "source_ids"
+      ],
+      "properties": {
+        "component": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "platform": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "branch": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cves": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cve"
+          },
+          "uniqueItems": true
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "exploitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "source_ids"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "confirmed",
+            "reported",
+            "unknown"
+          ]
+        },
+        "source_ids": {
+          "$ref": "#/$defs/source_ids"
+        }
+      }
+    },
+    "kev": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cve",
+        "listed",
+        "date_added",
+        "source_ids"
+      ],
+      "properties": {
+        "cve": {
+          "$ref": "#/$defs/cve"
+        },
+        "listed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "date_added": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_ids": {
+          "$ref": "#/$defs/source_ids"
+        }
+      }
+    },
+    "cvss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cve",
+        "score",
+        "version",
+        "authority",
+        "source_ids"
+      ],
+      "properties": {
+        "cve": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/cve"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authority": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "epss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cve",
+        "probability",
+        "score_date",
+        "source_ids"
+      ],
+      "properties": {
+        "cve": {
+          "$ref": "#/$defs/cve"
+        },
+        "probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "score_date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "product",
+        "audience",
+        "priority",
+        "action_type",
+        "priority_reason",
+        "cves",
+        "affected",
+        "fix_status",
+        "fixes",
+        "summary",
+        "action",
+        "exploitation",
+        "kev",
+        "cvss",
+        "epss",
+        "sources"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "product": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "audience": {
+          "enum": [
+            "applications_and_servers",
+            "end_users",
+            "both"
+          ]
+        },
+        "priority": {
+          "enum": [
+            "act_now",
+            "act_soon",
+            "monitor"
+          ]
+        },
+        "action_type": {
+          "enum": [
+            "update",
+            "mitigate",
+            "replace",
+            "rotate",
+            "investigate"
+          ]
+        },
+        "priority_reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "cves": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cve"
+          },
+          "uniqueItems": true
+        },
+        "affected": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fix_status": {
+          "enum": [
+            "available",
+            "unavailable",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "fixes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fix"
+          }
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "exploitation": {
+          "$ref": "#/$defs/exploitation"
+        },
+        "kev": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/kev"
+          }
+        },
+        "cvss": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cvss"
+          }
+        },
+        "epss": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/epss"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 1
+        }
+      }
+    }
+  }
+}
+

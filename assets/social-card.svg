@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Patch these — a daily security briefing</title>
+  <desc id="description">Know what to update. Plain-English guidance, official sources, and clear next steps.</desc>
+  <rect width="1200" height="630" fill="#f6f3eb"/>
+  <rect x="60" y="58" width="48" height="48" rx="13" fill="#275542"/>
+  <path d="M73 82h22M84 71v22" stroke="#f6f3eb" stroke-width="4" stroke-linecap="round"/>
+  <text x="124" y="92" fill="#242b27" font-family="Georgia, serif" font-size="34" font-weight="bold" letter-spacing="-1.5">patch-these</text>
+  <path d="M60 138H1140" stroke="#dedfd4"/>
+  <text x="60" y="210" fill="#275542" font-family="Arial, sans-serif" font-size="17" font-weight="bold" letter-spacing="3">A DAILY SECURITY BRIEFING</text>
+  <text x="56" y="323" fill="#242b27" font-family="Georgia, serif" font-size="86" letter-spacing="-4">Know what to update.</text>
+  <text x="61" y="390" fill="#687067" font-family="Arial, sans-serif" font-size="27">Plain-English guidance. Official sources. Clear next steps.</text>
+  <rect x="60" y="464" width="134" height="41" rx="6" fill="#fae9df"/>
+  <text x="82" y="491" fill="#a43e2c" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1">ACT NOW</text>
+  <rect x="210" y="464" width="144" height="41" rx="6" fill="#f6edcf"/>
+  <text x="233" y="491" fill="#84601c" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1">ACT SOON</text>
+  <rect x="370" y="464" width="139" height="41" rx="6" fill="#e8edf0"/>
+  <text x="392" y="491" fill="#596c78" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1">MONITOR</text>
+  <text x="60" y="579" fill="#687067" font-family="Arial, sans-serif" font-size="18">jluethe.github.io/patch-these</text>
+</svg>
