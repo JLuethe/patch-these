@@ -156,6 +156,31 @@ def _validate_item(item: dict, updated: datetime, *, require_check_times: bool =
         if record["score_date"] is not None:
             _require(date.fromisoformat(record["score_date"]) <= updated.date(), f"{where}: EPSS score date follows updated_at")
 
+    if item.get("verification") == "early_signal":
+        _require(
+            item["action_type"] == "investigate",
+            f"{where}: an early_signal cannot recommend a patch; action_type must be investigate",
+        )
+        _require(
+            item["fix_status"] != "available" and not item["fixes"],
+            f"{where}: an early_signal cannot carry a patch",
+        )
+        _require(
+            exploitation["status"] != "confirmed",
+            f"{where}: an early_signal cannot use confirmed exploitation",
+        )
+        for record in by_cve or []:
+            _require(
+                record["status"] != "confirmed",
+                f"{where}: an early_signal cannot use confirmed exploitation",
+            )
+        _require(bool(item["sources"]), f"{where}: an early_signal needs at least one source")
+        _require(bool((item.get("gaps") or "").strip()), f"{where}: an early_signal needs gaps saying what is unconfirmed")
+        _require(
+            all(row.get("listed") is not True for row in item["kev"]),
+            f"{where}: an early_signal cannot treat a KEV listing as confirmed",
+        )
+
 
 def validate_payload(payload: dict, expected_date: str | None = None) -> None:
     """Raise ValidationError for schema or cross-field errors; never modify data."""
@@ -183,6 +208,8 @@ def validate_payload(payload: dict, expected_date: str | None = None) -> None:
     _require(len(ids) == len(set(ids)), "duplicate item id")
     item_ids = set(ids)
     _require(set(payload["featured_item_ids"]) <= item_ids, "featured_item_ids contains an unknown item")
+    early_ids = {item["id"] for item in payload["items"] if item.get("verification") == "early_signal"}
+    _require(not (early_ids & set(payload["featured_item_ids"])), "an early_signal item cannot be featured")
 
     previous_correction = published
     for correction in payload["corrections"]:

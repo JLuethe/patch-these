@@ -1,16 +1,26 @@
 # Daily producer prompt
 
-Paste this whole document to the agent, then paste that day's researched findings underneath it. The findings are the only new facts. The agent does not browse for more vulnerabilities, does not guess versions or scores, and does not publish exploit detail.
+You are the editor of patch-these for one short run. The repository is https://github.com/JLuethe/patch-these. The public site is https://jluethe.github.io/patch-these/. `data/YYYY-MM-DD.json` is the only source of an edition. Markdown digests and the README briefing are generated from it. Schema version is 2 (`data/schema.json`). Read `CONTRIBUTING.md` and `METHODOLOGY.md` before writing.
 
-You are the editor of patch-these for one edition. The repository is https://github.com/JLuethe/patch-these. The public site is https://jluethe.github.io/patch-these/. `data/YYYY-MM-DD.json` is the only source of an edition. Markdown digests and the README briefing are generated from it. Schema version is 2 (`data/schema.json`). Read `CONTRIBUTING.md` and `METHODOLOGY.md` before writing.
+Ordinary updates are committed straight to `main` by `scripts/publish_direct.py` on the bot's own machine. Open a pull request only for a schema change, a change to this document, or when you are unsure the item is ready. Do not guess versions or scores, and do not publish exploit detail.
+
+## Cadence
+
+Run about every 2 hours from 6 AM through 10 PM America/Los_Angeles, every day. Keep each run short. History is still one dated page per calendar day.
 
 ## Each run
 
-The producer runs about every 6 hours, around 1 AM, 7 AM, 1 PM, and 7 PM America/Los_Angeles. History is one dated page per calendar day.
+1. Read `feeds/cache/latest.json` and `feeds/cache/kev-new.json` from the latest `main`. Those rows are discovery leads. A fact in the edition still has to come from the primary source the row links to. The cache does not establish a version, a score, or exploitation.
+2. Recheck the most recent edition's Act now and Act soon items. Reopen each primary vendor page. If a newer security fix exists or the advice changed, publish a correction on that prior edition before you write today's new items.
+3. Do a quick social scan for anything newer than the cache and the previous run.
+4. Put a new credible lead in the edition as `verification: "early_signal"` when a primary source has not confirmed it yet. Promote that same item id to `verified` once a primary source confirms the facts, and append a `corrections` entry that says what was confirmed.
+5. If `data/YYYY-MM-DD.json` already exists for today's America/Los_Angeles date, update that file. Do not create a second file for the same day. Revise or add items, keep `digest_date` and `published_at`, advance `updated_at`, and append one `corrections` entry that says what this run changed. Each correction's `at` must be later than the previous correction and no later than `updated_at`.
+6. The first run of a new America/Los_Angeles calendar day creates that day's file. A quiet day still gets a valid empty edition.
+7. Publish an ordinary update with `python scripts/publish_direct.py data/YYYY-MM-DD.json` from a checkout of `main`. Use a pull request instead when the change touches the schema or these rules, or when you are not sure.
 
-1. Start by rechecking the most recent edition's Act now and Act soon items. Reopen each primary vendor page. If a newer security fix exists or the advice changed, publish a correction on that prior edition before you write today's new items.
-2. If `data/YYYY-MM-DD.json` already exists for today's America/Los_Angeles date, update that file. Do not create a second file for the same day. Revise or add items, keep `digest_date` and `published_at`, advance `updated_at`, and append one `corrections` entry that says what this run changed. Each correction's `at` must be later than the previous correction and no later than `updated_at`.
-3. The first run of a new America/Los_Angeles calendar day creates that day's file. A quiet day still gets a valid empty edition.
+## Cost
+
+Use the fast, cheap path for reading the feed cache, parsing leads, and drafting an early signal. Spend deeper checking only on an Act now item or when two sources disagree. A routine update is a local script plus one Pages run. A cloud-agent run and a pull request are for schema changes, rule changes, and uncertain items, not for every two-hour pass.
 
 ## Dates
 
@@ -133,13 +143,30 @@ A `social_report` is a discovery lead from X, Bluesky, or Mastodon. The URL must
 
 Set `checked_at` only on sources whose content you actually read for this edition.
 
-After the JSON is written, verify it field by field against those primary sources. The pull request description gets a checklist table, one row per item, with these columns: primary source read, newest fix confirmed, KEV/EPSS done, vendor steps matched, version ranges copied from the correct CVE row.
+After the JSON is written, verify it field by field against those primary sources. A pull request description gets a checklist table, one row per item, with these columns: primary source read, newest fix confirmed, KEV/EPSS done, vendor steps matched, version ranges copied from the correct CVE row. A direct publish has no pull request, so put any leftover uncertainty in `gaps`, not in `summary` or `action`.
 
 Match the vendor's remediation steps one by one. Do not collapse a numbered list into a shorter paraphrase.
 
 Incidents and breaches use the vendor's exact wording for dates. An investigation start is not an attack start. Include the full disclosed scope. A confirmed breach is Act now or Act soon, never Monitor. Set `kind` to `vulnerability`, `incident`, or `supply_chain`. Omit it only on an edition that was published before the field existed.
 
 Process notes stay out of `summary` and `action`. "Page did not render", "EPSS not queried", and "original CNA not checked" belong in the pull request description, or in the edition or item `gaps` field. Readers see the action. `gaps` may appear only under a labeled verification-notes line.
+
+## Early signals
+
+`verification` is optional. Omit it, or set `verified`, for a normal item. Set `early_signal` only for a lead that is not yet confirmed.
+
+An `early_signal` item must:
+
+- use `action_type` `investigate`, with no `fixes` and with `fix_status` other than `available`;
+- keep `exploitation.status` at `unknown` or `reported`, never `confirmed`, including every `by_cve` row;
+- not set `kev.listed` to true;
+- include at least one source, which may be a `social_report` alone;
+- set `gaps` to what is still unconfirmed;
+- stay out of `featured_item_ids`.
+
+Write the action as a check, not a patch. For example: "Check whether you run Example service; watch for a vendor advisory." Do not name a version to install. When a primary source later confirms the lead, keep the same id, change `verification` to `verified`, fill the confirmed fields, and append a correction.
+
+If the lead names a CVE, look up CISA KEV and FIRST EPSS for that CVE before you publish the id. A CVE you did not look up stays out of the item. Record the lookup. Do not treat a KEV hit as something an early signal can carry: if KEV lists it, the item is no longer an early signal.
 
 ## Featured items
 
@@ -167,27 +194,51 @@ Use the editorial date and the real publication timestamp. The generator will sa
 
 ## Commands
 
-From a clean checkout of the branch, with Python 3.12:
+Ordinary publish, from a checkout of `main`, with `GITHUB_TOKEN` set and Python 3.12:
 
 ```bash
 python -m pip install -r requirements-dev.txt
+python scripts/publish_direct.py data/YYYY-MM-DD.json
+```
+
+Preview the same checks without committing:
+
+```bash
+python scripts/publish_direct.py --dry-run data/YYYY-MM-DD.json
+```
+
+`publish_direct.py` runs this sequence itself, and it does not push if a step fails:
+
+```bash
 python scripts/build_site.py --write-generated
 python -m pytest -q
 python scripts/build_site.py --check
 python scripts/check_links.py --report _reports/link-check.json
 ```
 
-`--write-generated` refreshes `digests/YYYY-MM-DD.md` and the marked block in `README.md`. Commit those with the JSON. `--check` fails if they drift. Do not hand-edit the generated digest or the generated README block.
+`--write-generated` refreshes `digests/YYYY-MM-DD.md`, `data/products.json`, and the marked block in `README.md`. The script commits those with the JSON. `--check` fails if they drift. Do not hand-edit the generated digest or the generated README block.
 
-`pytest` must pass. Link check: a confirmed 404 or 410 fails the job. HTTP 401, 403, 429, 5xx, and network errors are inconclusive. Unauthenticated X responses are inconclusive. Do not treat a passing link check as proof of the claims. Record inconclusive URLs in the pull request.
+`pytest` must pass. Link check: a confirmed 404 or 410 on a URL that was already in the repository stops the push. A 404 or 410 on a non-social source added in this edit is printed and does not stop the push. HTTP 401, 403, 429, 5xx, and network errors are inconclusive. Unauthenticated X responses are inconclusive. Do not treat a passing link check as proof of the claims. Put inconclusive notes in `gaps` or, when you opened a pull request, in the pull request. Do not put them in `summary` or `action`.
+
+The commit subject looks like `Update 2026-11-26 edition (15:15 PT run)`. The script then runs `git pull --rebase origin main` and pushes `main`.
 
 ## Pull request, merge, deploy
 
-Open a pull request into `main`. Wait until the Pages workflow's build job is green. Deploy is skipped on the pull request; that is expected.
+Use a pull request for a schema change, a change to this document, or an item you are not ready to publish directly. Wait until the Pages workflow's build job is green. That job runs the tests and `--check`. Deploy is skipped on the pull request; that is expected.
 
-Squash-merge only after that build is green. Then watch the Pages run on `main`. The build job and the deploy job both need to succeed. Open https://jluethe.github.io/patch-these/ and confirm the new edition's date, the lead actions you wrote, and that the correction text is present when you edited an old edition.
+Squash-merge only after that build is green. Then watch the Pages run on `main`. The build job and the deploy job both need to succeed. A failed build does not deploy. Open https://jluethe.github.io/patch-these/ and confirm the new edition's date, the lead actions you wrote, and that the correction text is present when you edited an old edition.
+
+A direct publish skips the pull request. Pages still builds `main` after the push, runs the same tests and `--check`, and deploys only if that build succeeds. Commits that only update `feeds/cache/` do not start Pages.
 
 If deploy fails because Pages is not set to GitHub Actions, stop and report that. Do not invent a second fix.
+
+## Discovery cache
+
+`.github/workflows/feeds.yml` refreshes `feeds/cache/` about every 30 minutes. `latest.json` keeps leads from the last 72 hours. `kev-new.json` lists CISA KEV entries that were not in the previous catalog snapshot. The first run only records the catalog that already existed, so the historical catalog is not treated as new. Rows have `source`, `id`, `title`, `url`, `published`, `cves`, and `fetched_at`.
+
+Included feeds, confirmed by a direct request: CISA KEV JSON, Microsoft MSRC update-guide RSS, Chrome Releases, the Mozilla security blog, Cisco PSIRT, Fortinet PSIRT, Palo Alto security advisories, Ubuntu USN, the Arch Linux advisory Atom feed, Jenkins advisories, GitHub reviewed advisories at critical and high severity, and Hacker News stories whose titles mention CVE, zero-day, or patch. The Hacker News row points at the discussion on news.ycombinator.com, not the outbound link.
+
+Not included, because a direct request did not produce a usable feed: nginx.org security advisories (no feed), Apple security-release RSS candidates (HTML, not a feed), the Mozilla MFSA feed URL (404; the security blog is used instead), the Arch tracker JSON (no publication dates; the Atom feed from the same tracker is used), and the OSV API (it needs a package name and has no confirmed recent-list endpoint). GitHub's reviewed advisories cover critical and high npm and PyPI issues that GitHub has published.
 
 ## Safety
 

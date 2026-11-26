@@ -451,6 +451,13 @@
             "supply_chain"
           ]
         },
+        "verification": {
+          "description": "Optional. Omitted or verified means the item is confirmed enough to brief. early_signal is an unverified lead and cannot be featured or carry a patch.",
+          "enum": [
+            "verified",
+            "early_signal"
+          ]
+        },
         "audience": {
           "enum": [
             "applications_and_servers",

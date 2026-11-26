@@ -1,6 +1,6 @@
 # Publishing and improving patch-these
 
-The source of each issue is `data/YYYY-MM-DD.json`. Edit that file, check the evidence, run validation, and regenerate the public copies. Publishing is currently editor-driven; the repository does not contain a daily collector or an unattended research agent.
+The source of each issue is `data/YYYY-MM-DD.json`. Edit that file, check the evidence, and publish. An ordinary edition update goes straight to `main` with `scripts/publish_direct.py`. A pull request is for a schema change, a producer-rule change, or a case where the editor is unsure.
 
 ## Set up and check a change
 
@@ -16,7 +16,14 @@ python scripts/check_links.py --report _reports/link-check.json
 
 The normal build validates JSON sources and writes `_site/`. It does not edit tracked files. Inspect the generated homepage, an issue page, feeds, and JSON output before publishing. Generated HTML is not committed.
 
-After editing an issue's JSON, refresh the generated Markdown digests and README briefing first, then run the tests, `--check`, and the link check, in that order.
+After editing an issue's JSON, refresh the generated Markdown digests and README briefing first, then run the tests, `--check`, and the link check, in that order. `scripts/publish_direct.py` runs that sequence and, when it passes, commits and pushes `main`:
+
+```bash
+python scripts/publish_direct.py data/2026-11-26.json
+python scripts/publish_direct.py --dry-run data/2026-11-26.json
+```
+
+The real command needs `GITHUB_TOKEN` in the environment. It uses that token only as an HTTPS credential and does not print it. Run it from a checkout of `main`. `--dry-run` runs the checks and prints the commit it would make, then stops. A confirmed dead link already in the repository stops the push. A dead link on a non-social source added in that edit is reported and does not stop the push.
 
 CI runs `python scripts/build_site.py --check`, which fails when the committed digest Markdown or README briefing differs from what the JSON generates. Run it locally before pushing if you want the same check.
 
@@ -34,6 +41,7 @@ Keep an item's `id` stable across editions and corrections for the same product 
 | --- | --- |
 | `id`, `product` | Stable item identifier and reader-facing product name. The generated product index groups appearances by this id. |
 | `kind` | Optional. `vulnerability`, `incident`, or `supply_chain`. |
+| `verification` | Optional. `verified` (the default when omitted) or `early_signal`. An early signal uses `investigate`, has no patch, cannot be featured, and needs `gaps` saying what is unconfirmed. |
 | `gaps` | Optional, on the edition or an item. Verification notes. Not the customer action. |
 | `audience` | `applications_and_servers`, `end_users`, or `both`. |
 | `priority`, `priority_reason` | `act_now`, `act_soon`, or `monitor`, with an explanation of the urgency. |
@@ -84,7 +92,9 @@ The check runs weekly rather than on every pull request so network availability 
 
 ## Publish
 
-The **Pages** workflow tests and builds pull requests with read-only repository permissions. A successful push to `main` builds the site and deploys it through a separate job with Pages and identity-token permissions. Pull-request runs have separate concurrency groups and cannot cancel production deployment. Official actions are pinned to verified commit SHAs; review upstream releases before updating the pins.
+The **Pages** workflow runs the tests and `python scripts/build_site.py --check` in the build job. The deploy job needs that build, so a bad push to `main` fails before the site is published. Pull requests are built with read-only repository permissions. A successful push to `main` deploys through a separate job with Pages and identity-token permissions. Commits that only change `feeds/**` do not start Pages. Pull-request runs have separate concurrency groups and cannot cancel production deployment. Official actions are pinned to verified commit SHAs; review upstream releases before updating the pins.
+
+`feeds/cache/` is a discovery cache written by the **Discovery feeds** workflow. A row there is a lead. The edition still cites the primary source that supports each fact.
 
 GitHub Pages must use GitHub Actions as its source: **Settings → Pages → Build and deployment → Source: GitHub Actions**. After enabling it, merge the reviewed change and check deployment. If an earlier deployment failed because Pages was not enabled, rerun Pages after fixing that setting.
 
