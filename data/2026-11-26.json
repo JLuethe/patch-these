@@ -1,0 +1,1572 @@
+{
+  "schema_version": 2,
+  "digest_date": "2026-11-26",
+  "coverage_start": "2026-11-25",
+  "coverage_end": "2026-11-26",
+  "published_at": "2026-11-26T15:12:00Z",
+  "updated_at": "2026-11-26T15:12:00Z",
+  "corrections": [],
+  "featured_item_ids": [
+    "nginx-http2",
+    "airbyte-core-images",
+    "checkpoint-security-management"
+  ],
+  "items": [
+    {
+      "id": "nginx-http2",
+      "product": "F5 NGINX Open Source and NGINX Plus",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "NGINX is a widely deployed web server, a national CERT reports active exploitation, and the EPSS score for CVE-2026-123007 is high.",
+      "cves": [
+        "CVE-2026-123007",
+        "CVE-2026-123633"
+      ],
+      "affected": "NGINX Open Source 1.9.5 to before 1.30.7 and 1.31.0 to before 1.31.9. nginx.org lists 0.6.18 through 1.31.8 as vulnerable for CVE-2026-123007. NGINX Plus 37.0.0 to before 37.0.8.1, 37.1.0 to before 37.3.0.1, and R34, R35, and R36.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "NGINX Open Source",
+          "version": "1.30.7",
+          "platform": null,
+          "branch": "stable",
+          "cves": [
+            "CVE-2026-123007",
+            "CVE-2026-123633"
+          ],
+          "source_ids": [
+            "csa-al-2026-168",
+            "nginx-advisories"
+          ]
+        },
+        {
+          "component": "NGINX Open Source",
+          "version": "1.31.9",
+          "platform": null,
+          "branch": "mainline",
+          "cves": [
+            "CVE-2026-123007",
+            "CVE-2026-123633"
+          ],
+          "source_ids": [
+            "csa-al-2026-168",
+            "nginx-advisories"
+          ]
+        },
+        {
+          "component": "NGINX Plus",
+          "version": "37.0.8.1",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-123007",
+            "CVE-2026-123633"
+          ],
+          "source_ids": [
+            "csa-al-2026-168",
+            "nginx-advisories"
+          ]
+        },
+        {
+          "component": "NGINX Plus",
+          "version": "37.3.0.1",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-123007",
+            "CVE-2026-123633"
+          ],
+          "source_ids": [
+            "csa-al-2026-168",
+            "nginx-advisories"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-123007 is a heap buffer overflow in NGINX HTTP/2 flow control that can crash a worker, corrupt memory, and possibly lead to code execution. CVE-2026-123633 is an HTTP/2 use-after-free addressed in the same releases. CSA Singapore says CVE-2026-123007 is reportedly being actively exploited. That CVE was not in the CISA KEV catalog at this edition's check. Exploitation of CVE-2026-123633 was not established, that CVE was not checked against KEV, and its EPSS score was not queried. CSA Singapore reports CVSS v3.1 8.1 for CVE-2026-123633; the original CNA was not checked. For NGINX Plus R34, R35, and R36, the fixed version is unknown.",
+      "action": "Upgrade NGINX Open Source to 1.30.7 (stable) or 1.31.9 (mainline), and NGINX Plus to 37.0.8.1 or 37.3.0.1. Also update ingress controllers and container images that bundle NGINX. For NGINX Plus R34, R35, and R36, see F5 article K000163926. That page did not render, so no fixed version was verified for those releases.",
+      "exploitation": {
+        "status": "reported",
+        "source_ids": [
+          "csa-al-2026-168"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-123007",
+            "status": "reported",
+            "source_ids": [
+              "csa-al-2026-168"
+            ]
+          },
+          {
+            "cve": "CVE-2026-123633",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-123007",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-123633",
+          "listed": null,
+          "date_added": null,
+          "source_ids": []
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-123007",
+          "score": 9.2,
+          "version": "4.0",
+          "authority": "F5 (CNA, f5sirt@f5.com)",
+          "source_ids": [
+            "nvd-cve-2026-123007"
+          ]
+        },
+        {
+          "cve": "CVE-2026-123007",
+          "score": 8.1,
+          "version": "3.1",
+          "authority": "F5 (CNA, f5sirt@f5.com)",
+          "source_ids": [
+            "nvd-cve-2026-123007"
+          ]
+        },
+        {
+          "cve": "CVE-2026-123633",
+          "score": 8.1,
+          "version": "3.1",
+          "authority": null,
+          "source_ids": [
+            "csa-al-2026-168"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-123007",
+          "probability": 0.45588,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "csa-al-2026-168",
+          "kind": "government_alert",
+          "url": "https://www.csa.gov.sg/alerts-and-advisories/alerts/al-2026-168/",
+          "label": "CSA Singapore alert AL-2026-168",
+          "checked_at": "2026-11-26T07:01:18-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "cvss",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "nginx-advisories",
+          "kind": "vendor_advisory",
+          "url": "https://nginx.org/en/security_advisories.html",
+          "label": "nginx.org security advisories",
+          "checked_at": "2026-11-26T07:01:04-08:00",
+          "supports": [
+            "affected",
+            "fixes"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-123007",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-123007",
+          "label": "NVD CVE-2026-123007",
+          "checked_at": "2026-11-26T06:58:52-08:00",
+          "supports": [
+            "summary",
+            "cvss"
+          ]
+        },
+        {
+          "id": "f5-k000163926",
+          "kind": "vendor_advisory",
+          "url": "https://my.f5.com/manage/s/article/K000163926",
+          "label": "F5 K000163926 (page did not render; no claim verified)",
+          "checked_at": "2026-11-26T07:01:06-08:00",
+          "supports": []
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-daily-cybersec",
+          "kind": "social_report",
+          "url": "https://x.com/Daily_CyberSec/status/2125873585856397351",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "airbyte-core-images",
+      "product": "Airbyte Core",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "This is a confirmed supply-chain compromise that can leak database and cloud credentials.",
+      "cves": [],
+      "affected": "Platform images airbyte/server, worker, bootloader, cron, connector-sidecar, container-orchestrator, workload-api-server, workload-init-container, and workload-launcher at tag 2.5.0 pulled between about 10:35 AM and 1:40 PM PT on 2026-11-25. Connector images source-postgres 3.8.12, destination-postgres 3.0.24, destination-redshift 4.0.13, destination-bigquery 3.2.3, source-facebook-marketing 6.1.12, source-mssql 5.1.5, source-mysql 3.53.10, destination-snowflake 5.2.2, and source-google-sheets 0.13.2 pulled after their tampered-from times (earliest 7:03 AM PT for source-postgres) and before 1:40 PM PT on 2026-11-25.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Airbyte platform images (server, worker, bootloader, cron, connector-sidecar, container-orchestrator, workload-api-server, workload-init-container, workload-launcher)",
+          "version": "2.6.0",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "source-postgres",
+          "version": "3.8.13",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "destination-postgres",
+          "version": "3.0.26",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "destination-redshift",
+          "version": "4.0.14",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "destination-bigquery",
+          "version": "3.2.4",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "source-facebook-marketing",
+          "version": "6.1.13",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "source-mssql",
+          "version": "5.1.6",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "source-mysql",
+          "version": "3.53.11",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "destination-snowflake",
+          "version": "5.2.3",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        },
+        {
+          "component": "source-google-sheets",
+          "version": "0.13.3",
+          "platform": null,
+          "branch": null,
+          "cves": [],
+          "source_ids": [
+            "airbyte-advisory"
+          ]
+        }
+      ],
+      "summary": "Airbyte says self-hosted Core Docker images were tampered and could send configured connection credentials to an external server. Platform images tagged 2.5.0 pulled between about 10:35 AM and 1:40 PM PT on 2026-11-25 are in that window, as are the listed connector images pulled after their tampered-from times (earliest 7:03 AM PT for source-postgres) and before 1:40 PM PT that day. There is no CVE. CVSS, EPSS, and KEV do not apply. Platform 2.6.0 also includes Airbyte's Java4Shell fix.",
+      "action": "Upgrade Airbyte Core platform images (server, worker, bootloader, cron, connector-sidecar, container-orchestrator, workload-api-server, workload-init-container, and workload-launcher) to 2.6.0. Replace connector images with source-postgres 3.8.13, destination-postgres 3.0.26, destination-redshift 4.0.14, destination-bigquery 3.2.4, source-facebook-marketing 6.1.13, source-mssql 5.1.6, source-mysql 3.53.11, destination-snowflake 5.2.3, and source-google-sheets 0.13.3, including copies in private registries. If a tampered image ran, rotate the credentials in the source and destination systems themselves and review their activity logs for the exposure window.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "airbyte-advisory"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "airbyte-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://airbyte.com/blog/advisory-for-open-source",
+          "label": "Airbyte open-source advisory",
+          "checked_at": "2026-11-26T07:01:39-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "x-karimscloud",
+          "kind": "social_report",
+          "url": "https://x.com/karimscloud/status/2125741643340923218",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checkpoint-security-management",
+      "product": "Check Point Security Management",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "mitigate",
+      "priority_reason": "CVE-2026-16232 is in the KEV catalog and is tied to a fresh intrusion campaign against firewall management servers that GreyNoise expects to continue.",
+      "cves": [
+        "CVE-2026-16232"
+      ],
+      "affected": "R77.30, R80, R80.10, R80.20, R80.30, R81, R81.10, R81.20, R82, and R82.10, when the management server is reachable from the internet and Trusted Clients (GUI clients) are unrestricted.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Check Point article sk185169 describes CVE-2026-16232, an authentication bypass in Security Management Server and Multi-Domain Security Management during SmartConsole login, and says it is exploited in the wild. GreyNoise reports intrusions at 22 or more organizations between 2026-10-17 and 2026-11-02 and expects the campaign to continue. CISA added CVE-2026-16232 to the KEV catalog on 2026-07-22. This edition records that newer campaign report. CVSS was not established, and EPSS was not queried. The hotfix build in sk185169 was not verified, so the patch version stays unknown rather than recorded as unavailable.",
+      "action": "Apply the fix and hardening in Check Point sk185169 (per sk185169; the hotfix build was not verified) and restrict Trusted Clients and management access to trusted IP addresses. Investigate exposed management servers for compromise.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "sk185169",
+          "greynoise"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-16232",
+            "status": "confirmed",
+            "source_ids": [
+              "sk185169",
+              "greynoise"
+            ]
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-16232",
+          "listed": true,
+          "date_added": "2026-07-22",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "sk185169",
+          "kind": "vendor_advisory",
+          "url": "https://support.checkpoint.com/results/sk/sk185169",
+          "label": "Check Point sk185169",
+          "checked_at": "2026-11-26T07:01:24-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "greynoise",
+          "kind": "researcher_report",
+          "url": "https://www.greynoise.io/blog/check-point-security-management-servers-intrusion-campaign",
+          "label": "GreyNoise intrusion-campaign report",
+          "checked_at": "2026-11-26T07:01:19-08:00",
+          "supports": [
+            "summary",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "mastodon-jbz",
+          "kind": "social_report",
+          "url": "https://indieweb.social/@jbz/117679562635502653",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "virtuemart",
+      "product": "VirtueMart",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "This is critical unauthenticated remote code execution on e-commerce sites, and exploitation is reported.",
+      "cves": [
+        "CVE-2026-133335"
+      ],
+      "affected": "VirtueMart 4.0.0 through 4.8.7.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "VirtueMart",
+          "version": "4.8.10",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-133335"
+          ],
+          "source_ids": [
+            "virtuemart-news"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-133335 is an unauthenticated local file inclusion issue in VirtueMart for Joomla that can lead to remote code execution. VirtueMart 4.8.8 fixed this CVE. Release 4.8.10 also fixes a further issue that lets someone fake a paid order. Social posts say the Joomla CNA record marks the CVE exploited in the wild. The VirtueMart news page and the NVD page read for this edition do not confirm that, so exploitation stays reported. The CVE was not in the CISA KEV catalog at this check.",
+      "action": "Upgrade VirtueMart to 4.8.10. Release 4.8.8 fixed CVE-2026-133335; 4.8.10 also fixes an issue that lets someone fake a paid order. VirtueMart offers a hotfix for 4.0 and later; this edition does not name that hotfix build.",
+      "exploitation": {
+        "status": "reported",
+        "source_ids": [
+          "x-mysitesguru",
+          "bsky-securityonline",
+          "mastodon-dailycyber"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-133335",
+            "status": "reported",
+            "source_ids": [
+              "x-mysitesguru",
+              "bsky-securityonline",
+              "mastodon-dailycyber"
+            ]
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-133335",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-133335",
+          "score": 9.2,
+          "version": "4.0",
+          "authority": "Joomla! Project CNA (security@joomla.org)",
+          "source_ids": [
+            "nvd-cve-2026-133335"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-133335",
+          "probability": 0.01055,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "virtuemart-news",
+          "kind": "vendor_advisory",
+          "url": "https://virtuemart.net/news",
+          "label": "VirtueMart news: Important Security FIX 4.8.10",
+          "checked_at": "2026-11-26T07:01:05-08:00",
+          "supports": [
+            "summary",
+            "fixes",
+            "action"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-133335",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-133335",
+          "label": "NVD CVE-2026-133335",
+          "checked_at": "2026-11-26T06:58:59-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-mysitesguru",
+          "kind": "social_report",
+          "url": "https://x.com/mysitesguru/status/2125953886032699805",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "bsky-securityonline",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/securityonline.bsky.social/post/3n36lu2buzx2q",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "mastodon-dailycyber",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@DailyCyberSecurity/117680312308411902",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary",
+            "exploitation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wp-rocket",
+      "product": "WP Rocket",
+      "audience": "applications_and_servers",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "This is a critical flaw in a very widely installed WordPress plugin.",
+      "cves": [
+        "CVE-2026-125812"
+      ],
+      "affected": "WP Rocket before 3.24.2.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "WP Rocket",
+          "version": "3.24.2",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-125812"
+          ],
+          "source_ids": [
+            "patchstack"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-125812 is a path traversal issue in the WP Rocket WordPress plugin that can lead to remote code execution. Versions before 3.24.2 are affected. Patchstack says exploitation is expected. This edition did not establish that it is being exploited. The CVE was not in the CISA KEV catalog at this check.",
+      "action": "Update WP Rocket to 3.24.2.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-125812",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-125812",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-125812",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "Patchstack (CNA)",
+          "source_ids": [
+            "patchstack",
+            "nvd-cve-2026-125812"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-125812",
+          "probability": 0.01012,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "patchstack",
+          "kind": "researcher_report",
+          "url": "https://patchstack.com/database/wordpress/plugin/wp-rocket/vulnerability/wordpress-wp-rocket-plugin-3-24-2-remote-code-execution-rce-vulnerability",
+          "label": "Patchstack WP Rocket advisory",
+          "checked_at": "2026-11-26T07:01:03-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "cvss"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-125812",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-125812",
+          "label": "NVD CVE-2026-125812",
+          "checked_at": "2026-11-26T06:59:05-08:00",
+          "supports": [
+            "summary",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-toolswatch",
+          "kind": "social_report",
+          "url": "https://x.com/ToolsWatch/status/2125895467884294605",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hpe-airwave",
+      "product": "HPE AirWave",
+      "audience": "applications_and_servers",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "A patch is available for critical unauthenticated remote code execution, and this edition did not establish exploitation.",
+      "cves": [
+        "CVE-2026-133973",
+        "CVE-2026-133971"
+      ],
+      "affected": "HPE Networking Management Software (AirWave) 8.3.0.7 and below.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "AirWave",
+          "version": "8.3.0.8 or later",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-133973",
+            "CVE-2026-133971"
+          ],
+          "source_ids": [
+            "hpe-csaf"
+          ]
+        }
+      ],
+      "summary": "HPE bulletin HPESBNW05186 fixes 23 issues in AirWave, including CVE-2026-133973, unauthenticated command injection in the web management interface, and CVE-2026-133971, an authentication bypass. AirWave 8.3.0.7 and below are affected. The fix is 8.3.0.8 or later. Exploitation was not established for either CVE, and neither was in the CISA KEV catalog at this check. CVSS for CVE-2026-133971 was not established. The HPE support page did not render (https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw05186en_us&docLocale=en_US); this edition uses the CSAF bulletin.",
+      "action": "Update HPE AirWave to 8.3.0.8 or later.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-133973",
+            "status": "unknown",
+            "source_ids": []
+          },
+          {
+            "cve": "CVE-2026-133971",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-133973",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-133971",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-133973",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "HPE (CNA)",
+          "source_ids": [
+            "nvd-cve-2026-133973"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-133973",
+          "probability": 0.01823,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        },
+        {
+          "cve": "CVE-2026-133971",
+          "probability": 0.00999,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "hpe-csaf",
+          "kind": "vendor_advisory",
+          "url": "https://csaf.arubanetworking.hpe.com/2026/hpe_networking_-_hpesbnw05186.txt",
+          "label": "HPE bulletin HPESBNW05186 CSAF",
+          "checked_at": "2026-11-26T07:01:06-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-133973",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-133973",
+          "label": "NVD CVE-2026-133973",
+          "checked_at": "2026-11-26T06:59:19-08:00",
+          "supports": [
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-daily-cybersec",
+          "kind": "social_report",
+          "url": "https://x.com/Daily_CyberSec/status/2125762979404652909",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-dailycyber",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@DailyCyberSecurity/117680135706734756",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jenkins-plugins",
+      "product": "Jenkins plugins",
+      "audience": "applications_and_servers",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "Anyone who can run sandboxed pipelines can take over the controller, and patches are available.",
+      "cves": [
+        "CVE-2026-136835",
+        "CVE-2026-136834"
+      ],
+      "affected": "Script Security 1436.v1082791135e4 and earlier; Pipeline: Groovy 4403.v471713a_cea_19 and earlier.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Script Security",
+          "version": "1436.1438.v3dc5ef7d16f2",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-136835"
+          ],
+          "source_ids": [
+            "jenkins-advisory"
+          ]
+        },
+        {
+          "component": "Pipeline: Groovy",
+          "version": "4403.4405.va_b_cdb_b_d0b_89f",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-136834"
+          ],
+          "source_ids": [
+            "jenkins-advisory"
+          ]
+        }
+      ],
+      "summary": "The Jenkins plugin advisory of 2026-11-25 includes a Script Security sandbox bypass (CVE-2026-136835, SECURITY-4278) and a Pipeline: Groovy sandbox bypass (CVE-2026-136834, SECURITY-4152). NVD now publishes those CVE identifiers, confirming numbers that the 25 November briefing did not treat as verified. Other plugins in the advisory are listed there. Exploitation was not established for either CVE, and neither was in the CISA KEV catalog at this check.",
+      "action": "Update Script Security to 1436.1438.v3dc5ef7d16f2 and Pipeline: Groovy to 4403.4405.va_b_cdb_b_d0b_89f, and update the other affected plugins named in the 2026-11-25 advisory.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-136835",
+            "status": "unknown",
+            "source_ids": []
+          },
+          {
+            "cve": "CVE-2026-136834",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-136835",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-136834",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-136835",
+          "score": 9.9,
+          "version": "3.1",
+          "authority": "Jenkins project CNA",
+          "source_ids": [
+            "nvd-cve-2026-136835"
+          ]
+        },
+        {
+          "cve": "CVE-2026-136834",
+          "score": 8.8,
+          "version": "3.1",
+          "authority": "Jenkins project CNA",
+          "source_ids": [
+            "nvd-cve-2026-136834"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-136835",
+          "probability": 0.01256,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        },
+        {
+          "cve": "CVE-2026-136834",
+          "probability": 0.00996,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "jenkins-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://www.jenkins.io/security/advisory/2026-11-25/",
+          "label": "Jenkins security advisory, 25 November 2026",
+          "checked_at": "2026-11-26T07:01:04-08:00",
+          "supports": [
+            "summary",
+            "cves",
+            "affected",
+            "fixes",
+            "action"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-136835",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-136835",
+          "label": "NVD CVE-2026-136835",
+          "checked_at": "2026-11-26T06:59:32-08:00",
+          "supports": [
+            "cvss"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-136834",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-136834",
+          "label": "NVD CVE-2026-136834",
+          "checked_at": "2026-11-26T06:59:38-08:00",
+          "supports": [
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-upwind",
+          "kind": "social_report",
+          "url": "https://x.com/UpwindMDR/status/2125645648363958729",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-dailycyber",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@DailyCyberSecurity/117679821328337132",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-trustlist",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/trustlist.bsky.social/post/3n367gesydu2c",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vm2",
+      "product": "vm2",
+      "audience": "applications_and_servers",
+      "priority": "monitor",
+      "action_type": "mitigate",
+      "priority_reason": "This is a narrow configuration-dependent issue, and no fix was confirmed in the sources read for this edition.",
+      "cves": [
+        "CVE-2026-93604"
+      ],
+      "affected": "vm2 through 3.12.0, when the embedder allowlists the crypto builtin.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "CVE-2026-93604 affects the vm2 Node.js sandbox through 3.12.0. Guest code can call crypto.setFips() when the embedder allowlists the crypto builtin. NVD lists CVSS 7.2 (version 3.1, primary) and 6.9 (version 4.0), both from VulnCheck. Exploitation was not established, and the CVE was not in the CISA KEV catalog at this check. Patch availability is unknown. The GitHub advisory at https://github.com/patriksimek/vm2/security/advisories/GHSA-x3v6-43hc-82mc was not read, so it is not used as evidence.",
+      "action": "Do not allowlist the crypto builtin for untrusted code. A fixed vm2 release was not established in the sources read for this edition.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-93604",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-93604",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-93604",
+          "score": 7.2,
+          "version": "3.1",
+          "authority": "VulnCheck",
+          "source_ids": [
+            "nvd-cve-2026-93604"
+          ]
+        },
+        {
+          "cve": "CVE-2026-93604",
+          "score": 6.9,
+          "version": "4.0",
+          "authority": "VulnCheck",
+          "source_ids": [
+            "nvd-cve-2026-93604"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-93604",
+          "probability": 0.00345,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "nvd-cve-2026-93604",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-93604",
+          "label": "NVD CVE-2026-93604",
+          "checked_at": "2026-11-26T07:00:46-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-hugovalters",
+          "kind": "social_report",
+          "url": "https://x.com/HugoValters/status/2125889297546977453",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pyjwt",
+      "product": "PyJWT",
+      "audience": "applications_and_servers",
+      "priority": "monitor",
+      "action_type": "update",
+      "priority_reason": "The PyJWT fix has been out since September, and only applications that mix HMAC and asymmetric algorithm families are exposed.",
+      "cves": [
+        "CVE-2026-102268"
+      ],
+      "affected": "PyJWT before 2.14.0, when the application accepts both HMAC and asymmetric algorithms. Social posts mention Red Hat Ansible Automation Platform 2.5; that product's fix status was not established.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "PyJWT",
+          "version": "2.14.0",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-102268"
+          ],
+          "source_ids": [
+            "nvd-cve-2026-102268"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-102268 is a key-confusion issue in PyJWT when an application accepts both HMAC and asymmetric algorithms. PyJWT before 2.14.0 is affected, and NVD records the fix as 2.14.0. The project release page at https://github.com/jpadilla/pyjwt/releases/tag/2.14.0 was not opened. Social posts mention Red Hat Ansible Automation Platform 2.5; the Red Hat fix status was not established. Exploitation was not established, and the CVE was not in the CISA KEV catalog at this check.",
+      "action": "Update PyJWT to 2.14.0 where the application accepts both HMAC and asymmetric algorithms. This edition does not establish a fixed release for Red Hat Ansible Automation Platform.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-102268",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-102268",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-102268",
+          "score": 9.1,
+          "version": "3.1",
+          "authority": "GitHub (CNA)",
+          "source_ids": [
+            "nvd-cve-2026-102268"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-102268",
+          "probability": 0.00325,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "nvd-cve-2026-102268",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-102268",
+          "label": "NVD CVE-2026-102268",
+          "checked_at": "2026-11-26T06:59:45-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "mastodon-offseq",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@offseq/117680153511073131",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "microsoft-visio",
+      "product": "Microsoft Office Visio",
+      "audience": "end_users",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "This is critical remote code execution in widely used Office software, and updates are available.",
+      "cves": [
+        "CVE-2026-112732"
+      ],
+      "affected": "Fixed builds were published for Office LTSC 2024, Office LTSC 2021, and Microsoft 365 Apps for Enterprise. A vulnerable version range was not stated in the sources read for this edition.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Office LTSC 2024",
+          "version": "16.0.17932.21140",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-112732"
+          ],
+          "source_ids": [
+            "msrc"
+          ]
+        },
+        {
+          "component": "Office LTSC 2021",
+          "version": "16.0.14334.21048",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-112732"
+          ],
+          "source_ids": [
+            "msrc"
+          ]
+        },
+        {
+          "component": "Microsoft 365 Apps for Enterprise",
+          "version": "per https://aka.ms/OfficeSecurityReleases",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-112732"
+          ],
+          "source_ids": [
+            "msrc"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-112732 is a double-free vulnerability in Microsoft Office Visio that allows remote code execution. Microsoft rates it Critical and released updates on 2026-11-24. Exploitation was not established, and the CVE was not in the CISA KEV catalog at this check. The Microsoft 365 Apps for Enterprise build was not listed in the MSRC API.",
+      "action": "Install Office LTSC 2024 build 16.0.17932.21140 or Office LTSC 2021 build 16.0.14334.21048. For Microsoft 365 Apps for Enterprise, install the build listed at https://aka.ms/OfficeSecurityReleases. That build was not listed in the MSRC API.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-112732",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-112732",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-112732",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "Microsoft (CNA)",
+          "source_ids": [
+            "nvd-cve-2026-112732"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-112732",
+          "probability": 0.01342,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "msrc",
+          "kind": "vendor_advisory",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-112732",
+          "label": "MSRC update guide CVE-2026-112732",
+          "checked_at": "2026-11-26T07:01:47-08:00",
+          "supports": [
+            "summary",
+            "fixes",
+            "action",
+            "severity"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-112732",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-112732",
+          "label": "NVD CVE-2026-112732",
+          "checked_at": "2026-11-26T06:59:25-08:00",
+          "supports": [
+            "summary",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, score date 2026-11-26",
+          "checked_at": "2026-11-26T06:58:42-08:00",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-thehackerwire",
+          "kind": "social_report",
+          "url": "https://x.com/TheHackerWire/status/2125635632743711128",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1password",
+      "product": "1Password",
+      "audience": "end_users",
+      "priority": "monitor",
+      "action_type": "mitigate",
+      "priority_reason": "There is no patch for customers to apply. The remaining risk is unexpected invitation or recovery email.",
+      "cves": [],
+      "affected": "A subset of 1Password customers. Vaults, passwords, and Secret Keys were not accessed.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "1Password says an attacker used an employee's GitHub account, starting 2026-11-19, to push code to backend services and copied account records for a subset of customers. The copied data includes names, email addresses, identifiers, sign-in times, and some tokens in emailed invitation or recovery links. Vaults, passwords, and Secret Keys were not accessed. There is no CVE. CVSS, EPSS, and KEV do not apply.",
+      "action": "No account change is needed, per 1Password. Be wary of unexpected 1Password email, including invitations or recovery requests you did not start.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "onepassword-blog"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "onepassword-blog",
+          "kind": "vendor_advisory",
+          "url": "https://1password.com/blog/update-on-nov-2026-security-incident",
+          "label": "1Password update on the November 2026 security incident",
+          "checked_at": "2026-11-26T07:01:18-08:00",
+          "supports": [
+            "summary",
+            "affected",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "x-salnahi",
+          "kind": "social_report",
+          "url": "https://x.com/salnahi/status/2125903224385225054",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-signalcheck",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/a-signalcheck.bsky.social/post/3n37g2xx2on22",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-signalcheck",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@a_signalcheck/117682156598514378",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    }
+  ]
+}
