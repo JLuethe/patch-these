@@ -1,0 +1,15 @@
+{
+  "description": "Saved social search terms for the editorial routine's early-signal scan. Run every query newest first, then drop posts already handled with scripts/seen_posts.py filter. Edit this file to change what the scan looks for.",
+  "x": {
+    "queries": ["CVE", "zero-day", "\"actively exploited\"", "\"patch now\"", "\"security advisory\"", "\"in the wild\"", "KEV", "breach"],
+    "mode": "Latest"
+  },
+  "bluesky": {
+    "queries": ["CVE", "zero-day", "\"actively exploited\""],
+    "sort": "latest"
+  },
+  "mastodon": {
+    "search": ["CVE"],
+    "tags": ["cve", "zeroday", "infosec"]
+  }
+}
