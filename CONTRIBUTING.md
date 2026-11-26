@@ -23,7 +23,7 @@ python scripts/publish_direct.py data/2026-11-26.json
 python scripts/publish_direct.py --dry-run data/2026-11-26.json
 ```
 
-The real command needs `GITHUB_TOKEN` in the environment. It uses that token only as an HTTPS credential and does not print it. Run it from a checkout of `main`. `--dry-run` runs the checks and prints the commit it would make, then stops. A confirmed dead link already in the repository stops the push. A dead link on a non-social source added in that edit is reported and does not stop the push.
+The real command needs `GITHUB_TOKEN` in the environment. It uses that token only as an HTTPS credential and does not print it. Run it from a checkout of `main`. `--dry-run` runs the checks and prints the commit it would make, then stops. With no change to the edition files it prints "Nothing to publish" and exits without a commit. `--fast` skips pytest and the link check when the only changes are added or edited early signals, and falls back to the full checks otherwise; Pages still runs the tests before deploying. A confirmed dead link already in the repository stops the push. A dead link on a non-social source added in that edit is reported and does not stop the push.
 
 CI runs `python scripts/build_site.py --check`, which fails when the committed digest Markdown or README briefing differs from what the JSON generates. Run it locally before pushing if you want the same check.
 

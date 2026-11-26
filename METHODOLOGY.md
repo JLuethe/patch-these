@@ -6,7 +6,7 @@ The briefings are curated, not a complete inventory of vulnerabilities. A missin
 
 ## Discovery and evidence
 
-The briefing is updated every 4 hours, at 6 AM, 10 AM, 2 PM, 6 PM and 10 PM Pacific time, every day. Each calendar day has one dated edition, updated in place, with a corrections log.
+The briefing is updated every 4 hours, at 6 AM, 10 AM, 2 PM, 6 PM and 10 PM Pacific time, every day. Each calendar day has one dated edition, updated in place, with a corrections log. The 10 AM, 2 PM and 6 PM runs look only for new reports on X, Bluesky and Mastodon. The 6 AM and 10 PM runs also read the official-feed cache and recheck earlier urgent items. Between runs, a new CISA KEV entry or a new advisory for a product covered in the past week starts a short check of just that item. A run that finds nothing new changes nothing.
 
 Each run looks first for new security issues on X, Bluesky and Mastodon, especially fresh posts that may not be fully validated yet. Unconfirmed leads are published as Early signals: not yet verified, with no hard patch recommendation. A patch recommendation, a confirmed exploitation status, or a CISA KEV listing is added only after a primary source confirms it: a vendor advisory, CISA KEV, NVD, FIRST EPSS, or the original researcher.
 
