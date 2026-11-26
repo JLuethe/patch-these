@@ -4,6 +4,7 @@
 Usage:
   python scripts/publish_direct.py data/2026-11-26.json
   python scripts/publish_direct.py --dry-run data/2026-11-26.json
+  python scripts/publish_direct.py --fast data/2026-11-26.json
 
 Run this from a checkout of main. The script regenerates the site, runs the
 tests, checks generated files, then link-checks. A confirmed dead link that
@@ -13,6 +14,21 @@ results never stop the push.
 
 Authentication uses GITHUB_TOKEN and never prints it. --dry-run runs the same
 checks and prints the commit it would make, then stops before git add.
+
+No change: when the edition files match HEAD, the script runs no checks, makes
+no commit and prints "Nothing to publish" (it still pushes a commit that an
+earlier failed push left waiting). A run that found nothing new must not edit
+the JSON at all, not even updated_at or last_checked_at.
+
+--fast: for edits that only add or change early signals. Eligible when, compared
+with origin/main, the only changed files are existing data/YYYY-MM-DD.json
+editions (plus their generated views), no item was removed, every added or
+changed item is an early signal before and after the edit, and the only other
+edition fields that changed are updated_at, last_checked_at and corrections.
+The fast path validates the edited files, runs --write-generated and --check,
+and skips pytest and the link check; the Pages workflow still runs the tests
+before it deploys. If the edit is not eligible, the script says why and runs
+the full checks instead.
 """
 # SPDX-License-Identifier: MIT
 from __future__ import annotations
@@ -20,6 +36,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 import subprocess
@@ -28,9 +45,12 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from patchthese.common import social_platform  # noqa: E402
+from patchthese.common import is_early_signal, social_platform  # noqa: E402
 
 GENERATED = ("README.md", "data/products.json")
+EDITION_NAME = re.compile(r"^data/\d{4}-\d{2}-\d{2}\.json$")
+DIGEST_NAME = re.compile(r"^digests/\d{4}-\d{2}-\d{2}\.md$")
+FAST_EDITION_FIELDS = {"updated_at", "last_checked_at", "corrections", "items"}
 
 
 def commit_message(paths: list[Path], when: datetime) -> str:
@@ -115,6 +135,72 @@ def _fail(message: str, code: int = 1) -> int:
     return code
 
 
+def fast_path_reason(old: dict | None, new: dict) -> str | None:
+    """None when this edition edit only adds or changes early signals; otherwise why not."""
+    if old is None:
+        return "the edition is new on main"
+    for key in sorted(set(old) | set(new)):
+        if key not in FAST_EDITION_FIELDS and old.get(key) != new.get(key):
+            return f"edition field {key} changed"
+    old_items = {item.get("id"): item for item in old.get("items") or []}
+    new_items = {item.get("id"): item for item in new.get("items") or []}
+    removed = sorted(set(old_items) - set(new_items))
+    if removed:
+        return "item removed: " + ", ".join(map(str, removed))
+    for item_id, item in new_items.items():
+        before = old_items.get(item_id)
+        if before == item:
+            continue
+        if not is_early_signal(item):
+            return f"item {item_id} is {'new' if before is None else 'changed'} and is not an early signal"
+        if before is not None and not is_early_signal(before):
+            return f"item {item_id} was verified before this edit"
+    old_order = [item.get("id") for item in old.get("items") or [] if not is_early_signal(item)]
+    new_order = [item.get("id") for item in new.get("items") or [] if not is_early_signal(item)]
+    if old_order != new_order:
+        return "verified items were reordered"
+    return None
+
+
+def _git_out(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True)
+
+
+def changed_files(root: Path, base: str) -> list[str]:
+    """Tracked files that differ from `base`, plus untracked files."""
+    diff = _git_out(root, "diff", "--name-only", base, "--")
+    untracked = _git_out(root, "ls-files", "--others", "--exclude-standard")
+    return sorted(set(diff.stdout.split()) | set(untracked.stdout.split()))
+
+
+def fast_path_check(root: Path, base: str = "origin/main") -> str | None:
+    """None when every change since `base` qualifies for --fast; otherwise the reason it does not."""
+    if _git_out(root, "rev-parse", "--verify", "--quiet", base).returncode != 0:
+        return f"{base} is not available to compare with"
+    changed = changed_files(root, base)
+    editions = [path for path in changed if EDITION_NAME.match(path)]
+    others = [path for path in changed if not EDITION_NAME.match(path) and path not in GENERATED and not DIGEST_NAME.match(path)]
+    if others:
+        return "files outside data/*.json changed: " + ", ".join(others)
+    if not editions:
+        return "no edition file changed"
+    for relative in editions:
+        shown = _git_out(root, "show", f"{base}:{relative}")
+        old = json.loads(shown.stdout) if shown.returncode == 0 else None
+        new = json.loads((root / relative).read_text(encoding="utf-8"))
+        reason = fast_path_reason(old, new)
+        if reason:
+            return f"{relative}: {reason}"
+    return None
+
+
+def editions_changed(root: Path, paths: list[Path]) -> bool:
+    """True when any edition file differs from HEAD or is untracked."""
+    relative = [path.relative_to(root).as_posix() for path in paths]
+    status = _git_out(root, "status", "--porcelain", "--", *relative)
+    return bool(status.stdout.strip())
+
+
 def _allowed_paths(edition_paths: list[Path]) -> set[str]:
     allowed = set(GENERATED)
     for path in edition_paths:
@@ -139,6 +225,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("files", nargs="+", type=Path, help="Edition JSON files to publish, such as data/2026-11-26.json")
     parser.add_argument("--dry-run", action="store_true", help="Run the checks and print the commit, but do not commit or push.")
+    parser.add_argument("--fast", action="store_true", help="Skip pytest and the link check when only early signals changed; falls back to the full checks otherwise.")
     args = parser.parse_args(argv)
     python = sys.executable
     edition_paths = []
@@ -151,15 +238,51 @@ def main(argv: list[str] | None = None) -> int:
             return _fail(f"Missing edition file: {path}")
         edition_paths.append(candidate)
 
-    steps = [
-        [python, "scripts/build_site.py", "--write-generated"],
-        [python, "-m", "pytest", "-q"],
-        [python, "scripts/build_site.py", "--check"],
-    ]
+    allowed = _allowed_paths(edition_paths)
+    if not editions_changed(ROOT, edition_paths):
+        # A quiet run: no checks, no commit. Only a commit left by a failed push is sent.
+        if args.dry_run:
+            print("Nothing to publish: the edition files match HEAD. dry run: no commit and no push")
+            return 0
+        token = os.environ.get("GITHUB_TOKEN", "")
+        if not token.strip() or any(char.isspace() for char in token):
+            print("Nothing to publish: the edition files match HEAD.")
+            return 0
+        auth_remote = f"https://x-access-token:{token}@github.com/JLuethe/patch-these.git"
+        quiet_paths = [path.relative_to(ROOT).as_posix() for path in edition_paths]
+        return commit_and_push(ROOT, quiet_paths, commit_message(edition_paths, datetime.now(timezone.utc)), auth_remote, token=token)
+
+    fast = False
+    if args.fast:
+        reason = fast_path_check(ROOT)
+        if reason:
+            print(f"--fast not eligible ({reason}); running the full checks instead.")
+        else:
+            fast = True
+            print("--fast: only early signals changed; skipping pytest and the link check (the Pages workflow runs the tests before deploying).")
+    if fast:
+        from patchthese.validation import ValidationError, validate_payload
+        for path in edition_paths:
+            try:
+                validate_payload(json.loads(path.read_text(encoding="utf-8")), path.stem)
+            except (ValidationError, ValueError) as error:
+                return _fail(f"{path.name} failed validation: {error}")
+        steps = [
+            [python, "scripts/build_site.py", "--write-generated"],
+            [python, "scripts/build_site.py", "--check"],
+        ]
+    else:
+        steps = [
+            [python, "scripts/build_site.py", "--write-generated"],
+            [python, "-m", "pytest", "-q"],
+            [python, "scripts/build_site.py", "--check"],
+        ]
     for command in steps:
         completed = _run(command, cwd=ROOT)
         if completed.returncode != 0:
             return completed.returncode
+    if fast:
+        return _finish(args, edition_paths, allowed)
 
     new_urls = new_source_urls(ROOT, edition_paths)
     link = _run([python, "scripts/check_links.py", "--report", "_reports/link-check.json"], cwd=ROOT)
@@ -175,10 +298,12 @@ def main(argv: list[str] | None = None) -> int:
         for result in blocking:
             print(f"link check blocked the push: {result['target']} — {result.get('detail')}", file=sys.stderr)
         return 1
+    return _finish(args, edition_paths, allowed)
 
+
+def _finish(args: argparse.Namespace, edition_paths: list[Path], allowed: set[str]) -> int:
     when = datetime.now(timezone.utc)
     message = commit_message(edition_paths, when)
-    allowed = _allowed_paths(edition_paths)
     unexpected = _unexpected_changes(allowed)
     if unexpected:
         return _fail("Refusing to publish because unrelated files changed: " + ", ".join(unexpected))
