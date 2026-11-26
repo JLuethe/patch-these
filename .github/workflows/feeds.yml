@@ -1,7 +1,14 @@
 # Refresh the discovery cache. This is not an edition and it does not deploy the site.
 # The cache lives on the feed-cache branch, one force-pushed commit with
-# latest.json, kev-new.json, kev-seen.json and status.json at its root.
-# Nothing is committed to main.
+# latest.json, kev-new.json, kev-seen.json, status.json, wake.json and
+# woken.json at its root. Nothing is committed to main.
+#
+# Wakes: when wake.json has rows (a new CISA KEV entry, or a new advisory for a
+# product covered in the last 7 days), the last step POSTs a short JSON body to
+# the routine's webhook. It needs two repository secrets:
+#   PATCH_THESE_WAKE_URL     the webhook URL
+#   PATCH_THESE_WAKE_SECRET  sent as "Authorization: Bearer <secret>"
+# Without both, the step logs a notice and skips. A row wakes the routine once.
 
 name: Discovery feeds
 
@@ -47,7 +54,7 @@ jobs:
       - name: Fetch public discovery feeds
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python scripts/fetch_feeds.py --output "$RUNNER_TEMP/feed-cache"
+        run: python scripts/fetch_feeds.py --output "$RUNNER_TEMP/feed-cache" --wake-body "$RUNNER_TEMP/wake-body.json"
 
       - name: Publish the cache to the feed-cache branch
         env:
@@ -66,3 +73,27 @@ jobs:
           fi
           commit=$(git commit-tree "$tree" -m "Discovery feed cache $(date -u +%Y-%m-%dT%H:%M:%SZ)")
           git push --force origin "$commit:refs/heads/feed-cache"
+
+      - name: Wake the editorial routine for new KEV entries or covered-vendor advisories
+        env:
+          WAKE_URL: ${{ secrets.PATCH_THESE_WAKE_URL }}
+          WAKE_SECRET: ${{ secrets.PATCH_THESE_WAKE_SECRET }}
+        run: |
+          body="$RUNNER_TEMP/wake-body.json"
+          if [ ! -s "$body" ]; then
+            echo "No wake rows this run."
+            exit 0
+          fi
+          echo "Wake rows: $(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["total"])' "$body")"
+          if [ -z "$WAKE_URL" ] || [ -z "$WAKE_SECRET" ]; then
+            echo "::notice title=Wake skipped::PATCH_THESE_WAKE_URL or PATCH_THESE_WAKE_SECRET is not set; the rows stay in wake.json on feed-cache."
+            exit 0
+          fi
+          printf 'header = "Authorization: Bearer %s"\n' "$WAKE_SECRET" > "$RUNNER_TEMP/wake-curl.conf"
+          if curl -fsS --max-time 20 --retry 2 -X POST -H "Content-Type: application/json" \
+              -K "$RUNNER_TEMP/wake-curl.conf" --data-binary "@$body" "$WAKE_URL" -o /dev/null; then
+            echo "Woke the editorial routine."
+          else
+            echo "::warning title=Wake failed::The wake POST failed; the rows stay in wake.json for the next scheduled run."
+          fi
+          rm -f "$RUNNER_TEMP/wake-curl.conf"

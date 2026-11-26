@@ -6,6 +6,18 @@ and force-pushes the result back to feed-cache. Nothing is committed to main.
 status.json records each source's last_ok time; a source that has not
 succeeded for more than 24 hours produces a GitHub Actions warning.
 
+Each row may carry advisory_lines (affected, fixed, notes, extracted_from,
+origin, confidence, checked_at), taken only from payloads already fetched: the
+GitHub advisory API's version ranges, CISA KEV's vendor/product/required
+action/due date, and exact "fixed in"/"before x.y" phrases in a vendor feed
+item's own text. No extra pages are fetched.
+
+wake.json lists rows worth an immediate targeted editorial run: new KEV
+entries, and new advisory rows matching a product covered in the last 7 days
+(see scripts/patchthese/wake.py). woken.json remembers which rows already woke
+the routine so none wakes it twice. With --wake-body, the POST body for the
+workflow is written to that path when there are wake rows.
+
 Confirmed working, and included:
   cisa-kev              https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json
   msrc                  https://api.msrc.microsoft.com/update-guide/rss
@@ -54,6 +66,14 @@ from patchthese.feedcache import (  # noqa: E402
     parse_kev,
     dedupe,
     within_window,
+)
+from patchthese.wake import (  # noqa: E402
+    WAKE_FILE_LIMIT,
+    covered_products,
+    new_rows,
+    post_body,
+    record_woken,
+    select_wake_rows,
 )
 
 USER_AGENT = "patch-these-feed-cache/1.0 (+https://github.com/JLuethe/patch-these)"
@@ -107,7 +127,11 @@ def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def build_cache(output: Path, *, token: str | None, now: datetime | None = None, fetcher=None) -> int:
+PRODUCTS = ROOT / "data" / "products.json"
+
+
+def build_cache(output: Path, *, token: str | None, now: datetime | None = None, fetcher=None,
+                products_path: Path = PRODUCTS, wake_body: Path | None = None) -> int:
     fetcher = fetcher or fetch
     now = now or datetime.now(timezone.utc).replace(microsecond=0)
     fetched_at = now.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -178,6 +202,29 @@ def build_cache(output: Path, *, token: str | None, now: datetime | None = None,
             _write_json(seen_path, seen)
             changed = True
 
+    # Wake rows: new KEV entries, and new advisories for products covered this week.
+    covered = covered_products(_read_json(products_path, {"products": []}), now.date())
+    fresh_advisories = [row for row in new_rows(stamped, previous_latest) if row["source"] not in failed]
+    woken_path = output / "woken.json"
+    woken = _read_json(woken_path, {"ids": {}}).get("ids") or {}
+    fresh_kev_ids = {item["id"] for item in fresh_kev}
+    kev_rows = [row for row in stamped if row["source"] == "cisa-kev" and row["id"] in fresh_kev_ids]
+    wake_rows = select_wake_rows(kev_rows, fresh_advisories, covered, woken)
+    _write_json(output / "wake.json", {
+        "generated_at": fetched_at,
+        "total": len(wake_rows),
+        "covered_products": [product["id"] for product in covered],
+        "rows": wake_rows[:WAKE_FILE_LIMIT],
+    })
+    updated_woken = record_woken(woken, wake_rows, fetched_at, now)
+    if updated_woken != woken or not woken_path.is_file():
+        _write_json(woken_path, {"ids": updated_woken})
+    if wake_body is not None:
+        if wake_rows:
+            _write_json(wake_body, post_body(wake_rows))
+        elif wake_body.exists():
+            wake_body.unlink()
+
     status_path = output / "status.json"
     status = update_source_status(_read_json(status_path, {}), ok, failed, fetched_at)
     _write_json(status_path, status)
@@ -190,7 +237,7 @@ def build_cache(output: Path, *, token: str | None, now: datetime | None = None,
 
     print(
         f"ok={len(ok)}; failures={sorted(failed) or 'none'}; stale={[name for name, _ in stale] or 'none'}; "
-        f"window_items={len(stamped)}; new_kev={len(fresh_kev)}; baseline={baseline}; changed={changed}"
+        f"window_items={len(stamped)}; new_kev={len(fresh_kev)}; wake_rows={len(wake_rows)}; baseline={baseline}; changed={changed}"
     )
     # Fail only when nothing at all could be fetched, which points at the runner or network.
     return 0 if ok else 1
@@ -200,6 +247,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "feeds" / "cache", help="Cache directory. The workflow restores it from the feed-cache branch first.")
     parser.add_argument("--dry-run", action="store_true", help="Fetch and print counts without writing the cache.")
+    parser.add_argument("--wake-body", type=Path, help="Write the wake POST body here when there are wake rows; remove it otherwise.")
     args = parser.parse_args(argv)
     token = os.environ.get("GITHUB_TOKEN") or None
     if args.dry_run:
@@ -209,7 +257,7 @@ def main(argv: list[str] | None = None) -> int:
             import shutil
             shutil.rmtree(scratch)
         return code
-    return build_cache(args.output, token=token)
+    return build_cache(args.output, token=token, wake_body=args.wake_body)
 
 
 if __name__ == "__main__":
