@@ -23,6 +23,17 @@
       ]
     },
     {
+      "id": "apache-roller",
+      "product": "Apache Roller",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "apache-roller",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
       "id": "azure-api-management-classic",
       "product": "Azure API Management Classic",
       "appearances": [
@@ -442,6 +453,17 @@
           "digest_date": "2026-11-26",
           "item_id": "todoist",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "us-air-force-cloud-one",
+      "product": "U.S. Air Force Cloud One",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "us-air-force-cloud-one",
+          "verification": "early_signal"
         }
       ]
     },

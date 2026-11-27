@@ -4,13 +4,68 @@
   "coverage_start": "2026-11-27",
   "coverage_end": "2026-11-27",
   "published_at": "2026-11-27T14:00:06Z",
-  "updated_at": "2026-11-27T14:00:06Z",
-  "corrections": [],
+  "updated_at": "2026-11-27T17:57:07Z",
+  "corrections": [
+    {
+      "at": "2026-11-27T17:57:07Z",
+      "summary": "Added Apache Roller (CVE-2026-129448) as a verified Act now item: unauthenticated code execution through XML-RPC, actively exploited per Apache and in CISA KEV since 2026-11-20; upgrade to 6.1.6 or later. Added an early signal on reports that hackers breached the U.S. Air Force Cloud One platform, not yet confirmed by an official statement.",
+      "item_ids": [
+        "apache-roller",
+        "us-air-force-cloud-one"
+      ]
+    }
+  ],
   "featured_item_ids": [
     "realvnc",
     "f5-big-ip-icontrol-soap"
   ],
   "items": [
+    {
+      "id": "us-air-force-cloud-one",
+      "product": "U.S. Air Force Cloud One",
+      "audience": "applications_and_servers",
+      "kind": "incident",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "Widely shared posts and news reports say hackers breached the U.S. Air Force's Cloud One platform and disrupted operations, but no official Air Force statement was confirmed in this edition.",
+      "cves": [],
+      "affected": "Not yet confirmed. Reports describe the U.S. Air Force's Cloud One computing platform.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on X citing news reports say hackers breached the U.S. Air Force's flagship Cloud One computing platform, disrupting operations, and that U.S. Cyber Command is assessing the intrusion. Whether data was taken is unclear. This edition has not confirmed the details from an official Air Force or Department of Defense statement.",
+      "action": "Check whether your organization runs workloads on or connects to Air Force Cloud One; watch for an official Air Force statement or customer notice.",
+      "gaps": "No official Air Force, Department of Defense or U.S. Cyber Command statement was found or read. Intrusion date, scope, data taken and any guidance for connected organizations are unconfirmed. Only posts on X were read.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "x-indiatoday",
+          "kind": "social_report",
+          "url": "https://x.com/IndiaToday/status/2126373146920091741",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-leadingreport",
+          "kind": "social_report",
+          "url": "https://x.com/LeadingReport/status/2126373767211532675",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
     {
       "id": "realvnc",
       "product": "RealVNC Viewer, Server, Connect, Classic Viewer and On-Demand Assist",
@@ -405,6 +460,165 @@
           "checked_at": "2026-11-27T13:58:00Z",
           "supports": [
             "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "apache-roller",
+      "product": "Apache Roller",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "CVE-2026-129448 lets an unauthenticated remote attacker run code on Apache Roller through the XML-RPC endpoint; Apache says it is being actively exploited and CISA added it to KEV on 2026-11-20.",
+      "cves": [
+        "CVE-2026-129448"
+      ],
+      "affected": "Apache Roller 4.0.0 through 6.1.4 per the CVE record; Apache says this is the same flaw an earlier CVE listed for 6.1.5, so every release before 6.1.6 should be treated as affected.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Apache Roller",
+          "version": "6.1.6",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-129448"
+          ],
+          "source_ids": [
+            "apache-roller-advisory"
+          ]
+        }
+      ],
+      "summary": "Apache Roller has an unauthenticated deserialization flaw in its XML-RPC endpoint (CVE-2026-129448) that can let a remote attacker run arbitrary code. Apache rates it Critical, CVSS 9.8, and says it is being actively exploited. CISA added it to the KEV catalog on 2026-11-20. Turning off XML-RPC in the admin UI does not protect older versions.",
+      "action": "Upgrade Apache Roller to 6.1.6 or later (6.1.7 is the current release). If you can't upgrade right away, apply Apache's interim mitigation below and restart Roller.",
+      "steps": [
+        "Upgrade to Apache Roller 6.1.6 or later from https://roller.apache.org/downloads/downloads.html.",
+        "If you cannot upgrade right away, set \"enabledForExtensions\" to \"false\" in WEB-INF/web.xml, or remove the \"/roller-services/xmlrpc\" servlet mapping, then restart Roller.",
+        "Do not rely on disabling XML-RPC in the administration UI; Apache says older versions deserialize the request before checking that setting."
+      ],
+      "gaps": "The Roller 6.1.7 release notes were not opened, so it is unconfirmed whether 6.1.7 adds further security fixes; the action names 6.1.6, the fixed release in Apache's advisory. FIRST EPSS score dated 2026-11-27. Ransomware use is listed as Unknown in KEV.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "apache-roller-advisory",
+          "cisa-kev"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-129448",
+            "status": "confirmed",
+            "source_ids": [
+              "apache-roller-advisory",
+              "cisa-kev"
+            ]
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-129448",
+          "listed": true,
+          "date_added": "2026-11-20",
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-129448",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "Apache Software Foundation (CNA)",
+          "source_ids": [
+            "apache-roller-advisory",
+            "nvd-cve-2026-129448"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-129448",
+          "probability": 0.24159,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss-roller"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "apache-roller-advisory",
+          "kind": "vendor_advisory",
+          "url": "https://lists.apache.org/thread.html/lnz4s26tv6hdo03wngtdbpfj4hg4gtds",
+          "label": "Apache Roller security advisory for CVE-2026-129448",
+          "checked_at": "2026-11-27T17:57:07Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "action",
+            "steps",
+            "exploitation",
+            "cvss"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-129448",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-129448",
+          "label": "NVD CVE-2026-129448",
+          "checked_at": "2026-11-27T17:57:07Z",
+          "supports": [
+            "cves",
+            "summary",
+            "affected",
+            "cvss"
+          ]
+        },
+        {
+          "id": "roller-downloads",
+          "kind": "vendor_advisory",
+          "url": "https://roller.apache.org/downloads/downloads.html",
+          "label": "Apache Roller downloads (current release 6.1.7)",
+          "checked_at": "2026-11-27T17:57:07Z",
+          "supports": [
+            "action",
+            "steps"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-27T17:57:07Z",
+          "supports": [
+            "kev",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "first-epss-roller",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-129448",
+          "label": "FIRST EPSS, 2026-11-27",
+          "checked_at": "2026-11-27T17:57:07Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-cliffguardcyber",
+          "kind": "social_report",
+          "url": "https://x.com/CliffguardCyber/status/2126315162957496525",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
           ]
         }
       ]

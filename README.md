@@ -13,7 +13,11 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 [Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-27.md) · [Structured data](data/2026-11-27.json)
 
-Coverage: 27 November 2026. Updated: 27 Nov 2026 · 6:00 AM PST.
+Coverage: 27 November 2026. Updated: 27 Nov 2026 · 9:57 AM PST.
+
+### Early signals: not yet verified
+
+- **Not yet verified. [U.S. Air Force Cloud One](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-us-air-force-cloud-one):** Check whether your organization runs workloads on or connects to Air Force Cloud One; watch for an official Air Force statement or customer notice. Source: [Discussed on X](https://x.com/IndiaToday/status/2126373146920091741) · [Discussed on X](https://x.com/LeadingReport/status/2126373767211532675).
 
 ### For everyone
 
@@ -21,6 +25,7 @@ Coverage: 27 November 2026. Updated: 27 Nov 2026 · 6:00 AM PST.
 
 ### For app and server owners
 
+- **[Apache Roller](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-apache-roller) — Act now / Update:** Upgrade Apache Roller to 6.1.6 or later (6.1.7 is the current release). If you can't upgrade right away, apply Apache's interim mitigation below and restart Roller.
 - **[RealVNC Viewer, Server, Connect, Classic Viewer and On-Demand Assist](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-realvnc) — Act soon / Update:** Update RealVNC Viewer and the Connect app to 8.6.2 or later, Server to 7.19.1 or later, Classic Viewer to 7.18.3 or later, and On-Demand Assist to 3.5.0 or later; check that mobile Viewer and Server apps have updated (Viewer 4.9.6, Server iOS 2.8.2, Server Android 2.8.4 or later).
 - **[F5 BIG-IP and BIG-IQ (iControl SOAP)](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-f5-big-ip-icontrol-soap) — Act soon / Update:** Update BIG-IP to 21.1.0.3, 17.5.1.10 or 17.1.3.6 or later on your branch, and BIG-IQ to 8.4.2.3 or later. Until then, remove iControl SOAP access for users who are not fully trusted and restrict iControl SOAP to trusted networks.
 
