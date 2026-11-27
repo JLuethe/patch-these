@@ -23,6 +23,17 @@
       ]
     },
     {
+      "id": "ansibleforms",
+      "product": "AnsibleForms",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "ansibleforms",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "apache-roller",
       "product": "Apache Roller",
       "appearances": [
@@ -140,6 +151,17 @@
           "digest_date": "2026-11-26",
           "item_id": "easyequities",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "exim",
+      "product": "Exim",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "exim",
+          "verification": "early_signal"
         }
       ]
     },
@@ -358,6 +380,17 @@
       ]
     },
     {
+      "id": "nomachine-personal-windows",
+      "product": "NoMachine Personal Edition for Windows",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "nomachine-personal-windows",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
       "id": "omarchy-dell-xps-touchpad-haptics",
       "product": "Omarchy dell-xps-touchpad-haptics",
       "appearances": [
@@ -497,6 +530,17 @@
           "digest_date": "2026-11-26",
           "item_id": "vm2",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "vm2-nodevm",
+      "product": "vm2",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "vm2-nodevm",
+          "verification": "early_signal"
         }
       ]
     },

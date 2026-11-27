@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-27",
   "coverage_end": "2026-11-27",
   "published_at": "2026-11-27T14:00:06Z",
-  "updated_at": "2026-11-27T17:57:07Z",
+  "updated_at": "2026-11-27T21:58:43Z",
   "corrections": [
     {
       "at": "2026-11-27T17:57:07Z",
@@ -13,6 +13,16 @@
         "apache-roller",
         "us-air-force-cloud-one"
       ]
+    },
+    {
+      "at": "2026-11-27T21:58:43Z",
+      "summary": "Added NoMachine Personal Edition for Windows as a verified Act now supply-chain item: NoMachine confirms its Windows installer download was replaced with a tampered copy carrying a remote-access tool between 19 November 13:43 UTC and 20 November 10:00 UTC. Added early signals for AnsibleForms (CVE-2026-73969), vm2 NodeVM (CVE-2026-93605) and Exim (CVE-2026-137702), not yet confirmed by a primary source.",
+      "item_ids": [
+        "nomachine-personal-windows",
+        "ansibleforms",
+        "vm2-nodevm",
+        "exim"
+      ]
     }
   ],
   "featured_item_ids": [
@@ -20,6 +30,275 @@
     "f5-big-ip-icontrol-soap"
   ],
   "items": [
+    {
+      "id": "ansibleforms",
+      "product": "AnsibleForms",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "Posts describe a critical AnsibleForms flaw and say public exploit code is now available, but no vendor advisory was read in this edition.",
+      "cves": [
+        "CVE-2026-73969"
+      ],
+      "affected": "Not yet confirmed. Posts name AnsibleForms.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on Bluesky and X describe CVE-2026-73969 as a critical vulnerability in AnsibleForms, the web form front end for Ansible automation, and one post says public exploit code has been published and that a fixed release exists. This edition has not confirmed the affected versions, the fix or the impact from the project's own advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether you run AnsibleForms, especially where it is reachable from the internet; read the project's release notes and security advisory before choosing a version.",
+      "gaps": "No AnsibleForms advisory, release notes or CVE record was read. Affected versions, the fixed version, severity and whether the flaw is being exploited are unconfirmed. The fixed version named in posts was not checked.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-73969",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-73969",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-73969",
+          "probability": 0.03043,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "bsky-eventmonitor",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/eventmonitor.bsky.social/post/3n3fp3p5q5uym",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-cvedotnow",
+          "kind": "social_report",
+          "url": "https://x.com/cvedotnow/status/2126411338851221709",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-27T21:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-73969",
+          "label": "FIRST EPSS",
+          "checked_at": "2026-11-27T21:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vm2-nodevm",
+      "product": "vm2",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "A post describes a maximum-severity sandbox escape in vm2's NodeVM with a fix still under review, but no advisory was read in this edition.",
+      "cves": [
+        "CVE-2026-93605"
+      ],
+      "affected": "Not yet confirmed. Posts name the vm2 NodeVM sandbox for Node.js.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts by one researcher on X, Bluesky and Mastodon say CVE-2026-93605 lets code inside a vm2 NodeVM sandbox escape and run commands on the host, rate it CVSS 10, and say a patch is still under review. This is a different flaw from the vm2 crypto-builtin issue covered on November 26. This edition has not confirmed the details from a vm2 or GitHub advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether your applications use vm2's NodeVM to run untrusted code; watch the vm2 GitHub advisories for a fix and limit the built-in modules the sandbox can load.",
+      "gaps": "No vm2 or GitHub security advisory and no CVE record was read. Affected versions, the CVSS score, fix status and exploitation are unconfirmed. Only one author's posts were found.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-93605",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-93605",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-93605",
+          "probability": 0.00726,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-hugovalters",
+          "kind": "social_report",
+          "url": "https://x.com/HugoValters/status/2126386070720053389",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-hugovalters",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/hugovalters.bsky.social/post/3n3cu5qdas32s",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-27T21:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-93605",
+          "label": "FIRST EPSS",
+          "checked_at": "2026-11-27T21:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exim",
+      "product": "Exim",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "A UK hosting provider opened a service incident for an Exim security vulnerability, but no Exim advisory was read in this edition.",
+      "cves": [
+        "CVE-2026-137702"
+      ],
+      "affected": "Not yet confirmed. Reports name the Exim mail server.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A status-monitoring post on Bluesky says the hosting provider Krystal opened an incident at 21:03 UTC on November 27 titled \"Exim security vulnerability (CVE-2026-137702)\". The post does not describe the flaw, the affected versions or a fix, and this edition has not read an Exim advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether you run Exim mail servers; watch the Exim project and your Linux distribution for a security advisory.",
+      "gaps": "No Exim advisory, distribution notice or CVE record was read. The nature of the flaw, affected versions, fix status and exploitation are unconfirmed. Only one post, relaying a provider status page, was found.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-137702",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-137702",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-137702",
+          "probability": 0.00481,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "bsky-pingoru",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/pingoru.bsky.social/post/3n3d3v5b3fz2w",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-27T21:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-137702",
+          "label": "FIRST EPSS",
+          "checked_at": "2026-11-27T21:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
     {
       "id": "us-air-force-cloud-one",
       "product": "U.S. Air Force Cloud One",
@@ -616,6 +895,66 @@
           "kind": "social_report",
           "url": "https://x.com/CliffguardCyber/status/2126315162957496525",
           "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nomachine-personal-windows",
+      "product": "NoMachine Personal Edition for Windows",
+      "audience": "both",
+      "kind": "supply_chain",
+      "verification": "verified",
+      "priority": "act_now",
+      "action_type": "mitigate",
+      "priority_reason": "NoMachine confirms its Windows Personal Edition download was replaced for about 20 hours with a tampered installer that gives an attacker remote control of the computer.",
+      "cves": [],
+      "affected": "NoMachine says you may be affected if you downloaded nomachine-personal-edition_10.2.3_1_x64.exe from its website between 19 November 2026 13:43 UTC and 20 November 2026 10:00 UTC and ran it on a Windows computer. macOS, Linux, other NoMachine products and automatic updates were not affected.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "NoMachine says that during its security incident of 19 and 20 November 2026, the Personal Edition for Windows installer on its website was replaced by a tampered copy that adds a remote-access tool. That tool can run commands with administrator rights, read and change files, view the screen and reach other devices on the same network, and restarts itself every minute. NoMachine says the tampered file is unsigned, that the malware does not spread on its own, and that the safest fix is to reinstall Windows. A verified installer was restored on 20 November. There is no CVE.",
+      "action": "If you downloaded and ran the NoMachine Personal Edition for Windows installer between 19 November 13:43 UTC and 20 November 10:00 UTC, treat that computer as fully exposed and follow NoMachine's steps, with reinstalling Windows as the safest fix.",
+      "steps": [
+        "Check for a python folder inside the NoMachine folder (normally C:\\Program Files\\NoMachine\\python), a running pythonw.exe in Task Manager, an installer with no embedded digital signature, or network connections to d137ukgg9ynlmn.cloudfront.net. Any one means the tampered installer was run.",
+        "If affected, disconnect the computer from the internet and do not type passwords on it.",
+        "From a different, clean device, change important passwords and turn on two-step verification.",
+        "Copy only personal files to a USB stick from the affected computer, then wipe it and reinstall Windows from clean media.",
+        "If you cannot reinstall right away, follow NoMachine's tested manual removal steps in its article while offline, then run a full antivirus scan.",
+        "Afterwards, change passwords again from a clean computer, including browser-saved passwords, saved NoMachine connection passwords and SSH keys kept on the affected computer, and reinstall NoMachine from the correct package.",
+        "If it was a work computer or held other people's data, tell your IT or security team."
+      ],
+      "gaps": "NoMachine's related software-update notice SU11X00294 was not read separately. The vendor article does not name the attacker or say how the download was replaced.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "nomachine-ar11x01397"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "nomachine-ar11x01397",
+          "kind": "vendor_advisory",
+          "url": "https://kb.nomachine.com/AR11X01397",
+          "label": "NoMachine KB AR11X01397: the security incident of 19 and 20 November 2026",
+          "checked_at": "2026-11-27T21:58:00Z",
+          "supports": [
+            "summary",
+            "affected",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "mastodon-mick-talbott",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@mick_talbott/117690195270117758",
+          "label": "Discussed on Mastodon",
           "checked_at": null,
           "supports": [
             "summary"
