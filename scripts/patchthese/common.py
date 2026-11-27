@@ -50,6 +50,11 @@ def human_date(value: str) -> str:
     return f"{d.day} {d.strftime('%B %Y')}"
 
 
+def briefing_date(value: str) -> str:
+    """Homepage kicker date, e.g. 27 NOVEMBER 2026."""
+    return date.fromisoformat(value).strftime("%d %B %Y").upper()
+
+
 def timestamp(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00").replace("z", "+00:00"))
 

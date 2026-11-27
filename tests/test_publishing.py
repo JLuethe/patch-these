@@ -277,7 +277,7 @@ def test_early_signals_are_labeled_in_html_json_and_feeds(publication):
 
 def test_early_signals_stay_above_the_featured_and_verified_items(publication):
     home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
-    assert home.index('id="early-signals"') < home.index('id="start-here"') < home.index('id="item-new-server"')
+    assert home.index('id="early-signals"') < home.index('id="priority-findings"') < home.index('id="item-new-server"')
 
 
 def test_exploitation_label_names_only_the_exploited_cves(publication):
@@ -421,14 +421,52 @@ def test_steps_render_as_ordered_lists_everywhere(publication):
     assert "&lt;ol&gt;&lt;li&gt;If exposed, upgrade to 2.4.1 or later now.&lt;/li&gt;" in feed
 
 
+def test_briefing_date_is_uppercase_day_month_year():
+    from patchthese.common import briefing_date
+    assert briefing_date("2026-11-27") == "27 NOVEMBER 2026"
+    assert briefing_date("2030-03-02") == "02 MARCH 2030"
+    assert briefing_date("2026-01-05") == "05 JANUARY 2026"
+
+
+def test_homepage_uses_the_requested_intro_date_and_counts(publication):
+    output = build_site(publication, site_url=SITE_URL)
+    home = (output / "index.html").read_text()
+    assert "Independent security intelligence, updated throughout the day." in home
+    assert 'LATEST BRIEFING <span aria-hidden="true">·</span> <time datetime="2030-03-02">02 MARCH 2030</time>' in home
+    assert "Tracking emerging security threats and vulnerabilities across X, Bluesky, Mastodon, security research blogs, and other sources." in home
+    assert "Early reports are clearly identified, findings are verified against authoritative sources, and recommendations are prioritized by urgency — all in plain English." in home
+    assert "Updated every four hours, 6 AM–10 PM Pacific." in home
+    stats = home.split('class="edition-stats"', 1)[1].split("</div></div>", 1)[0]
+    assert "<strong>04</strong><span>Security findings</span>" in stats
+    assert "<strong>00</strong><span>Act now if affected</span>" in stats
+    assert "<strong>03</strong><span>Act soon</span>" in stats
+    assert "<strong>01</strong><span>Early signals</span>" in stats
+    assert "Priority Findings" in home
+    assert "Key security developments, affected products, and recommended actions from the latest briefing." in home
+    nav = home.split('aria-label="Main">', 1)[1].split("</nav>", 1)[0]
+    assert ">Archive</a>" in nav and ">Methodology</a>" in nav and ">Subscribe</a>" in nav
+    assert "Latest briefing" not in nav and "Our method" not in nav
+    digest = (output / "digests" / fx.DAY_TWO / "index.html").read_text()
+    assert 'FROM THE ARCHIVE <span aria-hidden="true">·</span> <time datetime="2030-03-02">02 MARCH 2030</time>' in digest
+    assert "Emerging Threats" not in digest
+    quiet = fx.edition("2030-03-03", [fx.item("solo-server", "Solo Server", cve="CVE-2030-30009")])
+    save(publication, quiet)
+    later = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
+    later_stats = later.split('class="edition-stats"', 1)[1].split("</div></div>", 1)[0]
+    assert "<strong>01</strong><span>Security findings</span>" in later_stats
+    assert "<strong>00</strong><span>Act now if affected</span>" in later_stats
+    assert "<strong>01</strong><span>Act soon</span>" in later_stats
+    assert "Early signals" not in later_stats
+
+
 def test_first_screen_is_compact_and_early_signals_keep_their_place(publication):
     home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
-    assert '<details class="how-this-works">' in home
-    assert "Updated every 4 hours, 6 AM–10 PM Pacific." in home
+    assert "Emerging Threats" in home
+    assert "Updated every four hours, 6 AM–10 PM Pacific." in home
     assert "Find your software. Understand the risk." not in home
-    hero_to_signals = home[home.index('class="hero"'):home.index('id="early-signals"')]
-    assert "How this works" in hero_to_signals and "featured-grid" not in hero_to_signals
-    assert home.index('id="early-signals"') < home.index('id="start-here"')
+    before_signals = home[home.index('class="hero"'):home.index('id="early-signals"')]
+    assert "Emerging Threats" in before_signals and "featured-grid" not in before_signals
+    assert home.index('id="early-signals"') < home.index('id="priority-findings"')
 
 
 def test_markdown_readme_and_atom_list_early_signals_before_verified_items(publication):
