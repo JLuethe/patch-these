@@ -17,6 +17,15 @@ Matching is deliberately simple, case-insensitive whole-word matching:
   Palo Alto advisory therefore wakes the routine whenever any Palo Alto product
   was covered this week.
 
+Exception: MSRC and Ubuntu publish so many advisories that the vendor match
+woke the routine for unrelated rows (a Linux kernel CVE because Visio was
+covered). For those sources (NAME_ONLY_SOURCES) there is no vendor match and
+no id-segment match: a row wakes the routine only when its title or id names a
+covered product. That means one of the product name's distinctive words
+(three or more letters, not the vendor's own name and not a generic word such
+as "linux", "kernel", "server" or "office") appears as a whole word, or, when
+the name has no distinctive word, the whole name without the vendor appears.
+
 Hacker News rows never wake the routine. A row wakes it at most once: its key
 goes into woken.json and is kept for WOKEN_DAYS days.
 """
@@ -31,6 +40,14 @@ WOKEN_DAYS = 30
 WAKE_FILE_LIMIT = 25
 POST_LIMIT = 10
 NO_WAKE_SOURCES = frozenset({"hacker-news", "cisa-kev"})
+NAME_ONLY_SOURCES = frozenset({"msrc", "ubuntu-usn"})
+GENERIC_WORDS = frozenset({
+    "and", "the", "for", "with", "linux", "kernel", "server", "servers", "client", "desktop", "office", "windows",
+    "api", "management", "classic", "core", "open", "source", "plus", "security", "cloud", "web", "app", "apps",
+    "service", "services", "enterprise", "edition", "update", "http", "https", "plugin", "plugins", "images",
+    "image", "system", "systems", "platform", "manager", "agent", "tools", "library", "framework", "online",
+    "series", "group", "check", "point", "associates", "software", "products", "devices",
+})
 VENDOR_TERMS = {
     "msrc": ("microsoft", "windows", "azure", "exchange", "sharepoint", "office", "outlook"),
     "chrome-releases": ("chrome", "chromium"),
@@ -76,10 +93,25 @@ def product_terms(product: dict) -> list[str]:
     return list(dict.fromkeys(terms))
 
 
+def product_name_terms(product: dict, source: str) -> list[str]:
+    """Terms that name this product for a NAME_ONLY_SOURCES row."""
+    vendor_words = {word for term in VENDOR_TERMS.get(source, ()) for word in term.split()}
+    words = re.findall(r"[a-z0-9][a-z0-9.+-]*[a-z0-9]|[a-z0-9]", product["product"].lower())
+    distinctive = [word for word in words if len(word) >= 3 and word not in GENERIC_WORDS and word not in vendor_words]
+    if distinctive:
+        return list(dict.fromkeys(distinctive))
+    remainder = " ".join(word for word in words if word not in vendor_words)
+    return [remainder] if remainder else []
+
+
 def match_products(row: dict, covered: list[dict]) -> list[str]:
     """Covered product ids this advisory row matches."""
     text = f"{row.get('title') or ''} {row.get('id') or ''}".lower()
-    vendor_terms = VENDOR_TERMS.get(row.get("source") or "", ())
+    source = row.get("source") or ""
+    if source in NAME_ONLY_SOURCES:
+        return [product["id"] for product in covered
+                if any(_has_word(text, term) for term in product_name_terms(product, source))]
+    vendor_terms = VENDOR_TERMS.get(source, ())
     matched = []
     for product in covered:
         name = f"{product['product']} {product['id'].replace('-', ' ')} {product['id']}".lower()

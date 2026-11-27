@@ -112,3 +112,36 @@ def test_feeds_workflow_keeps_the_test_wake_separate_from_scheduled_runs():
     assert test_step.startswith("        if: ${{ inputs.test_wake }}\n")
     assert '{"reason":"test","total":0,"rows":[]}' in test_step and "woken" not in test_step
     assert "-K \"$RUNNER_TEMP/wake-curl.conf\"" in test_step and "echo \"$WAKE_SECRET" not in test_step
+
+
+MS_UBUNTU = [
+    {"id": "microsoft-visio", "product": "Microsoft Office Visio"},
+    {"id": "linux-nfsd", "product": "Linux kernel NFS server (nfsd)"},
+    {"id": "azure-api-management-classic", "product": "Azure API Management Classic"},
+    {"id": "canonical-lxd", "product": "Canonical LXD"},
+]
+
+
+def test_msrc_rows_wake_only_when_they_name_a_covered_product():
+    kernel = row("msrc", "CVE-2026-62840", "CVE-2026-62840 Linux Kernel Elevation of Privilege Vulnerability")
+    visio = row("msrc", "CVE-2026-70001", "CVE-2026-70001 Microsoft Visio Remote Code Execution Vulnerability")
+    edge = row("msrc", "CVE-2026-70002", "CVE-2026-70002 Microsoft Edge (Chromium-based) Spoofing Vulnerability")
+    apim = row("msrc", "CVE-2026-70003", "CVE-2026-70003 Azure API Management Classic Information Disclosure")
+    assert match_products(kernel, MS_UBUNTU) == []
+    assert match_products(visio, MS_UBUNTU) == ["microsoft-visio"]
+    assert match_products(edge, MS_UBUNTU) == []
+    assert match_products(apim, MS_UBUNTU) == ["azure-api-management-classic"]
+    assert [item["id"] for item in select_wake_rows([], [kernel, visio, edge], MS_UBUNTU, {})] == ["CVE-2026-70001"]
+
+
+def test_ubuntu_rows_wake_only_when_they_name_a_covered_product():
+    apache = row("ubuntu-usn", "USN-9016-2", "USN-9016-2: Apache HTTP Server regression")
+    lxd = row("ubuntu-usn", "USN-9020-1", "USN-9020-1: LXD vulnerabilities")
+    nfs = row("ubuntu-usn", "USN-9021-1", "USN-9021-1: Linux kernel vulnerabilities")
+    assert match_products(apache, MS_UBUNTU) == []
+    assert match_products(lxd, MS_UBUNTU) == ["canonical-lxd"]
+    assert match_products(nfs, MS_UBUNTU) == []
+
+
+def test_other_vendor_feeds_keep_vendor_wide_matching():
+    assert match_products(row("palo-alto", "PAN-9", "GlobalProtect: denial of service"), COVERED) == ["palo-alto-pan-os"]
