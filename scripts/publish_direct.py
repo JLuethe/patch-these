@@ -90,16 +90,44 @@ def new_source_urls(root: Path, paths: list[Path]) -> set[str]:
     return added
 
 
-def blocking_dead(results: list[dict], new_urls: set[str]) -> list[dict]:
+SITE_URL = os.environ.get("SITE_URL", "https://jluethe.github.io/patch-these").rstrip("/")
+
+
+def undeployed_prefixes(edition_paths: list[Path], site_url: str = SITE_URL) -> tuple[str, ...]:
+    """Public URLs of the editions being published. They only exist after this push deploys.
+
+    For each edition date: the digest page (and its #item anchors), the Markdown
+    digest, and the JSON file on the site. Every other link is still checked.
+    """
+    site_url = site_url.rstrip("/")
+    prefixes = []
+    for path in edition_paths:
+        date = Path(path).stem
+        prefixes += [f"{site_url}/digests/{date}/", f"{site_url}/digests/{date}.md", f"{site_url}/data/{date}.json"]
+    return tuple(prefixes)
+
+
+def is_undeployed(target: str, prefixes: tuple[str, ...]) -> bool:
+    for prefix in prefixes:
+        if target == prefix or (target.startswith(prefix) and (prefix.endswith("/") or target[len(prefix)] in "#?")):
+            return True
+    return False
+
+
+def blocking_dead(results: list[dict], new_urls: set[str], undeployed: tuple[str, ...] = ()) -> list[dict]:
     """Dead links that must stop a push.
 
     A newly added non-social URL is reported by the caller and does not block.
+    A public URL of an edition this push publishes (see undeployed_prefixes)
+    does not block either: it returns 404 until Pages deploys it.
     """
     blocking = []
     for result in results:
         if result.get("status") != "dead":
             continue
         target = result.get("target") or ""
+        if result.get("kind") != "local" and is_undeployed(target, undeployed):
+            continue
         if result.get("kind") != "local" and target in new_urls and social_platform(target) is None:
             continue
         blocking.append(result)
@@ -293,7 +321,11 @@ def main(argv: list[str] | None = None) -> int:
     warned = reported_new_dead(report.get("results") or [], new_urls)
     for result in warned:
         print(f"link check warning (new non-social source, not blocking): {result['target']} — {result.get('detail')}")
-    blocking = blocking_dead(report.get("results") or [], new_urls)
+    undeployed = undeployed_prefixes(edition_paths)
+    for result in report.get("results") or []:
+        if result.get("status") == "dead" and result.get("kind") != "local" and is_undeployed(result.get("target") or "", undeployed):
+            print(f"link check skipped (published by this push, live after deploy): {result['target']}")
+    blocking = blocking_dead(report.get("results") or [], new_urls, undeployed)
     if blocking or link.returncode not in {0, 1}:
         for result in blocking:
             print(f"link check blocked the push: {result['target']} — {result.get('detail')}", file=sys.stderr)

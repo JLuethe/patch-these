@@ -178,3 +178,27 @@ def test_a_run_with_no_edition_change_exits_cleanly_without_a_commit(tmp_path):
     assert completed.returncode == 0
     assert "Nothing to publish" in completed.stdout and "pytest" not in completed.stdout
     assert _git(root, "rev-parse", "HEAD") == head
+
+
+def test_the_published_editions_own_site_urls_do_not_block_but_other_dead_links_do():
+    from publish_direct import undeployed_prefixes
+    site = "https://jluethe.github.io/patch-these"
+    undeployed = undeployed_prefixes([Path("data/2026-11-27.json")], site)
+    dead = lambda target: {"target": target, "status": "dead", "kind": "external", "detail": "HTTP 404"}
+    results = [
+        dead(f"{site}/digests/2026-11-27/"),
+        dead(f"{site}/digests/2026-11-27/#item-example"),
+        dead(f"{site}/digests/2026-11-27.md"),
+        dead(f"{site}/data/2026-11-27.json"),
+        dead(f"{site}/digests/2026-11-26/"),          # an already-published day still blocks
+        dead(f"{site}/digests/2026-11-270/"),         # not the same date
+        dead("https://vendor.example/old"),
+        {"target": "digests/2026-11-27.md", "status": "dead", "kind": "local", "detail": "missing"},
+    ]
+    assert [item["target"] for item in blocking_dead(results, set(), undeployed)] == [
+        f"{site}/digests/2026-11-26/",
+        f"{site}/digests/2026-11-270/",
+        "https://vendor.example/old",
+        "digests/2026-11-27.md",
+    ]
+    assert len(blocking_dead(results, set())) == len(results)
