@@ -51,10 +51,3 @@ def test_command_line_round_trip_uses_pt_state_dir(tmp_path):
     assert json.loads(run("filter", stdin=as_json).stdout) == [{"url": "https://x.com/a/status/2"}]
     stored = json.loads((tmp_path / "state" / "seen-posts.json").read_text())["posts"]
     assert list(stored) == ["x:1"]
-
-
-def test_saved_queries_cover_all_three_platforms():
-    queries = json.loads((SCRIPT.parents[1] / "social" / "queries.json").read_text())
-    assert "CVE" in queries["x"]["queries"] and '"actively exploited"' in queries["x"]["queries"]
-    assert queries["bluesky"]["queries"] and queries["mastodon"]["search"] == ["CVE"]
-    assert set(queries["mastodon"]["tags"]) == {"cve", "zeroday", "infosec"}

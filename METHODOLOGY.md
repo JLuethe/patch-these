@@ -14,11 +14,13 @@ Official sources also arrive through a feed cache refreshed about every 30 minut
 
 Social posts are discovery leads. They are not evidence of exploitation, of a fixed version, or of who is affected. Those claims are verified against primary sources: vendor advisories, government alerts, original researcher reports, CVE records, and score services. A popular post is not that evidence.
 
-Social discovery uses:
+Social discovery searches for technical flaw descriptions, not only CVE ids: zero-day language, authentication and authorization bypass, code execution and injection, file access and request forgery, privilege escalation and sandbox escape, observed exploitation, newly public exploits and patch bypasses, and early disclosures such as "no CVE yet" or "unpatched". A separately budgeted catch-up query reads posts that mention CVE ids. There is no engagement minimum: a fresh post from a small account counts as much as a popular one. The exact terms are in [`social/queries.json`](social/queries.json). Sources:
 
-- X search.
-- Bluesky public post search.
-- Public Mastodon hashtag timelines via mastodon.social. Those timelines include federated posts from infosec.exchange and other servers.
+- X search, newest first.
+- Bluesky public post search, newest first.
+- Mastodon: post search and the `#cve`, `#zeroday`, `#0day`, `#vulnerability` and `#securityadvisory` hashtag timelines on mastodon.social (which include federated posts from other servers), and the public local timeline of infosec.exchange.
+
+A report does not need a CVE, a patch, or a confirmation to be published as an early signal, and having one does not disqualify it. Early signals cover security flaws and exploitation developments, including supply-chain compromises. General breach and incident news without a specific exploited flaw is not an early signal; a confirmed breach that readers need to act on is published as a verified incident item.
 
 The 25 November 2026 edition was discovered through X only. Later editions may link posts from any of the three. Posts are linked, not copied. The briefing does not paste the text, attach screenshots, or embed media.
 

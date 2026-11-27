@@ -20,7 +20,7 @@ The main job of each run is finding new things on X, Bluesky and Mastodon, espec
 
 ## Each run
 
-1. Scan X, Bluesky and Mastodon for posts since the previous run, newest first, using every query in `social/queries.json` (see "Social scan" below). Filter the candidates through `scripts/seen_posts.py filter` so posts handled by an earlier run are skipped, and record every post you looked at with `scripts/seen_posts.py add`, whether you published it or not. For each credible new lead, publish a verified item if a quick look finds a primary source that confirms it. Otherwise publish it right away as `verification: "early_signal"`. Do not hold a lead back while chasing confirmation; a later run can promote it.
+1. Scan X, Bluesky and Mastodon for posts since the previous run, newest first, using every query family in `social/queries.json` (see "Social scan" below). Filter the candidates through `scripts/seen_posts.py filter` so posts handled by an earlier run are skipped, and record every post you looked at with `scripts/seen_posts.py add`, whether you published it or not. Keep a lead only if it is in scope (see "What counts as an early signal"). For each credible new lead, publish a verified item if a quick look finds a primary source that confirms it. Otherwise publish it right away as `verification: "early_signal"`. Do not hold a lead back while chasing confirmation; a later run can promote it.
 2. Full runs only (6 AM and 10 PM) and feed wakes: read the feed cache from the `feed-cache` branch (not `main`): `git fetch origin feed-cache`, then `git show origin/feed-cache:latest.json`, `git show origin/feed-cache:kev-new.json`, and `git show origin/feed-cache:status.json` to see which sources are stale, plus `git show origin/feed-cache:wake.json` for this fetch's wake rows. Those rows are discovery leads and can confirm or promote an early signal. A fact in the edition still has to come from the primary source the row links to. The cache does not establish a version, a score, or exploitation.
 3. Full runs only: recheck a prior Act now or Act soon item only when the cache, CISA KEV, or a social post shows a relevant change for that item's product or CVE, such as a new advisory or release from that vendor, a new KEV entry, or a report of a new fix or exploitation. Then reopen the primary vendor page, and if a newer security fix exists or the advice changed, publish a correction on that prior edition. Do not re-read every vendor page on every run. The 6 AM run does one full recheck of the most recent edition's Act now and Act soon items when time allows.
 4. Promote an early signal to `verified` under the same item id once a primary source confirms the facts, and append a `corrections` entry that says what was confirmed.
@@ -31,7 +31,29 @@ The main job of each run is finding new things on X, Bluesky and Mastodon, espec
 
 ## Social scan
 
-`social/queries.json` on `main` holds the saved search terms: the X queries (`CVE`, `zero-day`, `"actively exploited"`, `"patch now"`, `"security advisory"`, `"in the wild"`, `KEV`, `breach`, Latest tab), the Bluesky queries (`CVE`, `zero-day`, `"actively exploited"`, sorted by latest), and Mastodon (search `q=CVE` plus the `cve`, `zeroday` and `infosec` hashtag timelines). Change the scan by editing that file in a pull request.
+`social/queries.json` on `main` holds the saved search terms, grouped into query families. `tests/test_social_queries.py` checks its shape. The families are:
+
+| Family | Terms |
+| --- | --- |
+| `zero_day` | `0day`, `"zero-day"`, `zeroday` |
+| `auth` | `"auth bypass"`, `"authentication bypass"`, `"authorization bypass"`, `"account takeover"` |
+| `execution` | `"remote code execution"`, `"unauthenticated RCE"`, `"command injection"`, `"SQL injection"` |
+| `file_request` | `"arbitrary file read"`, `"arbitrary file write"`, `"path traversal"`, `SSRF` |
+| `privilege` | `"privilege escalation"`, `"sandbox escape"`, `"container escape"` |
+| `exploitation` | `"suspected exploitation"`, `"exploitation attempts"`, `"actively exploited"`, `"in the wild"` |
+| `new_exploitability` | `"exploit released"`, `"public exploit"`, `"patch bypass"` |
+| `early_disclosure` (contextual) | `"CVE pending"`, `"no CVE"`, `unpatched`, `"vendor notified"` |
+| `advisory_allowance` | `"security advisory"`, one page only |
+| `catchup` | bare `CVE`, with its own budget |
+
+These families find technical flaw descriptions even when a post has no CVE id and does not say "zero-day". `early_disclosure` terms are common outside security: on X the query also requires a security word nearby (`vulnerability`, `exploit`, `flaw`, `bug`, `security`, `CVE`, `patch`), and on every platform keep such a post only when it is about a software or hardware security flaw. `catchup` is the high-volume bare `CVE` query. It has its own page budget so it cannot use up the run before the rarer phrase families are read. Bare `breach`, `KEV` and `"patch now"` are no longer in the scan: they mostly found general incident news, KEV bots and patch reminders. New KEV entries still arrive through the feed cache and its wake.
+
+Rules for every platform: newest first (latest ordering), no engagement minimum, no CVE-year filter, and each query covers the window since its last checkpoint (the previous run) with 10 minutes of overlap. Each query has a page budget (`max_pages`, never more than 8). When the budget runs out before the window is covered, the query is **incomplete**; say so in the run notes rather than treating the window as read. A query is **ok** when it covered the window, **empty** when it covered the window and found nothing, and **failed** when the request failed.
+
+- **X:** one `search_posts_all` call per page with `sort_order: recency`, `start_time` at the window start and 25 results per call. Each family is a single OR query (`x.queries[].query`); X supports OR and parentheses, so a family costs one call per page instead of one per term. `-is:retweet` drops plain reposts; it is not an engagement filter. Page with `next_token` up to the query's `max_pages`. The whole X scan is at most 24 pages, inside the 40-call run budget.
+- **Bluesky:** `app.bsky.feed.searchPosts` on `api.bsky.app` (the `public.api.bsky.app` host refuses search with HTTP 403), `sort=latest`, `limit=100`, `since` at the window start. Bluesky search does not support OR, so each family term is a simple query of its own: one page each, three for `catchup`.
+- **Mastodon, mastodon.social:** status search with the read-only `MASTODON_TOKEN` for each family term (one page of 40 each, two for `catchup`; unauthenticated search returns no statuses), plus the public hashtag timelines `#cve`, `#zeroday`, `#0day`, `#vulnerability` and `#securityadvisory`, two pages each. Those timelines include federated posts from infosec.exchange and other servers. `#infosec` is not in the primary scan: it is high volume and mostly general news. Skip accounts flagged as bots.
+- **Mastodon, infosec.exchange:** without a token this server answers search with no statuses and tag timelines with HTTP 422, so read its public local timeline (`/api/v1/timelines/public?local=true`, up to 8 pages of 40) and keep posts that contain a family term or a CVE id. Never use the mastodon.social token on another server.
 
 Seen posts are kept on the bot's machine, not in the repository, so recording them never creates a commit or a Pages deploy. The store is `$PT_STATE_DIR/seen-posts.json` (default `/workspace/pt-state/seen-posts.json`), and entries older than 14 days are pruned (`PT_SEEN_DAYS` changes that).
 
@@ -186,6 +208,12 @@ Process notes stay out of `summary` and `action`. "Page did not render", "EPSS n
 ## Early signals
 
 Every item in an edition dated 2026-11-27 or later must set `verification` explicitly: `verified` for a confirmed item, `early_signal` for a lead that is not yet confirmed. Validation rejects a missing value. Older editions may omit it, and an omitted value there means `verified`.
+
+### What counts as an early signal
+
+A report does not need a CVE id, a patch, or a confirmation to be an early signal, and having any of them does not disqualify it. A post describing an unpatched flaw with no CVE yet, a researcher's report of suspected exploitation, or a newly public exploit for an old CVE are all early signals until a primary source confirms them.
+
+The early-signal section is for security flaws and exploitation developments: a new or newly exploited vulnerability, a patch bypass, a newly public exploit, a suspected zero-day, or a supply-chain compromise (a malicious package, update or build artifact). General incident and breach news is not an early signal. A ransomware claim, a data-leak post, an outage, or a report that some organization was hacked is skipped unless it names a specific exploited flaw or product weakness (then the lead is that flaw), is a supply-chain compromise (`kind: "supply_chain"`), or is a confirmed breach of a service readers use that leaves them something to do, such as rotating credentials. That last case is a verified `incident` item under the incident rules above (Act now or Act soon, never Monitor), not an early signal. Record a skipped general incident as seen with `seen_posts.py add`, like any other post. Published items are not removed because of this rule.
 
 An early signal may rest on one credible social post. Do not wait for a second source and do not move or bury early signals. When an early signal has exactly one source, the site, the Markdown digest and the Atom feed add a "Single source" note next to "Not yet verified".
 

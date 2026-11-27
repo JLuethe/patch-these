@@ -1,15 +1,250 @@
 {
-  "description": "Saved social search terms for the editorial routine's early-signal scan. Run every query newest first, then drop posts already handled with scripts/seen_posts.py filter. Edit this file to change what the scan looks for.",
+  "version": 2,
+  "description": "Saved social search terms for the editorial routine's early-signal scan, grouped into query families with per-family page budgets. Bluesky and Mastodon are collected by scripts/social_collect.py; X is searched by the routine with the queries below. Every query runs newest first over the window since its last checkpoint; drop posts already handled with scripts/seen_posts.py filter. Edit this file to change what the scan looks for; tests/test_social_queries.py checks its shape.",
+  "rules": {
+    "ordering": "latest",
+    "engagement_minimum": null,
+    "cve_year_filter": null,
+    "overlap_minutes": 10,
+    "default_lookback_hours": 4,
+    "page_ceiling": 8,
+    "removed_from_core_scan": [
+      "breach",
+      "KEV",
+      "\"patch now\""
+    ],
+    "note": "No engagement minimum and no CVE-year filter. A family whose budget runs out before the window is covered is marked incomplete in the run report, not silently truncated. catchup (bare CVE) has its own budget so it cannot starve the rarer phrase families."
+  },
+  "families": {
+    "zero_day": {
+      "label": "Zero-day language",
+      "terms": [
+        "0day",
+        "\"zero-day\"",
+        "zeroday"
+      ]
+    },
+    "auth": {
+      "label": "Authentication and authorization flaws",
+      "terms": [
+        "\"auth bypass\"",
+        "\"authentication bypass\"",
+        "\"authorization bypass\"",
+        "\"account takeover\""
+      ]
+    },
+    "execution": {
+      "label": "Code execution and injection",
+      "terms": [
+        "\"remote code execution\"",
+        "\"unauthenticated RCE\"",
+        "\"command injection\"",
+        "\"SQL injection\""
+      ]
+    },
+    "file_request": {
+      "label": "File access and request forgery",
+      "terms": [
+        "\"arbitrary file read\"",
+        "\"arbitrary file write\"",
+        "\"path traversal\"",
+        "SSRF"
+      ]
+    },
+    "privilege": {
+      "label": "Privilege escalation and isolation",
+      "terms": [
+        "\"privilege escalation\"",
+        "\"sandbox escape\"",
+        "\"container escape\""
+      ]
+    },
+    "exploitation": {
+      "label": "Exploitation observations",
+      "terms": [
+        "\"suspected exploitation\"",
+        "\"exploitation attempts\"",
+        "\"actively exploited\"",
+        "\"in the wild\""
+      ]
+    },
+    "new_exploitability": {
+      "label": "New exploitability",
+      "terms": [
+        "\"exploit released\"",
+        "\"public exploit\"",
+        "\"patch bypass\""
+      ]
+    },
+    "early_disclosure": {
+      "label": "Early disclosure (contextual)",
+      "terms": [
+        "\"CVE pending\"",
+        "\"no CVE\"",
+        "unpatched",
+        "\"vendor notified\""
+      ],
+      "contextual": true,
+      "context_terms": [
+        "vulnerability",
+        "vuln",
+        "exploit",
+        "flaw",
+        "bug",
+        "security",
+        "CVE",
+        "patch"
+      ],
+      "note": "These terms are common outside security. Keep a post only when it is about a software or hardware security flaw; judge each one in context."
+    },
+    "advisory_allowance": {
+      "label": "Small security-advisory allowance",
+      "terms": [
+        "\"security advisory\""
+      ]
+    },
+    "catchup": {
+      "label": "High-volume CVE catch-up, budgeted separately",
+      "terms": [
+        "CVE"
+      ]
+    }
+  },
   "x": {
-    "queries": ["CVE", "zero-day", "\"actively exploited\"", "\"patch now\"", "\"security advisory\"", "\"in the wild\"", "KEV", "breach"],
-    "mode": "Latest"
+    "tool": "x search_posts_all",
+    "mode": "Latest",
+    "sort_order": "recency",
+    "results_per_call": 25,
+    "max_calls_per_run": 40,
+    "combine": "Each family is one OR query: X search supports OR and parentheses (tested 2026-11-27), so a family costs one call per page instead of one per term. -is:retweet drops plain reposts; it is not an engagement filter.",
+    "queries": [
+      {
+        "id": "zero_day",
+        "family": "zero_day",
+        "query": "(0day OR \"zero-day\" OR zeroday) -is:retweet",
+        "max_pages": 3
+      },
+      {
+        "id": "auth",
+        "family": "auth",
+        "query": "(\"auth bypass\" OR \"authentication bypass\" OR \"authorization bypass\" OR \"account takeover\") -is:retweet",
+        "max_pages": 2
+      },
+      {
+        "id": "execution",
+        "family": "execution",
+        "query": "(\"remote code execution\" OR \"unauthenticated RCE\" OR \"command injection\" OR \"SQL injection\") -is:retweet",
+        "max_pages": 3
+      },
+      {
+        "id": "file_request",
+        "family": "file_request",
+        "query": "(\"arbitrary file read\" OR \"arbitrary file write\" OR \"path traversal\" OR SSRF) -is:retweet",
+        "max_pages": 2
+      },
+      {
+        "id": "privilege",
+        "family": "privilege",
+        "query": "(\"privilege escalation\" OR \"sandbox escape\" OR \"container escape\") -is:retweet",
+        "max_pages": 2
+      },
+      {
+        "id": "exploitation",
+        "family": "exploitation",
+        "query": "(\"suspected exploitation\" OR \"exploitation attempts\" OR \"actively exploited\" OR \"in the wild\") -is:retweet",
+        "max_pages": 3
+      },
+      {
+        "id": "new_exploitability",
+        "family": "new_exploitability",
+        "query": "(\"exploit released\" OR \"public exploit\" OR \"patch bypass\") -is:retweet",
+        "max_pages": 2
+      },
+      {
+        "id": "early_disclosure",
+        "family": "early_disclosure",
+        "query": "(\"CVE pending\" OR \"no CVE\" OR unpatched OR \"vendor notified\") (vulnerability OR vuln OR exploit OR flaw OR bug OR security OR CVE OR patch) -is:retweet",
+        "max_pages": 2
+      },
+      {
+        "id": "advisory_allowance",
+        "family": "advisory_allowance",
+        "query": "\"security advisory\" -is:retweet",
+        "max_pages": 1
+      },
+      {
+        "id": "catchup",
+        "family": "catchup",
+        "query": "CVE -is:retweet",
+        "max_pages": 4
+      }
+    ]
   },
   "bluesky": {
-    "queries": ["CVE", "zero-day", "\"actively exploited\""],
-    "sort": "latest"
+    "endpoint": "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts",
+    "sort": "latest",
+    "limit": 100,
+    "combine": "Bluesky search does not support OR (tested 2026-11-27: '0day OR zeroday' returns nothing), so each term is its own simple query.",
+    "families": [
+      "zero_day",
+      "auth",
+      "execution",
+      "file_request",
+      "privilege",
+      "exploitation",
+      "new_exploitability",
+      "early_disclosure",
+      "advisory_allowance",
+      "catchup"
+    ],
+    "max_pages": {
+      "default": 1,
+      "catchup": 3
+    }
   },
   "mastodon": {
-    "search": ["CVE"],
-    "tags": ["cve", "zeroday", "infosec"]
+    "instances": {
+      "mastodon.social": {
+        "auth": "MASTODON_TOKEN (read-only)",
+        "search": {
+          "families": [
+            "zero_day",
+            "auth",
+            "execution",
+            "file_request",
+            "privilege",
+            "exploitation",
+            "new_exploitability",
+            "early_disclosure",
+            "advisory_allowance",
+            "catchup"
+          ],
+          "limit": 40,
+          "max_pages": {
+            "default": 1,
+            "catchup": 2
+          }
+        },
+        "tags": [
+          "cve",
+          "zeroday",
+          "0day",
+          "vulnerability",
+          "securityadvisory"
+        ],
+        "tag_max_pages": 2,
+        "note": "Search needs the token (unauthenticated search returns no statuses). Tag timelines are public and include federated posts from infosec.exchange and other servers. #infosec is not in the primary scan: it is high volume and mostly general news."
+      },
+      "infosec.exchange": {
+        "auth": "none",
+        "local_timeline": {
+          "match_families": true,
+          "limit": 40,
+          "max_pages": 8
+        },
+        "note": "Without a token infosec.exchange answers search with no statuses and tag timelines with HTTP 422, so the collector reads its public local timeline and keeps posts that match a family term or a CVE id (tested 2026-11-27)."
+      }
+    },
+    "skip_bot_accounts": true
   }
 }
