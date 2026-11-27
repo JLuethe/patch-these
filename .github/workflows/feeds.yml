@@ -20,7 +20,8 @@ name: Discovery feeds
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    # Off the top and bottom of the hour: GitHub drops more scheduled runs at :00 and :30.
+    - cron: "13,43 * * * *"
   workflow_dispatch:
     inputs:
       test_wake:
@@ -105,11 +106,16 @@ jobs:
             exit 0
           fi
           printf 'header = "Authorization: Bearer %s"\n' "$WAKE_SECRET" > "$RUNNER_TEMP/wake-curl.conf"
-          if curl -fsS --max-time 20 --retry 2 -X POST -H "Content-Type: application/json" \
-              -K "$RUNNER_TEMP/wake-curl.conf" --data-binary "@$body" "$WAKE_URL" -o /dev/null; then
+          set +e
+          status=$(curl -sS --max-time 20 --retry 2 -X POST -H "Content-Type: application/json" \
+              -K "$RUNNER_TEMP/wake-curl.conf" --data-binary "@$body" -o /dev/null -w '%{http_code}' "$WAKE_URL" 2>/dev/null)
+          code=$?
+          set -e
+          echo "Wake HTTP status: ${status:-none} (curl exit $code)"
+          if [ "$code" -eq 0 ] && [ "${status:-0}" -ge 200 ] && [ "${status:-0}" -lt 300 ]; then
             echo "Woke the editorial routine."
           else
-            echo "::warning title=Wake failed::The wake POST failed; the rows stay in wake.json for the next scheduled run."
+            echo "::warning title=Wake failed::The wake POST failed (HTTP ${status:-none}); the rows stay in wake.json for the next scheduled run."
           fi
           rm -f "$RUNNER_TEMP/wake-curl.conf"
 

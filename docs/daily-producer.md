@@ -285,7 +285,7 @@ If deploy fails because Pages is not set to GitHub Actions, stop and report that
 
 ## Discovery cache
 
-`.github/workflows/feeds.yml` refreshes the cache about every 30 minutes and force-pushes it as a single commit to the `feed-cache` branch. Nothing is committed to `main`. Read it with:
+`.github/workflows/feeds.yml` is scheduled at :13 and :43 past each hour and force-pushes it as a single commit to the `feed-cache` branch. Nothing is committed to `main`. GitHub runs schedules on a best-effort basis and can skip many of them, so check `status.json`'s `checked_at` before trusting the cache as current; on 26–27 Nov only two scheduled fetches ran in about a day. Read it with:
 
 ```bash
 git fetch origin feed-cache
