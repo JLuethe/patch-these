@@ -289,8 +289,11 @@ def build_queries(queries: dict, watchlist: dict, since_for: Callable[[str], dat
 
     if "bluesky" in platforms:
         bsky = queries["bluesky"]
+        suspended = {entry["term"] for entry in bsky.get("suspended_terms") or []}
         for name in bsky["families"]:
             for term in families[name]["terms"]:
+                if term in suspended:
+                    continue
                 qid = f"bluesky:{name}:{slug(term)}"
                 result.append(Query(qid, "bluesky", "search", term, pages(bsky["max_pages"], name),
                                     bluesky_search(term, since_for(qid), int(bsky["limit"])), name, family_keep(name)))

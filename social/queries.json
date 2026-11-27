@@ -181,6 +181,9 @@
     ]
   },
   "bluesky": {
+    "suspended_terms": [
+      {"term": "\"in the wild\"", "since": "2026-11-27", "reason": "Too noisy on Bluesky (about 75 mostly off-topic posts in 4 hours). Suspended by John; still searched on X and Mastodon. Remove this entry to restore it."}
+    ],
     "endpoint": "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts",
     "sort": "latest",
     "limit": 100,

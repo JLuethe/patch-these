@@ -46,6 +46,8 @@ The main job of each run is finding new things on X, Bluesky and Mastodon, espec
 | `advisory_allowance` | `"security advisory"`, one page only |
 | `catchup` | bare `CVE`, with its own budget |
 
+Suspended on Bluesky (2026-11-27, John): `"in the wild"` is too noisy there, so the collector skips it via `bluesky.suspended_terms` in `social/queries.json`. It is still searched on X and Mastodon. Delete that entry to restore it.
+
 These families find technical flaw descriptions even when a post has no CVE id and does not say "zero-day". `early_disclosure` terms are common outside security: on X the query also requires a security word nearby (`vulnerability`, `exploit`, `flaw`, `bug`, `security`, `CVE`, `patch`), and on every platform keep such a post only when it is about a software or hardware security flaw. `catchup` is the high-volume bare `CVE` query. It has its own page budget so it cannot use up the run before the rarer phrase families are read. Bare `breach`, `KEV` and `"patch now"` are no longer in the scan: they mostly found general incident news, KEV bots and patch reminders. New KEV entries still arrive through the feed cache and its wake.
 
 Rules for every platform: newest first (latest ordering), no engagement minimum, no CVE-year filter, and each query covers the window since its last checkpoint (the previous run) with 10 minutes of overlap. Each query has a page budget (`max_pages`, never more than 8). When the budget runs out before the window is covered, the query is **incomplete**; say so in the run notes rather than treating the window as read. A query is **ok** when it covered the window, **empty** when it covered the window and found nothing, and **failed** when the request failed.
