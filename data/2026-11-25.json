@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-23",
   "coverage_end": "2026-11-25",
   "published_at": "2026-11-26T04:37:59Z",
-  "updated_at": "2026-11-26T07:21:00Z",
+  "updated_at": "2026-11-27T18:39:00Z",
   "corrections": [
     {
       "at": "2026-11-26T05:22:22Z",
@@ -66,6 +66,14 @@
         "jenkins-plugins",
         "idunno-anticsrf",
         "monai-label"
+      ]
+    },
+    {
+      "at": "2026-11-27T18:39:00Z",
+      "summary": "CISA added Drupal CVE-2026-136716 and GeoServer CVE-2026-120705 and CVE-2026-129243 to KEV on 27 November (due 30 November). Drupal: KEV now recorded for both CVEs, EPSS added; actions unchanged. GeoServer: exploitation is now confirmed for those two CVEs (CVE-2026-129245 is not in KEV); affected versions added from the Canadian Cyber Centre advisory; update to 3.0.2, 2.28.6, or 2.27.7 or later.",
+      "item_ids": [
+        "drupal-core",
+        "geoserver"
       ]
     }
   ],
@@ -357,13 +365,14 @@
           ]
         }
       ],
-      "summary": "An installer weakness, CVE-2026-132165, can allow a Drupal site takeover. Drupal rates that issue Highly critical, and CISA lists it as exploited. SA-CORE-2026-019 is a follow-on installer access-bypass, CVE-2026-136716, which the vendor says is being exploited. Drupal rates that advisory Highly critical 21/25, which is not a CVSS score. Sites already on the 017 fixes can still be affected. Unsupported lines have no fix.",
+      "summary": "An installer weakness, CVE-2026-132165, can allow a Drupal site takeover. Drupal rates that issue Highly critical, and CISA lists it as exploited. SA-CORE-2026-019 is a follow-on installer access-bypass, CVE-2026-136716, which the vendor says is being exploited; CISA added it to KEV on 27 November with a 30 November due date. Drupal rates that advisory Highly critical 21/25, which is not a CVSS score. Sites already on the 017 fixes can still be affected. Unsupported lines have no fix.",
       "action": "Update to 10.6.23, 11.3.23, or 11.4.14, then run update.php (an update hook must run). Lock down /core/install.php and keep settings.php unwritable. Check logs for unauthorized access, especially unexpected use of user 1, and confirm user 1's email. End-of-life lines have no fix.",
       "exploitation": {
         "status": "confirmed",
         "source_ids": [
           "cisa-kev",
-          "drupal-sa-core-2026-019"
+          "drupal-sa-core-2026-019",
+          "cisa-kev-1127"
         ],
         "by_cve": [
           {
@@ -377,7 +386,8 @@
             "cve": "CVE-2026-136716",
             "status": "confirmed",
             "source_ids": [
-              "drupal-sa-core-2026-019"
+              "drupal-sa-core-2026-019",
+              "cisa-kev-1127"
             ]
           }
         ]
@@ -393,15 +403,32 @@
         },
         {
           "cve": "CVE-2026-136716",
-          "listed": false,
-          "date_added": null,
+          "listed": true,
+          "date_added": "2026-11-27",
           "source_ids": [
-            "cisa-kev-feed"
+            "cisa-kev-1127"
           ]
         }
       ],
       "cvss": [],
-      "epss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-132165",
+          "probability": 0.08381,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        },
+        {
+          "cve": "CVE-2026-136716",
+          "probability": 0.01212,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
       "sources": [
         {
           "id": "x-discovery",
@@ -497,6 +524,28 @@
           "checked_at": null,
           "supports": [
             "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev-1127",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-27T18:36:54Z",
+          "supports": [
+            "kev",
+            "cves",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-132165,CVE-2026-136716",
+          "label": "FIRST EPSS, 27 November 2026",
+          "checked_at": "2026-11-27T18:36:55Z",
+          "supports": [
+            "epss"
           ]
         }
       ]
@@ -693,13 +742,13 @@
       "audience": "applications_and_servers",
       "priority": "act_now",
       "action_type": "update",
-      "priority_reason": "Reported active exploitation and unauthenticated code execution warrant prompt updates.",
+      "priority_reason": "CISA added CVE-2026-120705 and CVE-2026-129243 to KEV on 27 November; chained with other flaws they allow unauthenticated code execution.",
       "cves": [
         "CVE-2026-120705",
         "CVE-2026-129243",
         "CVE-2026-129245"
       ],
-      "affected": null,
+      "affected": "GeoServer versions prior to 2.27.7, prior to 2.28.6, and prior to 3.0.2.",
       "fix_status": "available",
       "fixes": [
         {
@@ -745,32 +794,60 @@
           ]
         }
       ],
-      "summary": "These GeoServer issues are reported to enable unauthenticated remote code execution when combined. Active exploitation has been reported.",
-      "action": "Update to 3.0.2, 2.28.6, or 2.27.7.",
+      "summary": "The GeoServer project says CVE-2026-120705, CVE-2026-129243 and CVE-2026-129245 are steps in a chain that can lead to unauthenticated remote code execution. CISA lists CVE-2026-120705 and CVE-2026-129243 as known exploited (added 27 November, due 30 November); CVE-2026-129245 is not in KEV.",
+      "action": "Update to GeoServer 3.0.2, 2.28.6, or 2.27.7, or a later release on the same branch.",
       "exploitation": {
-        "status": "reported",
+        "status": "confirmed",
         "source_ids": [
+          "cisa-kev-1127",
           "cyber-centre"
+        ],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-120705",
+            "status": "confirmed",
+            "source_ids": [
+              "cisa-kev-1127"
+            ]
+          },
+          {
+            "cve": "CVE-2026-129243",
+            "status": "confirmed",
+            "source_ids": [
+              "cisa-kev-1127"
+            ]
+          },
+          {
+            "cve": "CVE-2026-129245",
+            "status": "unknown",
+            "source_ids": []
+          }
         ]
       },
       "kev": [
         {
           "cve": "CVE-2026-120705",
-          "listed": null,
-          "date_added": null,
-          "source_ids": []
+          "listed": true,
+          "date_added": "2026-11-27",
+          "source_ids": [
+            "cisa-kev-1127"
+          ]
         },
         {
           "cve": "CVE-2026-129243",
-          "listed": null,
-          "date_added": null,
-          "source_ids": []
+          "listed": true,
+          "date_added": "2026-11-27",
+          "source_ids": [
+            "cisa-kev-1127"
+          ]
         },
         {
           "cve": "CVE-2026-129245",
-          "listed": null,
+          "listed": false,
           "date_added": null,
-          "source_ids": []
+          "source_ids": [
+            "cisa-kev-1127"
+          ]
         }
       ],
       "cvss": [],
@@ -793,12 +870,13 @@
           "kind": "vendor_advisory",
           "url": "https://geoserver.org/vulnerability/2026/11/23/cve-update.html",
           "label": "GeoServer vulnerability update",
-          "checked_at": null,
+          "checked_at": "2026-11-27T18:37:14Z",
           "supports": [
-            "cves",
-            "summary",
             "action",
-            "fixes"
+            "cves",
+            "fix_status",
+            "fixes",
+            "summary"
           ]
         },
         {
@@ -806,10 +884,11 @@
           "kind": "government_alert",
           "url": "https://www.cyber.gc.ca/en/alerts-advisories/geoserver-security-advisory-av26-1207",
           "label": "Canadian Centre for Cyber Security AV26-1207",
-          "checked_at": null,
+          "checked_at": "2026-11-27T18:37:14Z",
           "supports": [
-            "summary",
-            "exploitation"
+            "affected",
+            "exploitation",
+            "summary"
           ]
         },
         {
@@ -830,6 +909,18 @@
           "checked_at": null,
           "supports": [
             "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev-1127",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-27T18:36:54Z",
+          "supports": [
+            "kev",
+            "cves",
+            "exploitation"
           ]
         }
       ]
@@ -1871,7 +1962,7 @@
       "fix_status": "not_applicable",
       "fixes": [],
       "summary": "Optimizely says an unauthorized party exploited a flaw in the Web Experimentation account signup flow on 16 November 2026 and inserted JavaScript into some customers' Project JavaScript. Optimizely says this was not a customer-password breach, that it closed the flaw the same day, and that it removed the injected code. CISA added CVE-2026-132224 to the KEV catalog on 2026-11-24. The shortened customer report does not print that CVE id; the association comes from the KEV entry.",
-      "action": "If you do not use Web Experimentation, Optimizely says no action is required. If you do, treat 07:51\u201322:24 UTC on 16 November 2026 as the exposure window and follow the customer report: confirm whether Optimizely told you the account was affected, review site activity where the snippet ran on payment or cryptocurrency pages, and keep a strong Content Security Policy. Optimizely has withdrawn the earlier guidance to leave the snippet disabled. This correction read the shortened 20 November report, not the full customer-portal version, and it has no customer-installable fix version.",
+      "action": "If you do not use Web Experimentation, Optimizely says no action is required. If you do, treat 07:51–22:24 UTC on 16 November 2026 as the exposure window and follow the customer report: confirm whether Optimizely told you the account was affected, review site activity where the snippet ran on payment or cryptocurrency pages, and keep a strong Content Security Policy. Optimizely has withdrawn the earlier guidance to leave the snippet disabled. This correction read the shortened 20 November report, not the full customer-portal version, and it has no customer-installable fix version.",
       "exploitation": {
         "status": "confirmed",
         "source_ids": [
@@ -2792,19 +2883,19 @@
           ]
         },
         {
-"id": "nvd-125396",
-        "kind": "cve_record",
-        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-125396",
-        "label": "NVD CVE-2026-125396",
-        "checked_at": "2026-11-26T06:27:00Z",
-        "supports": [
-          "cves",
-          "affected",
-          "cvss",
-          "summary",
-          "fixes",
-          "fix_status"
-        ]
+          "id": "nvd-125396",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-125396",
+          "label": "NVD CVE-2026-125396",
+          "checked_at": "2026-11-26T06:27:00Z",
+          "supports": [
+            "cves",
+            "affected",
+            "cvss",
+            "summary",
+            "fixes",
+            "fix_status"
+          ]
         },
         {
           "id": "sophos-sa-20261123-upload2shell",
