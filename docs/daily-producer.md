@@ -295,6 +295,16 @@ git show origin/feed-cache:status.json
 git show origin/feed-cache:wake.json
 ```
 
+**Backup trigger on the box.** Because GitHub skips many scheduled runs, the bot's box runs `scripts/dispatch_feeds_backup.py` from cron at :28 and :58 past each hour from 6 AM to 10:58 PM, plus 11 PM, Pacific. Each time it asks the GitHub API for the latest feeds runs and does nothing if one is queued or running, or started in the last 20 minutes (so GitHub's own :13/:43 runs count). Otherwise it dispatches `feeds.yml` on `main`. It uses no editorial routine run. It reads `GITHUB_TOKEN` from the environment, or the token already stored in the `/workspace/patch-these` clone's origin URL (Actions read and write), and never prints it. Every decision is appended to `/workspace/pt-state/feed-backup.log`.
+
+The box has no init system, so cron is started by hand, and a line in `~/.bashrc` restarts it whenever a shell opens. If the box is replaced, or the log stops growing during the day, reinstall with:
+
+```bash
+bash /workspace/patch-these/scripts/install_feed_backup_cron.sh
+```
+
+That is idempotent: it installs the `cron` package if needed, starts the daemon, adds the `.bashrc` hook, and rewrites the two crontab lines. `python3 scripts/dispatch_feeds_backup.py --dry-run` shows the decision without dispatching; `--force` dispatches regardless of time and recent runs.
+
 `status.json` has one record per source with `last_ok` (the last successful fetch, carried forward when a fetch fails), `last_attempt`, `last_error`, and `tracked_since`. A source with no success for more than 24 hours gets a `::warning::` annotation on the workflow run. One feed being down does not fail the job; the job fails only when no source at all can be fetched. A failed source keeps its previous rows in `latest.json` until they age out. Treat a stale source's vendor as needing a direct check.
 
 `latest.json` keeps leads from the last 72 hours. `kev-new.json` lists CISA KEV entries that were not in the previous catalog snapshot. The first run only records the catalog that already existed, so the historical catalog is not treated as new. Rows have `source`, `id`, `title`, `url`, `published`, `cves`, `fetched_at`, and, when the fetched payload itself had them, `advisory_lines`.
