@@ -247,28 +247,34 @@ def edition_stats(edition: dict) -> str:
 def briefing_intro(edition: dict, *, latest: bool) -> str:
     kicker = "LATEST BRIEFING" if latest else "FROM THE ARCHIVE"
     date_label = briefing_date(edition["digest_date"])
-    heading = "Independent security intelligence, updated throughout the day." if latest else "From the archive."
+    heading = "Tracking emerging threats, updated throughout the day." if latest else "From the archive."
     meta = (
         f'<div class="hero-meta"><span>Covers {coverage(edition)}</span>'
         f'<span>Updated {human_time(edition["updated_at"])}</span>'
         f"{checked_meta(edition)}</div>"
     )
-    hero = (
-        f'<section class="hero"><h1 class="lede">{heading}</h1>'
+    kicker_html = (
         f'<p class="eyebrow briefing-kicker">{kicker} <span aria-hidden="true">·</span> '
-        f'<time datetime="{edition["digest_date"]}">{date_label}</time></p>{meta}</section>'
+        f'<time datetime="{edition["digest_date"]}">{date_label}</time></p>'
     )
     if not latest:
-        return hero + edition_stats(edition)
-    emerging = (
-        '<section class="emerging-threats" aria-labelledby="emerging-threats">'
-        '<h2 id="emerging-threats">Emerging Threats</h2>'
-        "<p>Tracking emerging security threats and vulnerabilities across X, Bluesky, Mastodon, security research blogs, and other sources.</p>"
-        "<p>Early reports are clearly identified, findings are verified against authoritative sources, and recommendations are prioritized by urgency — all in plain English.</p>"
+        return (
+            f'<section class="hero"><h1 class="lede">{heading}</h1>{kicker_html}{meta}</section>'
+            + edition_stats(edition)
+        )
+    # Homepage intro: exact wording and order. The old Emerging Threats heading
+    # would only repeat the lede, so the paragraphs sit in the same styled block.
+    copy = (
+        '<div class="emerging-threats">'
         "<p>Updated every four hours, 6 AM–10 PM Pacific.</p>"
-        "</section>"
+        "<p>Monitoring X, Bluesky, Mastodon, security research blogs, and other sources for newly disclosed vulnerabilities and reports of active exploitation.</p>"
+        "<p>Early signals are clearly labeled, findings are verified against primary sources, and recommended actions are prioritized by urgency.</p>"
+        "</div>"
     )
-    return hero + emerging + edition_stats(edition)
+    return (
+        f'<section class="hero"><h1 class="lede">{heading}</h1>{kicker_html}{copy}{meta}</section>'
+        + edition_stats(edition)
+    )
 
 
 def briefing_body(edition: dict, site_url: str, *, latest: bool) -> str:

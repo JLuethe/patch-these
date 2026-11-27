@@ -431,11 +431,15 @@ def test_briefing_date_is_uppercase_day_month_year():
 def test_homepage_uses_the_requested_intro_date_and_counts(publication):
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "index.html").read_text()
-    assert "Independent security intelligence, updated throughout the day." in home
+    assert "Tracking emerging threats, updated throughout the day." in home
     assert 'LATEST BRIEFING <span aria-hidden="true">·</span> <time datetime="2030-03-02">02 MARCH 2030</time>' in home
-    assert "Tracking emerging security threats and vulnerabilities across X, Bluesky, Mastodon, security research blogs, and other sources." in home
-    assert "Early reports are clearly identified, findings are verified against authoritative sources, and recommendations are prioritized by urgency — all in plain English." in home
     assert "Updated every four hours, 6 AM–10 PM Pacific." in home
+    assert "Monitoring X, Bluesky, Mastodon, security research blogs, and other sources for newly disclosed vulnerabilities and reports of active exploitation." in home
+    assert "Early signals are clearly labeled, findings are verified against primary sources, and recommended actions are prioritized by urgency." in home
+    assert "Independent security intelligence, updated throughout the day." not in home
+    assert "Emerging Threats" not in home
+    intro = home[home.index("Tracking emerging threats"):home.index("Security findings")]
+    assert intro.index("Tracking emerging threats, updated throughout the day.") < intro.index("LATEST BRIEFING") < intro.index("Updated every four hours, 6 AM–10 PM Pacific.") < intro.index("Monitoring X, Bluesky, Mastodon") < intro.index("Early signals are clearly labeled")
     stats = home.split('class="edition-stats"', 1)[1].split("</div></div>", 1)[0]
     assert "<strong>04</strong><span>Security findings</span>" in stats
     assert "<strong>00</strong><span>Act now if affected</span>" in stats
@@ -449,6 +453,8 @@ def test_homepage_uses_the_requested_intro_date_and_counts(publication):
     digest = (output / "digests" / fx.DAY_TWO / "index.html").read_text()
     assert 'FROM THE ARCHIVE <span aria-hidden="true">·</span> <time datetime="2030-03-02">02 MARCH 2030</time>' in digest
     assert "Emerging Threats" not in digest
+    assert "Tracking emerging threats, updated throughout the day." not in digest
+    assert "Monitoring X, Bluesky, Mastodon" not in digest
     quiet = fx.edition("2030-03-03", [fx.item("solo-server", "Solo Server", cve="CVE-2030-30009")])
     save(publication, quiet)
     later = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
@@ -461,11 +467,11 @@ def test_homepage_uses_the_requested_intro_date_and_counts(publication):
 
 def test_first_screen_is_compact_and_early_signals_keep_their_place(publication):
     home = (build_site(publication, site_url=SITE_URL) / "index.html").read_text()
-    assert "Emerging Threats" in home
+    assert "Tracking emerging threats, updated throughout the day." in home
     assert "Updated every four hours, 6 AM–10 PM Pacific." in home
     assert "Find your software. Understand the risk." not in home
     before_signals = home[home.index('class="hero"'):home.index('id="early-signals"')]
-    assert "Emerging Threats" in before_signals and "featured-grid" not in before_signals
+    assert "Early signals are clearly labeled" in before_signals and "featured-grid" not in before_signals
     assert home.index('id="early-signals"') < home.index('id="priority-findings"')
 
 
