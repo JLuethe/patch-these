@@ -1,0 +1,176 @@
+{
+  "description": "Researcher, incident-response and PSIRT accounts whose recent posts the early-signal scan reads in full each run, without re-applying the discovery keywords. Every account was confirmed to exist with a real lookup on the date in verified_at. Posts still go through scripts/seen_posts.py filter, and a watchlist post is a discovery lead like any other social post: it never establishes exploitation, a fix, KEV membership or a score. Keep this list small; tests/test_social_watchlist.py checks its shape.",
+  "rules": {
+    "replies": false,
+    "reposts": false,
+    "keywords": false,
+    "window": "since the account's last checkpoint, with the same 10-minute overlap as social/queries.json"
+  },
+  "x": {
+    "max_pages": 2,
+    "accounts": [
+      {
+        "username": "Shadowserver",
+        "user_id": "24683268",
+        "name": "The Shadowserver Foundation",
+        "why": "internet scanning, exposed and exploited devices",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      },
+      {
+        "username": "CISACyber",
+        "user_id": "18066440",
+        "name": "CISA Cyber",
+        "why": "US government alerts and KEV additions",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      },
+      {
+        "username": "MsftSecIntel",
+        "user_id": "217462908",
+        "name": "Microsoft Threat Intelligence",
+        "why": "exploitation and threat-actor reports",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      },
+      {
+        "username": "watchtowrcyber",
+        "user_id": "1324374317484793856",
+        "name": "watchTowr",
+        "why": "vulnerability research and in-the-wild exploitation",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      },
+      {
+        "username": "GreyNoiseIO",
+        "user_id": "909851753075666944",
+        "name": "GreyNoise",
+        "why": "exploitation attempts seen by sensors",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      },
+      {
+        "username": "Horizon3Attack",
+        "user_id": "1468652557291638789",
+        "name": "Horizon3 Attack Team",
+        "why": "vulnerability research",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      },
+      {
+        "username": "TalosSecurity",
+        "user_id": "17905483",
+        "name": "Cisco Talos Intelligence Group",
+        "why": "vulnerability and threat research",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      },
+      {
+        "username": "Unit42_Intel",
+        "user_id": "4487645412",
+        "name": "Unit 42",
+        "why": "incident response and exploitation reports",
+        "verified_at": "2026-11-27",
+        "verified_by": "X get_users_by_usernames"
+      }
+    ],
+    "query": "(from:Shadowserver OR from:CISACyber OR from:MsftSecIntel OR from:watchtowrcyber OR from:GreyNoiseIO OR from:Horizon3Attack OR from:TalosSecurity OR from:Unit42_Intel) -is:retweet -is:reply"
+  },
+  "bluesky": {
+    "endpoint": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed",
+    "filter": "posts_no_replies",
+    "limit": 50,
+    "max_pages": 2,
+    "accounts": [
+      {
+        "handle": "doublepulsar.com",
+        "did": "did:plc:6bk4sb3yjxcbvpap7tnclaic",
+        "name": "Kevin Beaumont",
+        "why": "researcher, early exploitation reports",
+        "verified_at": "2026-11-27",
+        "verified_by": "app.bsky.actor.getProfile"
+      },
+      {
+        "handle": "campuscodi.risky.biz",
+        "did": "did:plc:w5dk6pygx5sdrslc5vo56h75",
+        "name": "Catalin Cimpanu",
+        "why": "security news digests",
+        "verified_at": "2026-11-27",
+        "verified_by": "app.bsky.actor.getProfile"
+      },
+      {
+        "handle": "shadowserver.bsky.social",
+        "did": "did:plc:3xyh2kw5hfxsax4zff3pp5ub",
+        "name": "The Shadowserver Foundation",
+        "why": "internet scanning, exposed and exploited devices",
+        "verified_at": "2026-11-27",
+        "verified_by": "app.bsky.actor.getProfile"
+      },
+      {
+        "handle": "greynoise.io",
+        "did": "did:plc:3y5lhkm7gbrixowhpoum2zaq",
+        "name": "GreyNoise",
+        "why": "exploitation attempts seen by sensors",
+        "verified_at": "2026-11-27",
+        "verified_by": "app.bsky.actor.getProfile"
+      },
+      {
+        "handle": "talosintelligence.com",
+        "did": "did:plc:2klbilq5kbutfx2fkyijd5u6",
+        "name": "Cisco Talos Intelligence Group",
+        "why": "vulnerability and threat research",
+        "verified_at": "2026-11-27",
+        "verified_by": "app.bsky.actor.getProfile"
+      }
+    ]
+  },
+  "mastodon": {
+    "how": "Look the account up on its home server (/api/v1/accounts/lookup, no token) and read /api/v1/accounts/<id>/statuses?exclude_replies=true from that server. Never send the mastodon.social token to another server.",
+    "limit": 40,
+    "max_pages": 2,
+    "accounts": [
+      {
+        "acct": "wdormann@infosec.exchange",
+        "name": "Will Dormann",
+        "why": "vulnerability analysis",
+        "verified_at": "2026-11-27",
+        "verified_by": "home-server /api/v1/accounts/lookup"
+      },
+      {
+        "acct": "GossiTheDog@cyberplace.social",
+        "name": "Kevin Beaumont",
+        "why": "researcher, early exploitation reports",
+        "verified_at": "2026-11-27",
+        "verified_by": "home-server /api/v1/accounts/lookup"
+      },
+      {
+        "acct": "thedfirreport@infosec.exchange",
+        "name": "The DFIR Report",
+        "why": "intrusion and incident-response reports",
+        "verified_at": "2026-11-27",
+        "verified_by": "home-server /api/v1/accounts/lookup"
+      },
+      {
+        "acct": "cR0w@infosec.exchange",
+        "name": "cR0w",
+        "why": "vulnerability and exploitation commentary",
+        "verified_at": "2026-11-27",
+        "verified_by": "home-server /api/v1/accounts/lookup"
+      },
+      {
+        "acct": "watchtowr@infosec.exchange",
+        "name": "watchTowr",
+        "why": "vulnerability research and in-the-wild exploitation",
+        "verified_at": "2026-11-27",
+        "verified_by": "home-server /api/v1/accounts/lookup"
+      },
+      {
+        "acct": "certcc@infosec.exchange",
+        "name": "CERT Coordination Center",
+        "why": "coordinated vulnerability disclosure",
+        "verified_at": "2026-11-27",
+        "verified_by": "home-server /api/v1/accounts/lookup"
+      }
+    ]
+  }
+}

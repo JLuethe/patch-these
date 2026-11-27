@@ -55,6 +55,16 @@ Rules for every platform: newest first (latest ordering), no engagement minimum,
 - **Mastodon, mastodon.social:** status search with the read-only `MASTODON_TOKEN` for each family term (one page of 40 each, two for `catchup`; unauthenticated search returns no statuses), plus the public hashtag timelines `#cve`, `#zeroday`, `#0day`, `#vulnerability` and `#securityadvisory`, two pages each. Those timelines include federated posts from infosec.exchange and other servers. `#infosec` is not in the primary scan: it is high volume and mostly general news. Skip accounts flagged as bots.
 - **Mastodon, infosec.exchange:** without a token this server answers search with no statuses and tag timelines with HTTP 422, so read its public local timeline (`/api/v1/timelines/public?local=true`, up to 8 pages of 40) and keep posts that contain a family term or a CVE id. Never use the mastodon.social token on another server.
 
+### Watchlist
+
+`social/watchlist.json` lists a few researcher, incident-response and PSIRT accounts (8 on X, 5 on Bluesky, 6 on Mastodon), each confirmed with a real lookup on the date in `verified_at`. Every run reads their own recent posts in the window, without the discovery keywords, because these accounts often describe a flaw before it has the words the families look for. Replies and reposts are skipped.
+
+- **X:** run `x.query` (one `from:` OR query for all eight accounts) like a family query, up to two pages.
+- **Bluesky:** `app.bsky.feed.getAuthorFeed` with `filter=posts_no_replies` on `public.api.bsky.app`, for each handle.
+- **Mastodon:** look the account up on its own server (`/api/v1/accounts/lookup`, no token) and read `/api/v1/accounts/<id>/statuses?exclude_replies=true` there.
+
+Watchlist posts go through `seen_posts.py filter` like every other candidate. A watchlist account is a discovery lead, not a primary source: its post never establishes exploitation, a fix, KEV membership or a score. When an account goes quiet or moves, update the list and its `verified_at` after a fresh lookup.
+
 Seen posts are kept on the bot's machine, not in the repository, so recording them never creates a commit or a Pages deploy. The store is `$PT_STATE_DIR/seen-posts.json` (default `/workspace/pt-state/seen-posts.json`), and entries older than 14 days are pruned (`PT_SEEN_DAYS` changes that).
 
 ```bash
