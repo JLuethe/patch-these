@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-25",
   "coverage_end": "2026-11-26",
   "published_at": "2026-11-26T15:12:00Z",
-  "updated_at": "2026-11-27T06:08:00Z",
+  "updated_at": "2026-11-27T14:00:06Z",
   "corrections": [
     {
       "at": "2026-11-26T16:00:00Z",
@@ -75,6 +75,14 @@
         "mitel-openscape-4000",
         "easyequities",
         "sap-github"
+      ]
+    },
+    {
+      "at": "2026-11-27T14:00:06Z",
+      "summary": "Linux kernel NFS server (NFS2ROOT) is now verified as CVE-2026-99362 from the kernel.org CVE record: Act now, install a kernel with the fix (5.10.275, 5.15.226, 6.1.193, 6.6.163, 6.12.117, 6.18.61, 7.3.2 or later on your branch) and reboot, or restrict port 2049. The Cacti early signal now notes a security company's report of exploitation attempts against its honeypot, which is still unconfirmed; there is still no Cacti fix.",
+      "item_ids": [
+        "linux-kernel-nfsd",
+        "cacti-core"
       ]
     }
   ],
@@ -2472,7 +2480,7 @@
       "affected": "Reported to affect Cacti 1.2.31 with guest access enabled; not yet confirmed by the Cacti project.",
       "fix_status": "unknown",
       "fixes": [],
-      "summary": "Not yet verified. A researcher disclosed a flaw named 4HTTP2ROOT in Cacti 1.2.31, the newest release, and a SecurityOnline report says it lets an unauthenticated visitor run commands on the Cacti server when guest access is turned on. The report says no CVE id or vendor fix exists yet and no attacks in the wild have been confirmed. Cacti servers often hold network device credentials.",
+      "summary": "Not yet verified. A researcher disclosed a flaw named 4HTTP2ROOT in Cacti 1.2.31, the newest release, and a SecurityOnline report says it lets an unauthenticated visitor run commands on the Cacti server when guest access is turned on. The report says no CVE id or vendor fix exists yet and no attacks in the wild have been confirmed. Cacti servers often hold network device credentials. On 27 November a security company said on X that its Cacti honeypot recorded exploitation attempts within 14 hours of a public proof of concept; that claim has not been confirmed by a primary source.",
       "action": "Check whether you run Cacti and whether guest access is enabled and reachable; watch for an advisory from the Cacti project.",
       "exploitation": {
         "status": "unknown",
@@ -2481,7 +2489,7 @@
       "kev": [],
       "cvss": [],
       "epss": [],
-      "gaps": "No Cacti project advisory, CVE record or fix was found; affected versions and the guest-access mitigation come only from the researcher write-up as reported by SecurityOnline. Exploitation in the wild is unconfirmed.",
+      "gaps": "No Cacti project advisory, CVE record or fix was found as of 27 November (the newest Cacti release is still 1.2.31); affected versions and the guest-access mitigation come only from the researcher write-up as reported by SecurityOnline. Exploitation in the wild is unconfirmed; the only report of attempts is a vendor's post on X.",
       "sources": [
         {
           "id": "securityonline-4http2root",
@@ -2508,6 +2516,16 @@
           "id": "x-emunaeliran",
           "kind": "social_report",
           "url": "https://x.com/EmunaEliran/status/2126071094805475450",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-previdian",
+          "kind": "social_report",
+          "url": "https://x.com/PrevidianCyber/status/2126286406418923830",
           "label": "Discussed on X",
           "checked_at": null,
           "supports": [
@@ -2603,25 +2621,205 @@
       "product": "Linux kernel NFS server (nfsd)",
       "audience": "applications_and_servers",
       "kind": "vulnerability",
-      "verification": "early_signal",
-      "priority": "act_soon",
-      "action_type": "investigate",
-      "priority_reason": "Posts describe a pre-authentication remote root flaw reachable on the NFS port of any Linux NFS server; neither the kernel maintainers nor a CVE record has been confirmed in this edition.",
-      "cves": [],
-      "affected": "Reported to affect the Linux kernel's in-kernel NFS server since 2014; affected and fixed kernel versions are not yet confirmed.",
-      "fix_status": "unknown",
-      "fixes": [],
-      "summary": "Not yet verified. Posts on Bluesky describe a flaw named NFS2ROOT: a 12-year-old pre-authentication heap overflow in the Linux kernel's NFS server that they say gives root to anyone who can reach port 2049. The posts link a researcher write-up that did not load at this check. No primary source confirming the flaw, its affected versions or a fix was read.",
-      "action": "Check whether any of your Linux systems run the kernel NFS server and whether port 2049 is reachable from untrusted networks; watch for kernel and distribution advisories.",
+      "verification": "verified",
+      "priority": "act_now",
+      "action_type": "update",
+      "priority_reason": "Unauthenticated remote kernel memory corruption in the NFS server, CVSS 9.8 from kernel.org, with upstream fixed releases available. Hosts that do not run an NFS server are not affected.",
+      "cves": [
+        "CVE-2026-99362"
+      ],
+      "affected": "Linux kernel NFS server (nfsd) from 3.16 before 5.10.275, 5.15.226, 6.1.193, 6.6.163, 6.12.117, 6.18.61 and 7.3.2 on those branches, per the kernel.org CVE record. Hosts that do not run an NFS server are not exposed.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "Linux kernel",
+          "version": "5.10.275",
+          "platform": null,
+          "branch": "5.10",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "5.15.226",
+          "platform": null,
+          "branch": "5.15",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.1.193",
+          "platform": null,
+          "branch": "6.1",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.6.163",
+          "platform": null,
+          "branch": "6.6",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.12.117",
+          "platform": null,
+          "branch": "6.12",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "6.18.61",
+          "platform": null,
+          "branch": "6.18",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "7.3.2",
+          "platform": null,
+          "branch": "7.3",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        },
+        {
+          "component": "Linux kernel",
+          "version": "7.4-rc1",
+          "platform": null,
+          "branch": "mainline",
+          "cves": [
+            "CVE-2026-99362"
+          ],
+          "source_ids": [
+            "cve-99362"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-99362, which researchers call NFS2ROOT, is a flaw in the Linux kernel NFS server's session reply handling that lets a remote, unauthenticated client write past a kernel buffer. kernel.org scores it CVSS 3.1 9.8. It has been present since kernel 3.16 and is fixed upstream on every supported branch. Exploitation was not established, and it was not in the CISA KEV catalog at this check. This is the same flaw as the linux-nfsd item in the 25 November edition.",
+      "action": "Install a kernel that includes the fix (5.10.275, 5.15.226, 6.1.193, 6.6.163, 6.12.117, 6.18.61, 7.3.2 or later on your branch, or a distribution kernel that names CVE-2026-99362) and reboot. Until then, stop nfs-server if you do not need it, or restrict TCP port 2049 to trusted networks.",
       "exploitation": {
         "status": "unknown",
-        "source_ids": []
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-99362",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
       },
-      "kev": [],
-      "cvss": [],
-      "epss": [],
-      "gaps": "Unconfirmed: the researcher write-up returned 404 and NVD timed out. One post names CVE-2026-99362; another thread cites CVE-2026-99288 with fixed kernel versions, so the CVE id and fixed versions are unresolved. Neither id was in CISA KEV (catalogVersion 2026.11.25). Exploitation in the wild is not reported.",
+      "kev": [
+        {
+          "cve": "CVE-2026-99362",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev-99362"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-99362",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "kernel.org",
+          "source_ids": [
+            "cve-99362"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-99362",
+          "probability": 0.00755,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "epss-99362"
+          ]
+        }
+      ],
+      "gaps": "Distribution kernel versions were not checked in this run; the mitigation wording follows the 25 November linux-nfsd item, which cited Red Hat.",
       "sources": [
+        {
+          "id": "cve-99362",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-99362",
+          "label": "CVE-2026-99362 (kernel.org CNA)",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "cves",
+            "summary",
+            "affected",
+            "fixes",
+            "cvss",
+            "fix_status"
+          ]
+        },
+        {
+          "id": "nvd-99362",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-99362",
+          "label": "NVD CVE-2026-99362",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "cves",
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev-99362",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "epss-99362",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-99362",
+          "label": "FIRST EPSS for CVE-2026-99362",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
         {
           "id": "bsky-greptipsfeed",
           "kind": "social_report",

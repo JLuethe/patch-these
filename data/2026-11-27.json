@@ -1,0 +1,413 @@
+{
+  "schema_version": 2,
+  "digest_date": "2026-11-27",
+  "coverage_start": "2026-11-27",
+  "coverage_end": "2026-11-27",
+  "published_at": "2026-11-27T14:00:06Z",
+  "updated_at": "2026-11-27T14:00:06Z",
+  "corrections": [],
+  "featured_item_ids": [
+    "realvnc",
+    "f5-big-ip-icontrol-soap"
+  ],
+  "items": [
+    {
+      "id": "realvnc",
+      "product": "RealVNC Viewer, Server, Connect, Classic Viewer and On-Demand Assist",
+      "audience": "both",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "CVE-2026-137738 is a pre-authentication memory-safety flaw that RealVNC rates Critical, CVSS 9.8, with fixed releases for every affected app; RealVNC says it is not aware of exploitation.",
+      "cves": [
+        "CVE-2026-137738"
+      ],
+      "affected": "Desktop (Windows, macOS, Linux): RealVNC Viewer 8.4.0 to 8.6.1, Classic Viewer 6.4.0 to 7.18.2, Server 6.4.0 to 7.19.0, Connect app 8.6.1 and earlier, On-Demand Assist 3.4.1 and earlier. Mobile: Viewer iOS 3.7.0 to 4.9.5, Viewer Android 3.5.0 to 4.9.5, Server iOS 2.8.1 and earlier, Server Android 2.8.3 and earlier. RealVNC says cloud-hosted connectivity and manually configured direct connections (including offline licensed and on-premises deployments) are affected; TCP-only direct connections are not exposed.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "RealVNC Viewer",
+          "version": "8.6.2",
+          "platform": "Windows, macOS, Linux",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC Connect app",
+          "version": "8.6.2",
+          "platform": "Windows, macOS, Linux",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC Classic Viewer",
+          "version": "7.18.3",
+          "platform": "Windows, macOS, Linux",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC Server",
+          "version": "7.19.1",
+          "platform": "Windows, macOS, Linux",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC On-Demand Assist",
+          "version": "3.5.0",
+          "platform": "Windows, macOS, Linux",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC Viewer",
+          "version": "4.9.6",
+          "platform": "iOS/iPadOS",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC Viewer",
+          "version": "4.9.6",
+          "platform": "Android",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC Server",
+          "version": "2.8.2",
+          "platform": "iOS/iPadOS",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        },
+        {
+          "component": "RealVNC Server",
+          "version": "2.8.4",
+          "platform": "Android",
+          "branch": null,
+          "cves": [
+            "CVE-2026-137738"
+          ],
+          "source_ids": [
+            "realvnc-rvnc-2026-001"
+          ]
+        }
+      ],
+      "summary": "RealVNC advisory RVNC-2026-001 (CVE-2026-137738) fixes a memory-safety flaw in UDP-based connections that could let an attacker run code remotely, as root on certain platforms, or crash the software before authentication. It affects both RealVNC Viewer and Server apps on desktop and mobile. RealVNC rates it Critical, CVSS 9.8, and says it is not aware of exploitation in the wild. The CVE was not in the CISA KEV catalog at this check.",
+      "action": "Update RealVNC Viewer and the Connect app to 8.6.2 or later, Server to 7.19.1 or later, Classic Viewer to 7.18.3 or later, and On-Demand Assist to 3.5.0 or later; check that mobile Viewer and Server apps have updated (Viewer 4.9.6, Server iOS 2.8.2, Server Android 2.8.4 or later).",
+      "steps": [
+        "RealVNC Viewer, RealVNC Server and the RealVNC Connect app: download the latest version from https://www.realvnc.com/en/connect/download/ and install it on your devices.",
+        "RealVNC Classic Viewer: go to https://manage.realvnc.com, then Downloads, and download and install the latest version on your devices.",
+        "RealVNC On-Demand Assist: download the latest version from https://www.realvnc.help/en/ and advise end users to delete any older copies they downloaded.",
+        "Mobile apps should update automatically; to check, open RealVNC Viewer or RealVNC Server in Google Play or the App Store and tap Update."
+      ],
+      "gaps": "FIRST EPSS returned no score for CVE-2026-137738. The CVE id comes from the NVD record, which links RealVNC's advisory; the advisory itself still lists the CVE as pending. RealVNC's release notes were not opened to confirm whether newer releases exist beyond the fixed versions.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-137738",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-137738",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-137738",
+          "score": 9.8,
+          "version": "3.1",
+          "authority": "MITRE (CNA)",
+          "source_ids": [
+            "nvd-cve-2026-137738"
+          ]
+        }
+      ],
+      "epss": [],
+      "sources": [
+        {
+          "id": "realvnc-rvnc-2026-001",
+          "kind": "vendor_advisory",
+          "url": "https://help.realvnc.com/hc/en-us/articles/40824627217949-Security-Advisory-UDP-based-connection-vulnerability",
+          "label": "RealVNC security advisory RVNC-2026-001",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-137738",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-137738",
+          "label": "NVD CVE-2026-137738",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "cves",
+            "summary",
+            "affected",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-137738",
+          "label": "FIRST EPSS, no score returned",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "bsky-windowsfaq",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/windowsfaq.bsky.social/post/3n3cagx7a322k",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-broadwakeai",
+          "kind": "social_report",
+          "url": "https://x.com/BroadwakeAI/status/2126290035582632240",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f5-big-ip-icontrol-soap",
+      "product": "F5 BIG-IP and BIG-IQ (iControl SOAP)",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "CVE-2026-125274 lets any authenticated iControl SOAP user with at least the Guest role run system commands on BIG-IP, and fixed releases are named in F5's CVE record; exploitation was not established.",
+      "cves": [
+        "CVE-2026-125274"
+      ],
+      "affected": "Per F5's CVE record: BIG-IP iControl SOAP 21.0.0 before 21.1.0.3, 17.5.0 before 17.5.1.10, and 17.1.0 before 17.1.3.6; BIG-IQ 8.4.0 before 8.4.2.3. Versions past End of Technical Support are not evaluated. F5 says this is a control-plane issue with no data-plane exposure.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "BIG-IP",
+          "version": "21.1.0.3",
+          "platform": null,
+          "branch": "21.x",
+          "cves": [
+            "CVE-2026-125274"
+          ],
+          "source_ids": [
+            "cve-125274"
+          ]
+        },
+        {
+          "component": "BIG-IP",
+          "version": "17.5.1.10",
+          "platform": null,
+          "branch": "17.5.x",
+          "cves": [
+            "CVE-2026-125274"
+          ],
+          "source_ids": [
+            "cve-125274"
+          ]
+        },
+        {
+          "component": "BIG-IP",
+          "version": "17.1.3.6",
+          "platform": null,
+          "branch": "17.1.x",
+          "cves": [
+            "CVE-2026-125274"
+          ],
+          "source_ids": [
+            "cve-125274"
+          ]
+        },
+        {
+          "component": "BIG-IQ",
+          "version": "8.4.2.3",
+          "platform": null,
+          "branch": "8.4.x",
+          "cves": [
+            "CVE-2026-125274"
+          ],
+          "source_ids": [
+            "cve-125274"
+          ]
+        }
+      ],
+      "summary": "F5's CVE-2026-125274 lets an authenticated iControl SOAP user with at least Guest privileges inject an unauthorized management request, which F5 says may allow running arbitrary system commands, creating or deleting files, or disabling services. It is a control-plane issue only. F5 scores it CVSS 3.1 8.8 and CVSS 4.0 8.7. Exploitation was not established, and it was not in the CISA KEV catalog at this check.",
+      "action": "Update BIG-IP to 21.1.0.3, 17.5.1.10 or 17.1.3.6 or later on your branch, and BIG-IQ to 8.4.2.3 or later. Until then, remove iControl SOAP access for users who are not fully trusted and restrict iControl SOAP to trusted networks.",
+      "steps": [
+        "Remove access to iControl SOAP for users who are not completely trusted; F5 says this is the only mitigation that applies while users still have access.",
+        "Block iControl SOAP access through self IP addresses: set Port Lockdown to Allow None for each self IP, or use Allow Custom and block the iControl SOAP port (TCP 443 by default, or your configured port). This can affect other services, including high availability.",
+        "Block iControl SOAP access through the management interface by restricting management access to trusted users and devices over a secure network."
+      ],
+      "gaps": "F5 advisory K000163936 did not render, so fixed versions are taken from the affected ranges in F5's own CVE record and the newest BIG-IP release on each branch was not confirmed on F5's site.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-125274",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-125274",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-125274",
+          "score": 8.8,
+          "version": "3.1",
+          "authority": "F5",
+          "source_ids": [
+            "cve-125274"
+          ]
+        },
+        {
+          "cve": "CVE-2026-125274",
+          "score": 8.7,
+          "version": "4.0",
+          "authority": "F5",
+          "source_ids": [
+            "cve-125274"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-125274",
+          "probability": 0.00667,
+          "score_date": "2026-11-26",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "cve-125274",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-125274",
+          "label": "CVE-2026-125274 (F5 CNA record)",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "cves",
+            "summary",
+            "affected",
+            "fixes",
+            "cvss",
+            "action",
+            "fix_status"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-125274",
+          "label": "FIRST EPSS for CVE-2026-125274",
+          "checked_at": "2026-11-27T13:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    }
+  ]
+}

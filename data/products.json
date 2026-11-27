@@ -133,6 +133,17 @@
       ]
     },
     {
+      "id": "f5-big-ip-icontrol-soap",
+      "product": "F5 BIG-IP and BIG-IQ (iControl SOAP)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "f5-big-ip-icontrol-soap",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
       "id": "firefox-thunderbird",
       "product": "Firefox and Thunderbird",
       "appearances": [
@@ -254,7 +265,7 @@
         {
           "digest_date": "2026-11-26",
           "item_id": "linux-kernel-nfsd",
-          "verification": "early_signal"
+          "verification": "verified"
         }
       ]
     },
@@ -387,6 +398,17 @@
           "digest_date": "2026-11-26",
           "item_id": "rackspace-spot",
           "verification": "early_signal"
+        }
+      ]
+    },
+    {
+      "id": "realvnc",
+      "product": "RealVNC Viewer, Server, Connect, Classic Viewer and On-Demand Assist",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "realvnc",
+          "verification": "verified"
         }
       ]
     },
