@@ -122,6 +122,17 @@
       ]
     },
     {
+      "id": "easyequities",
+      "product": "EasyEquities",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "easyequities",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
       "id": "firefox-thunderbird",
       "product": "Firefox and Thunderbird",
       "appearances": [
@@ -281,6 +292,17 @@
       ]
     },
     {
+      "id": "mitel-openscape-4000",
+      "product": "Mitel OpenScape 4000 and OpenScape 4000 Manager",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "mitel-openscape-4000",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
       "id": "monai-label",
       "product": "MONAI Label",
       "appearances": [
@@ -364,6 +386,17 @@
         {
           "digest_date": "2026-11-26",
           "item_id": "rackspace-spot",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
+      "id": "sap-github",
+      "product": "SAP (GitHub development platform)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "sap-github",
           "verification": "early_signal"
         }
       ]

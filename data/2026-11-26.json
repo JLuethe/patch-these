@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-25",
   "coverage_end": "2026-11-26",
   "published_at": "2026-11-26T15:12:00Z",
-  "updated_at": "2026-11-27T01:54:45Z",
+  "updated_at": "2026-11-27T06:08:00Z",
   "corrections": [
     {
       "at": "2026-11-26T16:00:00Z",
@@ -66,6 +66,15 @@
         "flight-centre-booking-system",
         "canonical-lxd",
         "linux-kernel-nfsd"
+      ]
+    },
+    {
+      "at": "2026-11-27T06:08:00Z",
+      "summary": "10 PM PT full run: added Mitel OpenScape 4000 and OpenScape 4000 Manager CVE-2026-137724, CVE-2026-137721 and CVE-2026-137723 (Act soon, upgrade to V11 R2.14 or later) and the EasyEquities security incident (Act soon, from its help-centre notice), plus an early signal for a reported SAP GitHub security incident that is not yet verified. The feed cache showed no changes to earlier items.",
+      "item_ids": [
+        "mitel-openscape-4000",
+        "easyequities",
+        "sap-github"
       ]
     }
   ],
@@ -2628,6 +2637,395 @@
           "kind": "social_report",
           "url": "https://bsky.app/profile/did:plc:wjohl6xdbk2az53ufpxzuujd/post/3n3awjc4dp22s",
           "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mitel-openscape-4000",
+      "product": "Mitel OpenScape 4000 and OpenScape 4000 Manager",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "CVE-2026-137724 and CVE-2026-137721 let an unauthenticated network attacker gain access to or run commands on OpenScape 4000 systems (CVSS 10.0 from Mitel), but exploitation was not established and none of the three CVEs was in CISA KEV at this check.",
+      "cves": [
+        "CVE-2026-137724",
+        "CVE-2026-137721",
+        "CVE-2026-137723"
+      ],
+      "affected": "Per Mitel advisory MISA-2026-0013: OpenScape 4000 V11 R0.22 through V11 R2.11, and V10 R1.68 and earlier; OpenScape 4000 Manager V11 R0.22 through V11 R2.11, and V10 R1.34, V10 R1.42, V10 R1.54 and V10 R1.68. The CVE records list each product as affected from V11 R0.22 before V11 R2.14.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "OpenScape 4000",
+          "version": "V11 R2.14",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-137724",
+            "CVE-2026-137721",
+            "CVE-2026-137723"
+          ],
+          "source_ids": [
+            "mitel-misa-2026-0013",
+            "cve-2026-137724",
+            "cve-2026-137721",
+            "cve-2026-137723"
+          ]
+        },
+        {
+          "component": "OpenScape 4000",
+          "version": "V11 R1.26 with PLT HF5",
+          "platform": null,
+          "branch": "V11 R1",
+          "cves": [
+            "CVE-2026-137724",
+            "CVE-2026-137721",
+            "CVE-2026-137723"
+          ],
+          "source_ids": [
+            "mitel-misa-2026-0013"
+          ]
+        },
+        {
+          "component": "OpenScape 4000 Manager",
+          "version": "V11 R2.14",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-137724",
+            "CVE-2026-137721",
+            "CVE-2026-137723"
+          ],
+          "source_ids": [
+            "mitel-misa-2026-0013",
+            "cve-2026-137724",
+            "cve-2026-137721",
+            "cve-2026-137723"
+          ]
+        },
+        {
+          "component": "OpenScape 4000 Manager",
+          "version": "V11 R1.26 with PLT HF5",
+          "platform": null,
+          "branch": "V11 R1",
+          "cves": [
+            "CVE-2026-137724",
+            "CVE-2026-137721",
+            "CVE-2026-137723"
+          ],
+          "source_ids": [
+            "mitel-misa-2026-0013"
+          ]
+        }
+      ],
+      "summary": "Mitel advisory MISA-2026-0013 (first issued 2026-11-18) covers three critical flaws in the Platform component of OpenScape 4000 and OpenScape 4000 Manager, which received CVE ids on November 27, 2026 (UTC): CVE-2026-137724, an unauthenticated unauthorized-access flaw (CVSS 3.1 10.0); CVE-2026-137721, an unauthenticated command injection (CVSS 3.1 10.0); and CVE-2026-137723, a command injection reachable by an unauthenticated attacker with adjacent network access (CVSS 3.1 9.6). A successful attack could expose sensitive information or run arbitrary commands on the system. Exploitation was not established, and none of the three is in the CISA KEV catalog.",
+      "action": "Upgrade OpenScape 4000 and OpenScape 4000 Manager to V11 R2.14 or later; on V11 R1.26 apply PLT HF5, and on V10 R0.28 to V11 R0.22 (Manager: V10 R1.34 to V11 R0.22) apply Mitel's patch.",
+      "steps": [
+        "Upgrade OpenScape 4000 and OpenScape 4000 Manager to V11 R2.14 or a later release.",
+        "On V11 R1.26, apply the PLT HF5 hotfix, or upgrade to a later release.",
+        "On OpenScape 4000 V10 R0.28 to V11 R0.22, or OpenScape 4000 Manager V10 R1.34 to V11 R0.22, apply the patch Mitel provides for those releases.",
+        "If you cannot update in time, enable Security Mode restricted access as Mitel's workaround, following Mitel knowledge base article KB000129263."
+      ],
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-137724",
+            "status": "unknown",
+            "source_ids": []
+          },
+          {
+            "cve": "CVE-2026-137721",
+            "status": "unknown",
+            "source_ids": []
+          },
+          {
+            "cve": "CVE-2026-137723",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-137724",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-137721",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        },
+        {
+          "cve": "CVE-2026-137723",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-137724",
+          "score": 10.0,
+          "version": "3.1",
+          "authority": "Mitel",
+          "source_ids": [
+            "cve-2026-137724"
+          ]
+        },
+        {
+          "cve": "CVE-2026-137721",
+          "score": 10.0,
+          "version": "3.1",
+          "authority": "Mitel",
+          "source_ids": [
+            "cve-2026-137721"
+          ]
+        },
+        {
+          "cve": "CVE-2026-137723",
+          "score": 9.6,
+          "version": "3.1",
+          "authority": "Mitel",
+          "source_ids": [
+            "cve-2026-137723"
+          ]
+        }
+      ],
+      "epss": [],
+      "gaps": "Mitel's advisory still lists only its internal ids MTLVULN-1785, MTLVULN-1786 and MTLVULN-1793; the CVE mapping (137724 to 1785, 137721 to 1786, 137723 to 1793) is inferred from the matching descriptions and CVSS vectors in the CVE records, which link to the advisory. The CVE records list only V11 R0.22 before V11 R2.14 as affected, while the advisory also lists V10 releases. Mitel's release list and knowledge base article KB000129263 were not opened to confirm a newer security release. FIRST EPSS returned no score for these CVEs on 2026-11-27.",
+      "sources": [
+        {
+          "id": "mitel-misa-2026-0013",
+          "kind": "vendor_advisory",
+          "url": "https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0013",
+          "label": "Mitel Product Security Advisory MISA-2026-0013",
+          "checked_at": "2026-11-27T06:00:12Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "action",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cve-2026-137724",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-137724",
+          "label": "CVE-2026-137724 record (CNA: Mitel)",
+          "checked_at": "2026-11-27T05:58:30Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cve-2026-137721",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-137721",
+          "label": "CVE-2026-137721 record (CNA: Mitel)",
+          "checked_at": "2026-11-27T05:58:30Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cve-2026-137723",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-137723",
+          "label": "CVE-2026-137723 record (CNA: Mitel)",
+          "checked_at": "2026-11-27T05:58:30Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed",
+          "checked_at": "2026-11-27T05:58:30Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, no score returned on 2026-11-27",
+          "checked_at": "2026-11-27T05:58:30Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-cvedotnow",
+          "kind": "social_report",
+          "url": "https://x.com/cvedotnow/status/2126192397767922115",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-cvestormsiren",
+          "kind": "social_report",
+          "url": "https://x.com/CVEStormSiren/status/2126191809399230877",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "easyequities",
+      "product": "EasyEquities",
+      "audience": "end_users",
+      "kind": "incident",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "mitigate",
+      "priority_reason": "EasyEquities says a security incident is affecting some of its systems, has taken client login offline, and is still assessing whether personal information was accessed, while warning clients about scam contact.",
+      "cves": [],
+      "affected": "EasyEquities clients. Client login and some services are restricted for all client accounts, including child accounts managed by a guardian. EasyEquities is still assessing whether any personal information was accessed; it says all client funds are accounted for and secure based on its investigation to date.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "South African investment platform EasyEquities, owned by Purple Group, says that on 26 November 2026 it emailed every client about a security incident affecting some of its systems, which it is investigating with independent specialists. As a precaution it restricted client login and some services, and it is keeping the platform offline while it completes checks. In a later update it said all client funds are accounted for and secure based on its investigation to date, and that it is assessing whether any personal information may have been accessed. It says the incident is not related to the September 2026 incident at a third-party service provider. There is no CVE.",
+      "action": "If you have an EasyEquities account, treat any unexpected call, email, SMS or WhatsApp asking for personal or banking details with caution even if it seems to come from EasyEquities, and never share your password or one-time PIN.",
+      "steps": [
+        "Don't keep trying to log in; EasyEquities will announce by email and on its social channels when access is back.",
+        "Treat unexpected calls, emails, SMS or WhatsApp messages asking for personal or banking details with caution, even if they seem to come from EasyEquities.",
+        "Never share your password or one-time PIN, and don't change banking details or approve a payment because someone asked without checking with EasyEquities first.",
+        "If you see anything on your account you didn't do, or suspect fraud, email fraud@easyequities.co.za."
+      ],
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "easyequities-faq"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "EasyEquities has not said when the incident was detected, which systems were affected, how access was gained, or whether personal information was accessed; the investigation is ongoing. The later update on client funds and the September incident comes from TechCentral's report of EasyEquities' statement.",
+      "sources": [
+        {
+          "id": "easyequities-faq",
+          "kind": "vendor_advisory",
+          "url": "https://www.easyequities.co.za/support/crucial-easyequities-documents/security-incident-november-2026",
+          "label": "EasyEquities Help Centre: Security Incident November 2026",
+          "checked_at": "2026-11-27T06:00:12Z",
+          "supports": [
+            "summary",
+            "affected",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "techcentral-easyequities",
+          "kind": "researcher_report",
+          "url": "https://techcentral.co.za/easyequities-security-incident-client-logins/288730/",
+          "label": "TechCentral report, 26 November 2026",
+          "checked_at": "2026-11-27T05:59:00Z",
+          "supports": [
+            "summary",
+            "affected",
+            "action"
+          ]
+        },
+        {
+          "id": "mastodon-grahamdowns",
+          "kind": "social_report",
+          "url": "https://mastodon.africa/@GrahamDowns/117686834249000952",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sap-github",
+      "product": "SAP (GitHub development platform)",
+      "audience": "applications_and_servers",
+      "kind": "incident",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "SAP says it identified suspicious activity and took protective measures, and reports say attackers used stolen employee GitHub tokens to copy and alter SAP source code; SAP has not confirmed that or said whether any customer software was affected.",
+      "cves": [],
+      "affected": "Not yet confirmed by SAP. Reports describe SAP's GitHub platform for developer productivity and software delivery; SAP says it has found no evidence so far of unauthorized access to customers' business data.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "Not yet verified. SAP said in a statement to the press on Thursday evening, November 26, that it had identified suspicious activity and immediately took the necessary measures to protect its customers, and that it has found no evidence so far of unauthorized access to customers' business data. Der Spiegel, citing an insider, reported that attackers stole SAP employees' GitHub authentication tokens and used them to copy and alter SAP source code; Handelsblatt reported that SAP restricted GitHub access, paused automated build and delivery pipelines and rotated code-signing keys. SAP has not confirmed those details or said which repositories were affected, or whether any altered code reached customer software.",
+      "action": "If you run SAP software or use SAP's open-source projects, watch for SAP guidance on affected repositories, builds or code-signing keys before trusting new SAP-signed packages.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "No SAP advisory or customer notice was found; SAP's statement was read only as quoted in news reports (read through search excerpts). The token theft, source-code changes, affected repositories, and any effect on shipped builds or signing keys are unconfirmed.",
+      "sources": [
+        {
+          "id": "handelsblatt-sap",
+          "kind": "researcher_report",
+          "url": "https://www.handelsblatt.com/technik/ki/sap-it-sicherheitsvorfall-bei-sap-haben-verdaechtige-aktivitaeten-identifiziert/100273138.html",
+          "label": "Handelsblatt report quoting SAP's statement (German)",
+          "checked_at": "2026-11-27T05:59:30Z",
+          "supports": [
+            "summary",
+            "affected"
+          ]
+        },
+        {
+          "id": "cybersecuritynews-sap",
+          "kind": "researcher_report",
+          "url": "https://cybersecuritynews.com/sap-security-incident/",
+          "label": "Cybersecurity News report",
+          "checked_at": "2026-11-27T05:59:30Z",
+          "supports": [
+            "summary",
+            "affected"
+          ]
+        },
+        {
+          "id": "x-thecybersecguru",
+          "kind": "social_report",
+          "url": "https://x.com/thecybersecguru/status/2126193224368992342",
+          "label": "Discussed on X",
           "checked_at": null,
           "supports": [
             "summary"

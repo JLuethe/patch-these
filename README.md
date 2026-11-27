@@ -13,7 +13,7 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 [Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-26.md) · [Structured data](data/2026-11-26.json)
 
-Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 5:54 PM PST.
+Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 10:08 PM PST.
 
 ### Early signals: not yet verified
 
@@ -22,6 +22,7 @@ Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 5:54 PM PST.
 - **Not yet verified. Single source. [Rackspace Spot](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-rackspace-spot):** Check whether you run workloads on Rackspace Spot; watch for Rackspace's customer notice on the breach and the shutdown date. Source: [Discussed on X](https://x.com/rtehrani/status/2125993016066253088).
 - **Not yet verified. Single source. [USA TODAY Co. subscriber accounts](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-usa-today-subscribers):** If you have a USA TODAY or affiliated newspaper subscription, be wary of phishing that mentions your subscription; watch for a notice from the publisher. Source: [Discussed on X](https://x.com/zubiqo/status/2126068935523250494).
 - **Not yet verified. [Zodia Custody](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-zodia-custody):** If your organization is a Zodia Custody client, check for a notice from Zodia and watch for targeted phishing using your contacts' names. Source: [Discussed on X](https://x.com/infinitimarkets/status/2126069765341069781) · [Discussed on X (service restored)](https://x.com/infinitimarkets/status/2126069780621008953).
+- **Not yet verified. [SAP (GitHub development platform)](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-sap-github):** If you run SAP software or use SAP's open-source projects, watch for SAP guidance on affected repositories, builds or code-signing keys before trusting new SAP-signed packages. Source: [Handelsblatt report quoting SAP's statement (German)](https://www.handelsblatt.com/technik/ki/sap-it-sicherheitsvorfall-bei-sap-haben-verdaechtige-aktivitaeten-identifiziert/100273138.html) · [Cybersecurity News report](https://cybersecuritynews.com/sap-security-incident/).
 
 ### For everyone
 
@@ -29,6 +30,7 @@ Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 5:54 PM PST.
 - **[1Password](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-1password) — Act soon / Mitigate:** You do not need to update anything in your 1Password account. Be cautious about phishing attempts in the form of unexpected emails, texts, or calls that mention 1Password, invitations, or account recovery. 1Password will never ask for your account password or Secret Key. Only enter them in the official 1Password app or on the official website, and only when you opened the app or typed the address yourself. The Secret Key is only needed the first time you sign in on a new device or browser. Keep your Secret Key and account password safe. If you see something suspicious, tell 1Password at support@1password.com.
 - **[Todoist](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-todoist) — Act soon / Rotate credentials:** Follow the instructions in the email Todoist sent you; if you did not receive one, Todoist says there is nothing to do. Todoist's notification comes from no-reply@notify.todoist.com; watch for fake emails.
 - **[Flight Centre Travel Group (Travel Associates, Cruiseabout)](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-flight-centre-booking-system) — Act soon / Mitigate:** If you booked accommodation through Flight Centre, Travel Associates or Cruiseabout, be alert to unexpected emails, calls or messages about your bookings, and don't click links, open attachments or share personal information, passwords or payment details in response.
+- **[EasyEquities](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-easyequities) — Act soon / Mitigate:** If you have an EasyEquities account, treat any unexpected call, email, SMS or WhatsApp asking for personal or banking details with caution even if it seems to come from EasyEquities, and never share your password or one-time PIN.
 
 ### For app and server owners
 
@@ -41,6 +43,7 @@ Coverage: 25–26 November 2026. Updated: 26 Nov 2026 · 5:54 PM PST.
 - **[HPE AirWave](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-hpe-airwave) — Act soon / Update:** Update HPE AirWave to 8.3.0.8 or later.
 - **[Jenkins plugins](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-jenkins-plugins) — Act soon / Update:** Update Script Security to 1436.1438.v3dc5ef7d16f2 or a later release, and Pipeline: Groovy to 4403.4405.va\_b\_cdb\_b\_d0b\_89f or a later release, and update the other affected plugins named in the 2026-11-25 advisory.
 - **[Canonical LXD](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-canonical-lxd) — Act soon / Update:** Update LXD to 5.0.12, 5.21.10 or 6.10.2 or later on your release line, prioritizing servers with OIDC login enabled.
+- **[Mitel OpenScape 4000 and OpenScape 4000 Manager](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-mitel-openscape-4000) — Act soon / Update:** Upgrade OpenScape 4000 and OpenScape 4000 Manager to V11 R2.14 or later; on V11 R1.26 apply PLT HF5, and on V10 R0.28 to V11 R0.22 (Manager: V10 R1.34 to V11 R0.22) apply Mitel's patch.
 - **[vm2](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-vm2) — Monitor / Update:** Update vm2 to 3.12.1 or later. Do not allowlist the crypto builtin for untrusted code.
 - **[PyJWT](https://jluethe.github.io/patch-these/digests/2026-11-26/#item-pyjwt) — Monitor / Update:** Update PyJWT to 2.14.0 or later where the application accepts both HMAC and asymmetric algorithms.
 
