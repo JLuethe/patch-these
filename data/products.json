@@ -56,6 +56,17 @@
       ]
     },
     {
+      "id": "canonical-lxd",
+      "product": "Canonical LXD",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "canonical-lxd",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
       "id": "checkpoint-security-management",
       "product": "Check Point Security Management",
       "appearances": [
@@ -117,6 +128,17 @@
         {
           "digest_date": "2026-11-25",
           "item_id": "firefox-thunderbird",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "flight-centre-booking-system",
+      "product": "Flight Centre Travel Group (Travel Associates, Cruiseabout)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "flight-centre-booking-system",
           "verification": "verified"
         }
       ]
@@ -211,6 +233,17 @@
           "digest_date": "2026-11-25",
           "item_id": "juniper-session-smart",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "linux-kernel-nfsd",
+      "product": "Linux kernel NFS server (nfsd)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-26",
+          "item_id": "linux-kernel-nfsd",
+          "verification": "early_signal"
         }
       ]
     },

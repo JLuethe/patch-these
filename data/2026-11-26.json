@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-25",
   "coverage_end": "2026-11-26",
   "published_at": "2026-11-26T15:12:00Z",
-  "updated_at": "2026-11-26T21:54:52Z",
+  "updated_at": "2026-11-27T01:54:45Z",
   "corrections": [
     {
       "at": "2026-11-26T16:00:00Z",
@@ -57,6 +57,15 @@
         "cacti-core",
         "usa-today-subscribers",
         "zodia-custody"
+      ]
+    },
+    {
+      "at": "2026-11-27T01:54:45Z",
+      "summary": "6 PM PT social scan: added Flight Centre Travel Group's booking-system incident (Act soon, from its ASX statement) and Canonical LXD CVE-2026-135384 (Act soon, update to 5.0.12, 5.21.10 or 6.10.2 or later), plus an early signal for a reported pre-authentication flaw in the Linux kernel NFS server that is not yet verified.",
+      "item_ids": [
+        "flight-centre-booking-system",
+        "canonical-lxd",
+        "linux-kernel-nfsd"
       ]
     }
   ],
@@ -2219,6 +2228,190 @@
       ]
     },
     {
+      "id": "flight-centre-booking-system",
+      "product": "Flight Centre Travel Group (Travel Associates, Cruiseabout)",
+      "audience": "end_users",
+      "kind": "incident",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "mitigate",
+      "priority_reason": "Flight Centre Travel Group says a significant number of customer records in a third-party accommodation booking system may have been accessed, a very small share with limited passport details, and warns customers to watch for scam messages about their bookings.",
+      "cves": [],
+      "affected": "Customers whose accommodation bookings were made in the third-party accommodation system used by Flight Centre brand, Travel Associates, Cruiseabout and some independent agents. Flight bookings and corporate travel bookings are not affected. Most accessed records comprise only customer names, some with basic travel information; a very small percentage is believed to include limited passport details, email addresses, phone numbers, birth dates, or in rare cases health or mobility information. No access to credit card, payment or bank account details has been identified.",
+      "fix_status": "not_applicable",
+      "fixes": [],
+      "summary": "In a statement to the Australian Securities Exchange dated November 26, 2026, Flight Centre Travel Group said it is investigating unusual activity in a third-party accommodation booking system used by some of its leisure travel brands. Activity has only been detected in the accommodation system used by Flight Centre brand, Travel Associates, Cruiseabout and some independent agents. The company believes a significant number of customer records in the system may have been accessed by unknown persons, although it is not yet clear how many were extracted. Most records comprise only customer names, some with basic travel information; a very small percentage is believed to include limited passport details, email addresses, phone numbers, birth dates, or in rare cases health or mobility information. No access to credit card, payment or bank account details has been identified. The company is working with Mandiant, changed authentication keys and credentials, and will contact impacted customers. There is no CVE.",
+      "action": "If you booked accommodation through Flight Centre, Travel Associates or Cruiseabout, be alert to unexpected emails, calls or messages about your bookings, and don't click links, open attachments or share personal information, passwords or payment details in response.",
+      "exploitation": {
+        "status": "confirmed",
+        "source_ids": [
+          "flt-asx-statement"
+        ]
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "The statement does not give the date the activity began or was detected, or the number of affected customers; the investigation is ongoing.",
+      "sources": [
+        {
+          "id": "flt-asx-statement",
+          "kind": "vendor_advisory",
+          "url": "https://www.marketindex.com.au/data-api/api/v1/announcements/XASX:FLT:2A1713085/pdf/inline/flt-investigating-cyber-security-incident",
+          "label": "Flight Centre Travel Group statement to the ASX, November 26, 2026",
+          "checked_at": "2026-11-27T01:54:45Z",
+          "supports": [
+            "summary",
+            "affected",
+            "action",
+            "exploitation"
+          ]
+        },
+        {
+          "id": "x-gene-sd",
+          "kind": "social_report",
+          "url": "https://x.com/Gene_SD/status/2126127154039771206",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canonical-lxd",
+      "product": "Canonical LXD",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "CVE-2026-135384 lets a remote attacker holding any token signed by the configured identity provider authenticate to the LXD API, but only on LXD servers with OIDC login configured.",
+      "cves": [
+        "CVE-2026-135384"
+      ],
+      "affected": "Canonical LXD before 5.0.12, 5.21.10 and 6.10.2 with OIDC authentication configured.",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "LXD 5.0",
+          "version": "5.0.12",
+          "platform": null,
+          "branch": "5.0",
+          "cves": [
+            "CVE-2026-135384"
+          ],
+          "source_ids": [
+            "nvd-cve-2026-135384"
+          ]
+        },
+        {
+          "component": "LXD 5.21",
+          "version": "5.21.10",
+          "platform": null,
+          "branch": "5.21",
+          "cves": [
+            "CVE-2026-135384"
+          ],
+          "source_ids": [
+            "nvd-cve-2026-135384"
+          ]
+        },
+        {
+          "component": "LXD 6",
+          "version": "6.10.2",
+          "platform": null,
+          "branch": "6.x",
+          "cves": [
+            "CVE-2026-135384"
+          ],
+          "source_ids": [
+            "nvd-cve-2026-135384"
+          ]
+        }
+      ],
+      "summary": "CVE-2026-135384 is an improper-authentication flaw in OIDC bearer token verification in Canonical LXD. NVD's description says a remote attacker holding a token signed by the configured identity provider can authenticate to the LXD API and gain unauthorized control or impersonate users by presenting tokens issued for other applications, ID tokens, or unverified email claims. LXD before 5.0.12, 5.21.10 and 6.10.2 is affected. Exploitation was not established, and the CVE was not in the CISA KEV catalog at this check.",
+      "action": "Update LXD to 5.0.12, 5.21.10 or 6.10.2 or later on your release line, prioritizing servers with OIDC login enabled.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-135384",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-135384",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "gaps": "The NVD page was read through a search result because a direct fetch timed out; its CVSS score and authority were not captured, and FIRST EPSS had no score for this CVE on 2026-11-26. The LXD release notes were not opened to confirm newer security releases.",
+      "sources": [
+        {
+          "id": "nvd-cve-2026-135384",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-135384",
+          "label": "NVD CVE-2026-135384",
+          "checked_at": "2026-11-27T01:54:45Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.25",
+          "checked_at": "2026-11-27T01:54:45Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss",
+          "label": "FIRST EPSS, no score returned on 2026-11-26",
+          "checked_at": "2026-11-27T01:54:45Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "bsky-offseq",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/offseq.bsky.social/post/3n3b22yknn32y",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "mastodon-offseq-lxd",
+          "kind": "social_report",
+          "url": "https://infosec.exchange/@offseq/117685815660445390",
+          "label": "Discussed on Mastodon",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
       "id": "rackspace-spot",
       "product": "Rackspace Spot",
       "audience": "applications_and_servers",
@@ -2389,6 +2582,52 @@
           "kind": "social_report",
           "url": "https://x.com/infinitimarkets/status/2126069780621008953",
           "label": "Discussed on X (service restored)",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "linux-kernel-nfsd",
+      "product": "Linux kernel NFS server (nfsd)",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "Posts describe a pre-authentication remote root flaw reachable on the NFS port of any Linux NFS server; neither the kernel maintainers nor a CVE record has been confirmed in this edition.",
+      "cves": [],
+      "affected": "Reported to affect the Linux kernel's in-kernel NFS server since 2014; affected and fixed kernel versions are not yet confirmed.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on Bluesky describe a flaw named NFS2ROOT: a 12-year-old pre-authentication heap overflow in the Linux kernel's NFS server that they say gives root to anyone who can reach port 2049. The posts link a researcher write-up that did not load at this check. No primary source confirming the flaw, its affected versions or a fix was read.",
+      "action": "Check whether any of your Linux systems run the kernel NFS server and whether port 2049 is reachable from untrusted networks; watch for kernel and distribution advisories.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": []
+      },
+      "kev": [],
+      "cvss": [],
+      "epss": [],
+      "gaps": "Unconfirmed: the researcher write-up returned 404 and NVD timed out. One post names CVE-2026-99362; another thread cites CVE-2026-99288 with fixed kernel versions, so the CVE id and fixed versions are unresolved. Neither id was in CISA KEV (catalogVersion 2026.11.25). Exploitation in the wild is not reported.",
+      "sources": [
+        {
+          "id": "bsky-greptipsfeed",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/greptipsfeed.bsky.social/post/3n3awpawcqc2t",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-dacbarbos",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/did:plc:wjohl6xdbk2az53ufpxzuujd/post/3n3awjc4dp22s",
+          "label": "Discussed on Bluesky",
           "checked_at": null,
           "supports": [
             "summary"
