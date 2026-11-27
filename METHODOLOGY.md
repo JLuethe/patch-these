@@ -30,7 +30,7 @@ Source kinds are `vendor_advisory`, `government_alert`, `researcher_report`, `so
 
 `checked_at` means the source content was checked. It is not the source publication date, the digest publication date, or the date an automated HTTP request succeeded. Historical records with no preserved verification timestamp retain `null`. Unknown information is never replaced by a guessed timestamp, score, affected range, or fixed version.
 
-The current repository validates structure, caches official feeds, and builds the publication. It does not automatically collect social posts or prove the truth of source claims. An editor must check the evidence before publishing.
+The current repository validates structure, caches official feeds, and builds the publication. A collector script gathers candidate Bluesky and Mastodon posts and reports, per query, whether the whole window was read; it does not judge them, publish them, or prove the truth of source claims. An editor must check the evidence before publishing.
 
 ## Urgency and action
 

@@ -20,7 +20,7 @@ The main job of each run is finding new things on X, Bluesky and Mastodon, espec
 
 ## Each run
 
-1. Scan X, Bluesky and Mastodon for posts since the previous run, newest first, using every query family in `social/queries.json` (see "Social scan" below). Filter the candidates through `scripts/seen_posts.py filter` so posts handled by an earlier run are skipped, and record every post you looked at with `scripts/seen_posts.py add`, whether you published it or not. Keep a lead only if it is in scope (see "What counts as an early signal"). For each credible new lead, publish a verified item if a quick look finds a primary source that confirms it. Otherwise publish it right away as `verification: "early_signal"`. Do not hold a lead back while chasing confirmation; a later run can promote it.
+1. Scan X, Bluesky and Mastodon for posts since the previous run, newest first, using every query family in `social/queries.json` and the accounts in `social/watchlist.json` (see "Social scan" below): `scripts/social_collect.py collect` for Bluesky and Mastodon, the X tool for X, recorded with `social_collect.py record`. Filter the candidates through `scripts/seen_posts.py filter` so posts handled by an earlier run are skipped, and record every post you looked at with `scripts/seen_posts.py add`, whether you published it or not. Keep a lead only if it is in scope (see "What counts as an early signal"). For each credible new lead, publish a verified item if a quick look finds a primary source that confirms it. Otherwise publish it right away as `verification: "early_signal"`. Do not hold a lead back while chasing confirmation; a later run can promote it.
 2. Full runs only (6 AM and 10 PM) and feed wakes: read the feed cache from the `feed-cache` branch (not `main`): `git fetch origin feed-cache`, then `git show origin/feed-cache:latest.json`, `git show origin/feed-cache:kev-new.json`, and `git show origin/feed-cache:status.json` to see which sources are stale, plus `git show origin/feed-cache:wake.json` for this fetch's wake rows. Those rows are discovery leads and can confirm or promote an early signal. A fact in the edition still has to come from the primary source the row links to. The cache does not establish a version, a score, or exploitation.
 3. Full runs only: recheck a prior Act now or Act soon item only when the cache, CISA KEV, or a social post shows a relevant change for that item's product or CVE, such as a new advisory or release from that vendor, a new KEV entry, or a report of a new fix or exploitation. Then reopen the primary vendor page, and if a newer security fix exists or the advice changed, publish a correction on that prior edition. Do not re-read every vendor page on every run. The 6 AM run does one full recheck of the most recent edition's Act now and Act soon items when time allows.
 4. Promote an early signal to `verified` under the same item id once a primary source confirms the facts, and append a `corrections` entry that says what was confirmed.
@@ -54,6 +54,29 @@ Rules for every platform: newest first (latest ordering), no engagement minimum,
 - **Bluesky:** `app.bsky.feed.searchPosts` on `api.bsky.app` (the `public.api.bsky.app` host refuses search with HTTP 403), `sort=latest`, `limit=100`, `since` at the window start. Bluesky search does not support OR, so each family term is a simple query of its own: one page each, three for `catchup`.
 - **Mastodon, mastodon.social:** status search with the read-only `MASTODON_TOKEN` for each family term (one page of 40 each, two for `catchup`; unauthenticated search returns no statuses), plus the public hashtag timelines `#cve`, `#zeroday`, `#0day`, `#vulnerability` and `#securityadvisory`, two pages each. Those timelines include federated posts from infosec.exchange and other servers. `#infosec` is not in the primary scan: it is high volume and mostly general news. Skip accounts flagged as bots.
 - **Mastodon, infosec.exchange:** without a token this server answers search with no statuses and tag timelines with HTTP 422, so read its public local timeline (`/api/v1/timelines/public?local=true`, up to 8 pages of 40) and keep posts that contain a family term or a CVE id. Never use the mastodon.social token on another server.
+
+### Collecting and the run report
+
+`scripts/social_collect.py` runs the Bluesky and Mastodon side of the scan, including the watchlist, and keeps the run's state on the bot's machine under `$PT_STATE_DIR` (default `/workspace/pt-state`), never in the repository:
+
+- `social-checkpoints.json`: one checkpoint per query (for example `bluesky:auth:auth-bypass`, `mastodon.social:tag:cve`, `x:zero_day`). Each query's window starts at its checkpoint minus 10 minutes of overlap, or 4 hours back when it has none. The checkpoint moves to the run's start time after an ok, empty or incomplete query and stays put after a failed one, so the next run re-reads that window.
+- `social-candidates.json`: the candidate posts, newest first and deduplicated across queries, each with its `url`, `platform`, `author`, `created_at`, a short `text`, the `queries` and `families` that found it, and `watchlist`. Feed it straight to `seen_posts.py filter --file`.
+- `social-report.json`: one row per query with `state` (ok, empty, incomplete or failed), `pages` and `max_pages`, `posts` read, `kept`, `window_start`, `oldest_reached` and `error`, plus `totals` and the candidate count.
+
+Bluesky's unauthenticated search refuses its own pagination cursor (HTTP 403), so the collector pages by time with `until` instead. A request that fails on the first page makes the query failed; a later page failing makes it incomplete, with the error recorded and the posts already read kept. Contextual families (`early_disclosure`) keep a post only when a security word is nearby, on every platform. The collector sends `MASTODON_TOKEN` only to mastodon.social and never prints it; without the token, mastodon.social search is reported failed and the tag timelines still run.
+
+X is searched by the routine with its own tool, and recorded in the same report:
+
+```bash
+python scripts/social_collect.py collect                 # Bluesky + Mastodon + their watchlists (about 2 minutes)
+python scripts/social_collect.py plan                    # X queries with start_time and max_pages, including x:watchlist
+# for each X plan row: search_posts_all(query, start_time, sort_order=recency, max_results=25), page with next_token up to max_pages, then
+python scripts/social_collect.py record --id x:auth --state ok --pages 1 --posts 18 --oldest 2026-11-27T15:02:00Z --candidates x-auth.txt
+python scripts/social_collect.py summary                 # totals plus every incomplete or failed query
+python scripts/seen_posts.py filter --file /workspace/pt-state/social-candidates.json > /workspace/pt-state/unseen.json
+```
+
+For X, the state follows the same rule: `ok` or `empty` when a page reached past `start_time` or there was no `next_token`, `incomplete` when `max_pages` ran out first, and `failed` (with `--error`) when the call failed. `--candidates` takes the post URLs, one per line or as a JSON list. Mention any incomplete or failed query in the run's notes; never treat an incomplete window as fully read.
 
 ### Watchlist
 
