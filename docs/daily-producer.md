@@ -101,6 +101,31 @@ python scripts/seen_posts.py normalize https://infosec.exchange/@user/1134
 
 Ids are normalized per platform: `x:<status id>` (x.com and twitter.com), `bsky:<at-uri>` or `bsky:<handle>/<rkey>`, and `masto:<status url>`. Anything that is not a recognized post URL passes through `filter` unchanged, so an odd URL is never silently dropped. If the store is lost, the next run simply sees some old posts again; the edition's existing items and sources still show what was already published.
 
+### Tracked issues
+
+`seen_posts.py` remembers which posts were read, for 14 days. `scripts/tracked_issues.py` remembers what they were about, in `$PT_STATE_DIR/tracked-issues.json` (not in the repository), so a second report of the same flaw is recognized even when it comes from a new post. Each issue has a slug id, a title, its posts, CVE ids and product names, and one state:
+
+| State | Meaning |
+| --- | --- |
+| `pending` | Noticed, not yet judged. |
+| `evaluated` | Judged and not published for now: out of scope, or not credible yet. Say why in `--note`. |
+| `tracked` | Published as an edition item, early signal or verified; `--item-id` names it. |
+| `closed` | No longer watched: resolved, dismissed, or idle. |
+
+Moves: pending to evaluated, tracked or closed; evaluated back to pending, or to tracked or closed; tracked to closed; closed back to pending to reopen.
+
+```bash
+python scripts/tracked_issues.py match "text of the new post" https://x.com/user/status/123 CVE-2026-12345
+python scripts/tracked_issues.py add example-vpn --title "Example VPN auth bypass" --product "example vpn" --post URL [--cve CVE-...]
+python scripts/tracked_issues.py attach example-vpn --post URL --note "second researcher report"
+python scripts/tracked_issues.py set example-vpn evaluated --note "one unverified claim, no product version"
+python scripts/tracked_issues.py set example-vpn tracked --item-id example-vpn --edition 2026-11-27
+python scripts/tracked_issues.py list --state pending
+python scripts/tracked_issues.py prune    # closes pending/evaluated issues idle 14 days, drops closed ones idle 30 days
+```
+
+Before judging an unseen candidate, run `match` on its text and URL. If it matches an open issue, `attach` the post; a new report of an `evaluated` lead can be enough to publish it now. When you publish a lead, `set` it to `tracked` with the item id. When the item is verified and needs no more watching, or a lead is dismissed, `set` it to `closed`. Recording every post with `seen_posts.py add` is still required.
+
 ## Cost
 
 Most runs are social-only: three of the five scheduled runs skip the cache and the rechecks entirely, the seen-posts filter avoids re-reading posts, and quiet periods between scheduled runs cost nothing because only a real KEV entry or covered-vendor advisory wakes the routine. Use the fast, cheap path for scanning social posts, reading the feed cache, parsing leads, and drafting an early signal. Spend deeper checking only on an Act now item or when two sources disagree. A routine update is a local script plus one Pages run. A cloud-agent run and a pull request are for schema changes, rule changes, and uncertain items, not for every four-hour pass.
