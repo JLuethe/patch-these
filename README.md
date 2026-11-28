@@ -52,6 +52,8 @@ The normal build, `python scripts/build_site.py`, only writes `_site/`. Use `--w
 
 GitHub Actions tests pull requests and builds the site. Merges to `main` deploy to GitHub Pages after **Settings → Pages → Build and deployment → Source: GitHub Actions** is enabled. The workflow pins its actions and keeps deployment permissions out of the build job.
 
+The shared social preview is authored in `assets/social-card.svg`. After editing it, regenerate the PNG with `rsvg-convert assets/social-card.svg -o assets/social-card.png` (librsvg), and bump the image URL version in `scripts/patchthese/rendering.py` so future shares request the new image.
+
 ## Data and feeds
 
 Schema version 2 is defined in [data/schema.json](data/schema.json). It separates exploitation reports, KEV membership, urgency, action type, and fixed releases by component, platform, branch, and CVE. A missing value means unknown, not safe. Source checks and score dates remain visible, including missing historical check times.
