@@ -325,6 +325,17 @@
       ]
     },
     {
+      "id": "llama-cpp-rpc",
+      "product": "llama.cpp (ggml RPC server)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "llama-cpp-rpc",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "microsoft-visio",
       "product": "Microsoft Office Visio",
       "appearances": [
@@ -424,6 +435,17 @@
       ]
     },
     {
+      "id": "oracle-ebs",
+      "product": "Oracle E-Business Suite",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "oracle-ebs",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "paloalto-panos",
       "product": "Palo Alto Networks PAN-OS",
       "appearances": [
@@ -431,6 +453,17 @@
           "digest_date": "2026-11-26",
           "item_id": "paloalto-panos",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "postal-2",
+      "product": "POSTAL 2 (Steam Workshop mods)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "postal-2",
+          "verification": "early_signal"
         }
       ]
     },
@@ -486,6 +519,17 @@
           "digest_date": "2026-11-25",
           "item_id": "simple-git",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "synology-dsm",
+      "product": "Synology DiskStation Manager (DSM)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "synology-dsm",
+          "verification": "early_signal"
         }
       ]
     },

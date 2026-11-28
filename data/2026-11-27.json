@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-27",
   "coverage_end": "2026-11-27",
   "published_at": "2026-11-27T14:00:06Z",
-  "updated_at": "2026-11-28T02:05:00Z",
+  "updated_at": "2026-11-28T06:02:00Z",
   "corrections": [
     {
       "at": "2026-11-27T17:57:07Z",
@@ -30,6 +30,16 @@
       "item_ids": [
         "linux-kernel-tcpanic"
       ]
+    },
+    {
+      "at": "2026-11-28T06:02:00Z",
+      "summary": "Added early signals for an Oracle E-Business Suite exploitation report (CVE-2026-101767), a llama.cpp RPC server flaw (CVE-2026-137567), a Synology DSM flaw (CVE-2026-120382) and a POSTAL 2 Workshop mod flaw (CVE-2026-138154), none yet confirmed by a vendor advisory.",
+      "item_ids": [
+        "oracle-ebs",
+        "llama-cpp-rpc",
+        "synology-dsm",
+        "postal-2"
+      ]
     }
   ],
   "featured_item_ids": [
@@ -37,6 +47,389 @@
     "f5-big-ip-icontrol-soap"
   ],
   "items": [
+    {
+      "id": "oracle-ebs",
+      "product": "Oracle E-Business Suite",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "Posts relaying a threat-intelligence report say attackers have started targeting CVE-2026-101767, an Oracle E-Business Suite flaw fixed in the October 2026 Critical Patch Update; this is not yet confirmed by a primary source.",
+      "cves": [
+        "CVE-2026-101767"
+      ],
+      "affected": "Not yet confirmed for this report. The NVD record for CVE-2026-101767 names the Oracle Application Object Library (Core) in E-Business Suite 12.2.3 to 12.2.15.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Bluesky posts relaying a news report say the threat-intelligence firm Defused has seen attackers begin targeting CVE-2026-101767, a critical E-Business Suite flaw Oracle patched recently, and scanning for unpatched systems. This edition has not read the Defused report or Oracle's advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether your Oracle E-Business Suite systems have the October 2026 Critical Patch Update applied, and review them for signs of compromise while the exploitation report is confirmed.",
+      "gaps": "The Defused report and the original news article were not read; only Japanese-language Bluesky posts relaying it were found. Oracle's October 2026 Critical Patch Update was not opened to confirm fixed versions. Exploitation is unconfirmed by a primary source.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-101767",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-101767",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-101767",
+          "probability": 0.00483,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "bsky-getpokemon7-ebs-1",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/getpokemon7.bsky.social/post/3n3drvn2yac2s",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-getpokemon7-ebs-2",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/getpokemon7.bsky.social/post/3n3dvxep6qk2s",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-101767",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-101767",
+          "label": "NVD record CVE-2026-101767",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "affected"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-101767",
+          "label": "FIRST EPSS",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "llama-cpp-rpc",
+      "product": "llama.cpp (ggml RPC server)",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "CVE-2026-137567 is described as an unauthenticated heap write in the llama.cpp ggml RPC server; posts are spreading it, and llama.cpp's own release notes were not read in this edition.",
+      "cves": [
+        "CVE-2026-137567"
+      ],
+      "affected": "Per the NVD record: llama.cpp builds b11450 up to, but not including, b12658, when the ggml RPC server is in use.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on X say a critical flaw in the llama.cpp ggml RPC server, CVE-2026-137567, lets an unauthenticated attacker on the network corrupt memory on hosts that run the RPC server. The NVD record, sourced from VulnCheck, lists builds b11450 up to b12658 and links a llama.cpp fix. This edition has not read a llama.cpp advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether you run the llama.cpp RPC server (rpc-server) and on which build, and keep it off untrusted networks while you confirm the fixed build with the llama.cpp project.",
+      "gaps": "No llama.cpp advisory or release note was read; the affected range comes from the NVD record only. CVSS scoring (VulnCheck) was not confirmed against the project. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-137567",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-137567",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-137567",
+          "probability": 0.00798,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-tokendudu",
+          "kind": "social_report",
+          "url": "https://x.com/tokendudu/status/2126541596724457728",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-ll685998568638",
+          "kind": "social_report",
+          "url": "https://x.com/ll685998568638/status/2126552424618094726",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-137567",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-137567",
+          "label": "NVD record CVE-2026-137567",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "affected"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-137567",
+          "label": "FIRST EPSS",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "synology-dsm",
+      "product": "Synology DiskStation Manager (DSM)",
+      "audience": "both",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "Posts describe CVE-2026-120382 as a critical flaw in the DSM OAuth API that could let remote attackers read or write files on Synology NAS devices; Synology's advisory was not read in this edition.",
+      "cves": [
+        "CVE-2026-120382"
+      ],
+      "affected": "Per the NVD record: DSM before 7.1.1-42962-10, 7.2.1-69057-14, 7.2.2-72806-11, 7.3.2-86009-6 and 7.4.1-90080-2.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A post on X says Synology DSM has a critical flaw, CVE-2026-120382, in its OAuth API that could let remote attackers read and write arbitrary files, and urges updating to DSM 7.4.1 or 7.3.2. The NVD record links Synology advisory Synology_SA_26_21, which this edition has not read. CISA KEV does not list the CVE.",
+      "action": "Check the DSM version on your Synology NAS devices and look for a DSM update in Control Panel; confirm the fixed versions in Synology advisory Synology_SA_26_21.",
+      "gaps": "Synology advisory Synology_SA_26_21 was not read; fixed versions come from the NVD record only. Severity and exploitation are unconfirmed.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-120382",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-120382",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-120382",
+          "probability": 0.01565,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-teeeda-worker",
+          "kind": "social_report",
+          "url": "https://x.com/Teeeda_worker/status/2126541729423843534",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-120382",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-120382",
+          "label": "NVD record CVE-2026-120382",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "affected"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-120382",
+          "label": "FIRST EPSS",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "postal-2",
+      "product": "POSTAL 2 (Steam Workshop mods)",
+      "audience": "end_users",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "CVE-2026-138154 is described as a way for a malicious Steam Workshop mod to run programs on a POSTAL 2 player's Windows PC; it was published today and has not been confirmed with the game's developer.",
+      "cves": [
+        "CVE-2026-138154"
+      ],
+      "affected": "Per the NVD record: POSTAL 2 before build 26810491.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on Bluesky and X say a newly published flaw, CVE-2026-138154, lets a malicious Steam Workshop mod for POSTAL 2 break out of the game's sandbox and run commands on the player's Windows PC. The NVD record lists builds before 26810491. This edition has not read the developer's notice. CISA KEV does not list the CVE.",
+      "action": "If you play POSTAL 2, let Steam update the game and avoid installing Workshop mods from unknown authors until the fix is confirmed.",
+      "gaps": "The developer's Steam news post and the researcher's write-up were not read; the affected range comes from the NVD record only. Exploitation is unknown. FIRST EPSS returned no score.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-138154",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-138154",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [],
+      "sources": [
+        {
+          "id": "bsky-offseq-postal2",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/offseq.bsky.social/post/3n3dpksgukr2p",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-cvedotnew-postal2",
+          "kind": "social_report",
+          "url": "https://x.com/cvedotnew/status/2126515491082830040",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "nvd-cve-2026-138154",
+          "kind": "cve_record",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-138154",
+          "label": "NVD record CVE-2026-138154",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "affected"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T06:02:00Z",
+          "supports": [
+            "kev"
+          ]
+        }
+      ]
+    },
     {
       "id": "linux-kernel-tcpanic",
       "product": "Linux kernel",
