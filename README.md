@@ -13,13 +13,14 @@ Read by audience, search for a product or CVE, or save the products you follow i
 
 [Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-27.md) · [Structured data](data/2026-11-27.json)
 
-Coverage: 27 November 2026. Updated: 27 Nov 2026 · 1:58 PM PST.
+Coverage: 27 November 2026. Updated: 27 Nov 2026 · 6:05 PM PST.
 
 ### Early signals: not yet verified
 
 - **Not yet verified. [AnsibleForms](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-ansibleforms):** Check whether you run AnsibleForms, especially where it is reachable from the internet; read the project's release notes and security advisory before choosing a version. Source: [Discussed on Bluesky](https://bsky.app/profile/eventmonitor.bsky.social/post/3n3fp3p5q5uym) · [Discussed on X](https://x.com/cvedotnow/status/2126411338851221709).
 - **Not yet verified. [vm2](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-vm2-nodevm):** Check whether your applications use vm2's NodeVM to run untrusted code; watch the vm2 GitHub advisories for a fix and limit the built-in modules the sandbox can load. Source: [Discussed on X](https://x.com/HugoValters/status/2126386070720053389) · [Discussed on Bluesky](https://bsky.app/profile/hugovalters.bsky.social/post/3n3cu5qdas32s).
 - **Not yet verified. [Exim](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-exim):** Check whether you run Exim mail servers; watch the Exim project and your Linux distribution for a security advisory. Source: [Discussed on Bluesky](https://bsky.app/profile/pingoru.bsky.social/post/3n3d3v5b3fz2w) · [CISA KEV catalog feed, catalogVersion 2026.11.27](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json).
+- **Not yet verified. [Linux kernel](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-linux-kernel-tcpanic):** Check your Linux distribution's security tracker for CVE-2026-99288 and plan the kernel update it names for internet-facing servers. Source: [Discussed on X](https://x.com/hakunoba/status/2126483755011555466) · [Discussed on X](https://x.com/v4bel/status/2126483558567166118).
 - **Not yet verified. [U.S. Air Force Cloud One](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-us-air-force-cloud-one):** Check whether your organization runs workloads on or connects to Air Force Cloud One; watch for an official Air Force statement or customer notice. Source: [Discussed on X](https://x.com/IndiaToday/status/2126373146920091741) · [Discussed on X](https://x.com/LeadingReport/status/2126373767211532675).
 
 ### For everyone

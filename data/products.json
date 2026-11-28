@@ -303,6 +303,17 @@
       ]
     },
     {
+      "id": "linux-kernel-tcpanic",
+      "product": "Linux kernel",
+      "appearances": [
+        {
+          "digest_date": "2026-11-27",
+          "item_id": "linux-kernel-tcpanic",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "linux-nfsd",
       "product": "Linux kernel NFS server (nfsd)",
       "appearances": [

@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-25",
   "coverage_end": "2026-11-26",
   "published_at": "2026-11-26T15:12:00Z",
-  "updated_at": "2026-11-27T14:00:06Z",
+  "updated_at": "2026-11-28T02:05:00Z",
   "corrections": [
     {
       "at": "2026-11-26T16:00:00Z",
@@ -82,6 +82,13 @@
       "summary": "Linux kernel NFS server (NFS2ROOT) is now verified as CVE-2026-99362 from the kernel.org CVE record: Act now, install a kernel with the fix (5.10.275, 5.15.226, 6.1.193, 6.6.163, 6.12.117, 6.18.61, 7.3.2 or later on your branch) and reboot, or restrict port 2049. The Cacti early signal now notes a security company's report of exploitation attempts against its honeypot, which is still unconfirmed; there is still no Cacti fix.",
       "item_ids": [
         "linux-kernel-nfsd",
+        "cacti-core"
+      ]
+    },
+    {
+      "at": "2026-11-28T02:05:00Z",
+      "summary": "Cacti (4HTTP2ROOT / 4HTTP2SHELL): the Cacti project merged a security hardening commit for guest writes and user settings to its develop branch. There is still no release, advisory or CVE, so the item stays unverified and guest access should stay off.",
+      "item_ids": [
         "cacti-core"
       ]
     }
@@ -2480,7 +2487,7 @@
       "affected": "Reported to affect Cacti 1.2.31 with guest access enabled; not yet confirmed by the Cacti project.",
       "fix_status": "unknown",
       "fixes": [],
-      "summary": "Not yet verified. A researcher disclosed a flaw named 4HTTP2ROOT in Cacti 1.2.31, the newest release, and a SecurityOnline report says it lets an unauthenticated visitor run commands on the Cacti server when guest access is turned on. The report says no CVE id or vendor fix exists yet and no attacks in the wild have been confirmed. Cacti servers often hold network device credentials. On 27 November a security company said on X that its Cacti honeypot recorded exploitation attempts within 14 hours of a public proof of concept; that claim has not been confirmed by a primary source.",
+      "summary": "Not yet verified. A researcher disclosed a flaw named 4HTTP2ROOT in Cacti 1.2.31, the newest release, and a SecurityOnline report says it lets an unauthenticated visitor run commands on the Cacti server when guest access is turned on. The report says no CVE id or vendor fix exists yet and no attacks in the wild have been confirmed. Cacti servers often hold network device credentials. On 27 November a security company said on X that its Cacti honeypot recorded exploitation attempts within 14 hours of a public proof of concept; that claim has not been confirmed by a primary source. On 28 November (UTC) the Cacti project merged a security commit to its develop branch titled \"harden user settings validation, Guest writes, and realtime graph access\"; it is not in a release yet, and the project has not published an advisory or CVE tying it to this report.",
       "action": "Check whether you run Cacti and whether guest access is enabled and reachable; watch for an advisory from the Cacti project.",
       "exploitation": {
         "status": "unknown",
@@ -2489,7 +2496,7 @@
       "kev": [],
       "cvss": [],
       "epss": [],
-      "gaps": "No Cacti project advisory, CVE record or fix was found as of 27 November (the newest Cacti release is still 1.2.31); affected versions and the guest-access mitigation come only from the researcher write-up as reported by SecurityOnline. Exploitation in the wild is unconfirmed; the only report of attempts is a vendor's post on X.",
+      "gaps": "No Cacti project advisory, CVE record or release fix was found as of 28 November; the newest Cacti release is still 1.2.31. A security hardening commit was merged to the develop branch, but the project has not said it fixes this report. Affected versions and the guest-access mitigation come only from the researcher write-up as reported by SecurityOnline. Exploitation in the wild is unconfirmed; the only report of attempts is a vendor's post on X.",
       "sources": [
         {
           "id": "securityonline-4http2root",
@@ -2526,6 +2533,26 @@
           "id": "x-previdian",
           "kind": "social_report",
           "url": "https://x.com/PrevidianCyber/status/2126286406418923830",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cacti-commit-e23470d",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/Cacti/cacti/commit/e23470d81",
+          "label": "Cacti project commit on GitHub (develop branch), 28 November",
+          "checked_at": "2026-11-28T02:05:00Z",
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-precursoruk",
+          "kind": "social_report",
+          "url": "https://x.com/PrecursorUK/status/2126485644763422796",
           "label": "Discussed on X",
           "checked_at": null,
           "supports": [

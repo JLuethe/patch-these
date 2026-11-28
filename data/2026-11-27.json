@@ -4,7 +4,7 @@
   "coverage_start": "2026-11-27",
   "coverage_end": "2026-11-27",
   "published_at": "2026-11-27T14:00:06Z",
-  "updated_at": "2026-11-27T21:58:43Z",
+  "updated_at": "2026-11-28T02:05:00Z",
   "corrections": [
     {
       "at": "2026-11-27T17:57:07Z",
@@ -23,6 +23,13 @@
         "vm2-nodevm",
         "exim"
       ]
+    },
+    {
+      "at": "2026-11-28T02:05:00Z",
+      "summary": "Added an early signal for a Linux kernel remote crash flaw, CVE-2026-99288 (TCPanic), not yet confirmed by a primary source.",
+      "item_ids": [
+        "linux-kernel-tcpanic"
+      ]
     }
   ],
   "featured_item_ids": [
@@ -30,6 +37,99 @@
     "f5-big-ip-icontrol-soap"
   ],
   "items": [
+    {
+      "id": "linux-kernel-tcpanic",
+      "product": "Linux kernel",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "Posts describe CVE-2026-99288 (\"TCPanic\") as a remote, no-login crash of Linux servers over TCP; the details and fixed versions have not been checked against a primary source in this edition.",
+      "cves": [
+        "CVE-2026-99288"
+      ],
+      "affected": "Not yet confirmed. Posts say Linux servers reachable over TCP, IPv4 and IPv6.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on X describe CVE-2026-99288, nicknamed TCPanic, as a Linux kernel flaw that lets a remote attacker with no login crash a server using only TCP traffic, and say Linux 7.3.4 fixes it. The researcher credited with the report also posted about it on X. The fixed versions and real-world impact have not been checked against kernel or distribution advisories in this edition. CISA KEV does not list the CVE.",
+      "action": "Check your Linux distribution's security tracker for CVE-2026-99288 and plan the kernel update it names for internet-facing servers.",
+      "gaps": "No distribution advisory or kernel release note was read for this edition; affected and fixed versions come only from posts. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-99288",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-99288",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-99288",
+          "probability": 0.00716,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-hakunoba",
+          "kind": "social_report",
+          "url": "https://x.com/hakunoba/status/2126483755011555466",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-v4bel",
+          "kind": "social_report",
+          "url": "https://x.com/v4bel/status/2126483558567166118",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-28T02:05:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-99288",
+          "label": "FIRST EPSS",
+          "checked_at": "2026-11-28T02:05:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
     {
       "id": "ansibleforms",
       "product": "AnsibleForms",
