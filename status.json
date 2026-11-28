@@ -1,0 +1,78 @@
+{
+  "checked_at": "2026-11-28T17:54:29Z",
+  "stale_after_hours": 24,
+  "sources": {
+    "arch-linux": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "chrome-releases": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "cisa-kev": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "cisco-psirt": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "fortinet-psirt": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "github-advisories": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "hacker-news": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "jenkins-advisories": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "mozilla-security": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "msrc": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "palo-alto": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    },
+    "ubuntu-usn": {
+      "tracked_since": "2026-11-26T19:22:40Z",
+      "last_ok": "2026-11-28T17:54:29Z",
+      "last_attempt": "2026-11-28T17:54:29Z",
+      "last_error": null
+    }
+  }
+}

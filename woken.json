@@ -1,0 +1,10 @@
+{
+  "ids": {
+    "chrome-releases:tag:blogger.com,1999:blog-8982037438137564684.post-3662837635663720113": "2026-11-27T20:10:51Z",
+    "cisa-kev:CVE-2026-120705": "2026-11-27T18:35:54Z",
+    "cisa-kev:CVE-2026-129243": "2026-11-27T18:35:54Z",
+    "cisa-kev:CVE-2026-136716": "2026-11-27T18:35:54Z",
+    "msrc:CVE-2026-62840": "2026-11-27T09:22:26Z",
+    "ubuntu-usn:https://ubuntu.com/security/notices/USN-9016-2": "2026-11-27T09:22:26Z"
+  }
+}
