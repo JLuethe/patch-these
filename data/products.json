@@ -457,6 +457,17 @@
       ]
     },
     {
+      "id": "php-fpm",
+      "product": "PHP (PHP-FPM)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "php-fpm",
+          "verification": "verified"
+        }
+      ]
+    },
+    {
       "id": "postal-2",
       "product": "POSTAL 2 (Steam Workshop mods)",
       "appearances": [
@@ -486,6 +497,17 @@
           "digest_date": "2026-11-26",
           "item_id": "rackspace-spot",
           "verification": "early_signal"
+        }
+      ]
+    },
+    {
+      "id": "react-server-components",
+      "product": "React Server Components and Next.js",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "react-server-components",
+          "verification": "verified"
         }
       ]
     },

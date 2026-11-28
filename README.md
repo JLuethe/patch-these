@@ -9,35 +9,20 @@ Read by audience, search for a product or CVE, or save the products you follow i
 **[Website](https://jluethe.github.io/patch-these/)** · **[Choose an Atom feed](https://jluethe.github.io/patch-these/subscribe/)** · **[Latest JSON](https://jluethe.github.io/patch-these/latest.json)** · **[Methodology](METHODOLOGY.md)**
 
 <!-- BEGIN GENERATED EDITION -->
-## Latest edition — 27 November 2026
+## Latest edition — 28 November 2026
 
-[Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-27.md) · [Structured data](data/2026-11-27.json)
+[Read the briefing](https://jluethe.github.io/patch-these/) · [Full Markdown digest](digests/2026-11-28.md) · [Structured data](data/2026-11-28.json)
 
-Coverage: 27 November 2026. Updated: 27 Nov 2026 · 10:02 PM PST.
-
-### Early signals: not yet verified
-
-- **Not yet verified. [Oracle E-Business Suite](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-oracle-ebs):** Check whether your Oracle E-Business Suite systems have the October 2026 Critical Patch Update applied, and review them for signs of compromise while the exploitation report is confirmed. Source: [Discussed on Bluesky](https://bsky.app/profile/getpokemon7.bsky.social/post/3n3drvn2yac2s) · [Discussed on Bluesky](https://bsky.app/profile/getpokemon7.bsky.social/post/3n3dvxep6qk2s).
-- **Not yet verified. [llama.cpp (ggml RPC server)](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-llama-cpp-rpc):** Check whether you run the llama.cpp RPC server (rpc-server) and on which build, and keep it off untrusted networks while you confirm the fixed build with the llama.cpp project. Source: [Discussed on X](https://x.com/tokendudu/status/2126541596724457728) · [Discussed on X](https://x.com/ll685998568638/status/2126552424618094726).
-- **Not yet verified. [Synology DiskStation Manager (DSM)](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-synology-dsm):** Check the DSM version on your Synology NAS devices and look for a DSM update in Control Panel; confirm the fixed versions in Synology advisory Synology\_SA\_26\_21. Source: [Discussed on X](https://x.com/Teeeda_worker/status/2126541729423843534) · [NVD record CVE-2026-120382](https://nvd.nist.gov/vuln/detail/CVE-2026-120382).
-- **Not yet verified. [AnsibleForms](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-ansibleforms):** Check whether you run AnsibleForms, especially where it is reachable from the internet; read the project's release notes and security advisory before choosing a version. Source: [Discussed on Bluesky](https://bsky.app/profile/eventmonitor.bsky.social/post/3n3fp3p5q5uym) · [Discussed on X](https://x.com/cvedotnow/status/2126411338851221709).
-- **Not yet verified. [vm2](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-vm2-nodevm):** Check whether your applications use vm2's NodeVM to run untrusted code; watch the vm2 GitHub advisories for a fix and limit the built-in modules the sandbox can load. Source: [Discussed on X](https://x.com/HugoValters/status/2126386070720053389) · [Discussed on Bluesky](https://bsky.app/profile/hugovalters.bsky.social/post/3n3cu5qdas32s).
-- **Not yet verified. [Exim](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-exim):** Check whether you run Exim mail servers; watch the Exim project and your Linux distribution for a security advisory. Source: [Discussed on Bluesky](https://bsky.app/profile/pingoru.bsky.social/post/3n3d3v5b3fz2w) · [CISA KEV catalog feed, catalogVersion 2026.11.27](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json).
-- **Not yet verified. [POSTAL 2 (Steam Workshop mods)](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-postal-2):** If you play POSTAL 2, let Steam update the game and avoid installing Workshop mods from unknown authors until the fix is confirmed. Source: [Discussed on Bluesky](https://bsky.app/profile/offseq.bsky.social/post/3n3dpksgukr2p) · [Discussed on X](https://x.com/cvedotnew/status/2126515491082830040).
-- **Not yet verified. [Linux kernel](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-linux-kernel-tcpanic):** Check your Linux distribution's security tracker for CVE-2026-99288 and plan the kernel update it names for internet-facing servers. Source: [Discussed on X](https://x.com/hakunoba/status/2126483755011555466) · [Discussed on X](https://x.com/v4bel/status/2126483558567166118).
-- **Not yet verified. [U.S. Air Force Cloud One](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-us-air-force-cloud-one):** Check whether your organization runs workloads on or connects to Air Force Cloud One; watch for an official Air Force statement or customer notice. Source: [Discussed on X](https://x.com/IndiaToday/status/2126373146920091741) · [Discussed on X](https://x.com/LeadingReport/status/2126373767211532675).
+Coverage: 27–28 November 2026. Updated: 28 Nov 2026 · 6:02 AM PST.
 
 ### For everyone
 
-- **[NoMachine Personal Edition for Windows](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-nomachine-personal-windows) — Act now / Mitigate:** If you downloaded and ran the NoMachine Personal Edition for Windows installer between 19 November 13:43 UTC and 20 November 10:00 UTC, treat that computer as fully exposed and follow NoMachine's steps, with reinstalling Windows as the safest fix.
-- **[RealVNC Viewer, Server, Connect, Classic Viewer and On-Demand Assist](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-realvnc) — Act soon / Update:** Update RealVNC Viewer and the Connect app to 8.6.2 or later, Server to 7.19.1 or later, Classic Viewer to 7.18.3 or later, and On-Demand Assist to 3.5.0 or later; check that mobile Viewer and Server apps have updated (Viewer 4.9.6, Server iOS 2.8.2, Server Android 2.8.4 or later).
+No items for this audience in this edition.
 
 ### For app and server owners
 
-- **[Apache Roller](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-apache-roller) — Act now / Update:** Upgrade Apache Roller to 6.1.6 or later (6.1.7 is the current release). If you can't upgrade right away, apply Apache's interim mitigation below and restart Roller.
-- **[NoMachine Personal Edition for Windows](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-nomachine-personal-windows) — Act now / Mitigate:** If you downloaded and ran the NoMachine Personal Edition for Windows installer between 19 November 13:43 UTC and 20 November 10:00 UTC, treat that computer as fully exposed and follow NoMachine's steps, with reinstalling Windows as the safest fix.
-- **[RealVNC Viewer, Server, Connect, Classic Viewer and On-Demand Assist](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-realvnc) — Act soon / Update:** Update RealVNC Viewer and the Connect app to 8.6.2 or later, Server to 7.19.1 or later, Classic Viewer to 7.18.3 or later, and On-Demand Assist to 3.5.0 or later; check that mobile Viewer and Server apps have updated (Viewer 4.9.6, Server iOS 2.8.2, Server Android 2.8.4 or later).
-- **[F5 BIG-IP and BIG-IQ (iControl SOAP)](https://jluethe.github.io/patch-these/digests/2026-11-27/#item-f5-big-ip-icontrol-soap) — Act soon / Update:** Update BIG-IP to 21.1.0.3, 17.5.1.10 or 17.1.3.6 or later on your branch, and BIG-IQ to 8.4.2.3 or later. Until then, remove iControl SOAP access for users who are not fully trusted and restrict iControl SOAP to trusted networks.
+- **[React Server Components and Next.js](https://jluethe.github.io/patch-these/digests/2026-11-28/#item-react-server-components) — Act soon / Update:** Upgrade the react-server-dom packages to 19.0.9, 19.1.10, 19.2.9 or 19.3.1 or later in your line, and Next.js 16 apps to 16.4.1 or later (16.4.6 is the current release).
+- **[PHP (PHP-FPM)](https://jluethe.github.io/patch-these/digests/2026-11-28/#item-php-fpm) — Act soon / Update:** Upgrade PHP to 8.2.36, 8.3.37, 8.4.28 or 8.5.13 or later and restart PHP-FPM.
 
 <!-- END GENERATED EDITION -->
 

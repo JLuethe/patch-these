@@ -1,0 +1,322 @@
+{
+  "schema_version": 2,
+  "digest_date": "2026-11-28",
+  "coverage_start": "2026-11-27",
+  "coverage_end": "2026-11-28",
+  "published_at": "2026-11-28T14:02:00Z",
+  "updated_at": "2026-11-28T14:02:00Z",
+  "corrections": [],
+  "featured_item_ids": [
+    "react-server-components",
+    "php-fpm"
+  ],
+  "items": [
+    {
+      "id": "react-server-components",
+      "product": "React Server Components and Next.js",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "CVE-2026-126187 can let an unauthenticated remote attacker run code on servers using React Server Components in affected configurations; React rates it Critical (CVSS 4.0 9.5), and posts on 28 Nov say proof-of-concept code is now public.",
+      "cves": [
+        "CVE-2026-126187"
+      ],
+      "affected": "react-server-dom-webpack, react-server-dom-parcel and react-server-dom-turbopack 19.0.0 through 19.0.8, 19.1.0 through 19.1.9, 19.2.0 through 19.2.8, and 19.3.0. Next.js 16.0.0 through 16.4.0 apps using the App Router with Cache Components and a `use cache` function that returns multiple typed arrays (Next.js advisory GHSA-673q-mjm6-r5xr).",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "react-server-dom-webpack / -parcel / -turbopack",
+          "version": "19.0.9, 19.1.10, 19.2.9 or 19.3.1",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-126187"
+          ],
+          "source_ids": [
+            "react-ghsa"
+          ]
+        },
+        {
+          "component": "Next.js",
+          "version": "16.4.1",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-126187"
+          ],
+          "source_ids": [
+            "nextjs-ghsa"
+          ]
+        }
+      ],
+      "summary": "A deserialization flaw in React Server Components (CVE-2026-126187) can lead to remote code execution from crafted payloads when a response carries multiple typed arrays and an attacker-controlled value. React says only rare cases are affected but recommends updating immediately; apps that don't use a server or an RSC-capable framework are not affected. Next.js published a matching advisory for `use cache` functions that return multiple typed arrays and says there is no workaround. The advisories date from October and November; posts on X on 28 Nov say proof-of-concept code and a test lab are now public, which we have not verified. No exploitation has been confirmed and it is not in CISA KEV.",
+      "action": "Upgrade the react-server-dom packages to 19.0.9, 19.1.10, 19.2.9 or 19.3.1 or later in your line, and Next.js 16 apps to 16.4.1 or later (16.4.6 is the current release).",
+      "steps": [
+        "Check whether your app uses React Server Components through a framework or bundler plugin (react-server-dom-webpack, -parcel or -turbopack).",
+        "Upgrade those packages to 19.0.9, 19.1.10, 19.2.9 or 19.3.1 or later, matching your release line.",
+        "For Next.js 16.0.0 through 16.4.0, upgrade to 16.4.1 or later even if you don't have a `use cache` function returning typed arrays; Next.js lists no workaround."
+      ],
+      "gaps": "Public proof-of-concept is reported only by social posts and was not checked. Next.js releases after 16.4.1 were not reviewed for further security fixes. The Next.js advisory carries no CVE id; it is linked to CVE-2026-126187 by posts and its matching description, not by the advisory itself. FIRST EPSS dated 2026-11-27. CISA KEV catalogVersion 2026.11.27 checked.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-126187",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-126187",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-126187",
+          "score": 9.5,
+          "version": "4.0",
+          "authority": "GitHub, Inc. (CNA)",
+          "source_ids": [
+            "cve-126187"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-126187",
+          "probability": 0.01487,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss-126187"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "react-ghsa",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/react/react/security/advisories/GHSA-xqc2-xf4c-x3h3",
+          "label": "React advisory GHSA-xqc2-xf4c-x3h3 (CVE-2026-126187)",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "action",
+            "steps"
+          ]
+        },
+        {
+          "id": "nextjs-ghsa",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/vercel/next.js/security/advisories/GHSA-673q-mjm6-r5xr",
+          "label": "Next.js advisory GHSA-673q-mjm6-r5xr",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "action",
+            "steps"
+          ]
+        },
+        {
+          "id": "next-npm",
+          "kind": "vendor_advisory",
+          "url": "https://www.npmjs.com/package/next",
+          "label": "next on npm (latest 16.4.6)",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "action"
+          ]
+        },
+        {
+          "id": "cve-126187",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-126187",
+          "label": "CVE-2026-126187 record",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "cves",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-126187",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-126187",
+          "label": "FIRST EPSS, 2026-11-27",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-perlod",
+          "kind": "social_report",
+          "url": "https://x.com/Perlod_official/status/2126622422183104864",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "php-fpm",
+      "product": "PHP (PHP-FPM)",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "verified",
+      "priority": "act_soon",
+      "action_type": "update",
+      "priority_reason": "CVE-2026-129289 can let an unauthenticated attacker run PHP code through PHP-FPM when the web server reuses FastCGI connections; PHP rates it Critical (CVSS 4.0 9.2), a detailed research write-up was published on 28 Nov, and its EPSS is 0.44.",
+      "cves": [
+        "CVE-2026-129289"
+      ],
+      "affected": "PHP before 8.2.36, 8.3.0 before 8.3.37, 8.4.0 before 8.4.28, and 8.5.0 before 8.5.13, when running under PHP-FPM (or LSAPI) with persistent backend connections (FCGI_KEEP_CONN).",
+      "fix_status": "available",
+      "fixes": [
+        {
+          "component": "PHP",
+          "version": "8.2.36, 8.3.37, 8.4.28 or 8.5.13",
+          "platform": null,
+          "branch": null,
+          "cves": [
+            "CVE-2026-129289"
+          ],
+          "source_ids": [
+            "php-ghsa"
+          ]
+        }
+      ],
+      "summary": "PHP can fail to discard unread request-body bytes before reusing a persistent PHP-FPM or LSAPI connection (CVE-2026-129289). When an app opens php://input without reading it to the end, an unauthenticated attacker can make the leftover bytes form a separate FastCGI request, bypass front-end routing and run attacker-controlled PHP code with the worker's privileges. It requires connection reuse between the web server and PHP-FPM. PHP fixed it on 19 Nov; a researcher's detailed write-up circulated on 28 Nov. No exploitation has been confirmed and it is not in CISA KEV.",
+      "action": "Upgrade PHP to 8.2.36, 8.3.37, 8.4.28 or 8.5.13 or later and restart PHP-FPM.",
+      "steps": [
+        "Upgrade PHP to 8.2.36, 8.3.37, 8.4.28 or 8.5.13 or later in your release line (or your distribution's patched package), then restart PHP-FPM.",
+        "Check whether your web server reuses FastCGI connections to PHP-FPM (for example nginx `fastcgi_keep_conn on`); those setups are the ones exposed."
+      ],
+      "gaps": "The interim workaround of turning off FastCGI connection reuse comes from search summaries, not from the PHP advisory text we read, so it is left out of the steps. Later PHP releases were not reviewed for further security fixes. FIRST EPSS dated 2026-11-27. CISA KEV catalogVersion 2026.11.27 checked.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-129289",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-129289",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [
+        {
+          "cve": "CVE-2026-129289",
+          "score": 9.2,
+          "version": "4.0",
+          "authority": "PHP Group (CNA)",
+          "source_ids": [
+            "php-ghsa"
+          ]
+        }
+      ],
+      "epss": [
+        {
+          "cve": "CVE-2026-129289",
+          "probability": 0.44302,
+          "score_date": "2026-11-27",
+          "source_ids": [
+            "first-epss-129289"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "php-ghsa",
+          "kind": "vendor_advisory",
+          "url": "https://github.com/php/php-src/security/advisories/GHSA-qc49-hpvq-g2w6",
+          "label": "PHP advisory GHSA-qc49-hpvq-g2w6 (CVE-2026-129289)",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "summary",
+            "affected",
+            "fixes",
+            "action",
+            "steps",
+            "cvss"
+          ]
+        },
+        {
+          "id": "cve-129289",
+          "kind": "cve_record",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-129289",
+          "label": "CVE-2026-129289 record",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "cves"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, catalogVersion 2026.11.27",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-129289",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-129289",
+          "label": "FIRST EPSS, 2026-11-27",
+          "checked_at": "2026-11-28T14:02:00Z",
+          "supports": [
+            "epss"
+          ]
+        },
+        {
+          "id": "x-nytrorst",
+          "kind": "social_report",
+          "url": "https://x.com/NytroRST/status/2126584665691808050",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        }
+      ]
+    }
+  ]
+}
