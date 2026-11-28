@@ -54,6 +54,17 @@ def between(html, start, end="</article>"):
     return chunk[:chunk.index(end)]
 
 
+def test_social_cards_use_the_refreshed_image_on_home_and_digests(publication):
+    output = build_site(publication, site_url=SITE_URL)
+    for path in (output / "index.html", output / "digests" / fx.DAY_TWO / "index.html"):
+        html = path.read_text()
+        image_url = SITE_URL + "/assets/social-card.png?v=2"
+        assert f'<meta property="og:image" content="{image_url}">' in html
+        assert f'<meta name="twitter:image" content="{image_url}">' in html
+        assert 'content="patch-these — tracking emerging threats, updated throughout the day."' in html
+    assert (output / "assets" / "social-card.png").read_bytes() == (ROOT / "assets" / "social-card.png").read_bytes()
+
+
 def test_the_homepage_shows_the_newest_edition_only(publication):
     output = build_site(publication, site_url=SITE_URL)
     home = (output / "index.html").read_text()
