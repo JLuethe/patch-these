@@ -91,7 +91,7 @@ def build_site(root: Path, *, site_url: str = "https://jluethe.github.io/patch-t
         output = Path(temporary) / "site"
         output.mkdir()
         shutil.copytree(root / "assets", output / "assets")
-        for asset in ("style.css", "app.js", "social-card.png", "favicon.svg"):
+        for asset in ("style.css", "app.js", "social-card-v2.png", "favicon.svg"):
             if not (output / "assets" / asset).is_file():
                 raise ValueError(f"Missing publication asset: assets/{asset}")
         def write(path: str, content: str) -> None:
