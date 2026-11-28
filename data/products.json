@@ -23,6 +23,17 @@
       ]
     },
     {
+      "id": "android-58882",
+      "product": "Android (zero-click flaw)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "android-58882",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "ansibleforms",
       "product": "AnsibleForms",
       "appearances": [
@@ -52,6 +63,17 @@
           "digest_date": "2026-11-25",
           "item_id": "azure-api-management-classic",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "budibase-server",
+      "product": "Budibase (@budibase/server)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "budibase-server",
+          "verification": "early_signal"
         }
       ]
     },
@@ -199,6 +221,17 @@
       ]
     },
     {
+      "id": "fortinet-fortios-126259",
+      "product": "Fortinet FortiOS",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "fortinet-fortios-126259",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "geoserver",
       "product": "GeoServer",
       "appearances": [
@@ -217,6 +250,17 @@
           "digest_date": "2026-11-25",
           "item_id": "ghostscript",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "git-recurse-submodules",
+      "product": "Git (clone --recurse-submodules)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "git-recurse-submodules",
+          "verification": "early_signal"
         }
       ]
     },
@@ -292,6 +336,17 @@
       ]
     },
     {
+      "id": "laravel-tokenguard",
+      "product": "Laravel framework (TokenGuard API token auth)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "laravel-tokenguard",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
       "id": "linux-kernel-nfsd",
       "product": "Linux kernel NFS server (nfsd)",
       "appearances": [
@@ -331,6 +386,17 @@
         {
           "digest_date": "2026-11-27",
           "item_id": "llama-cpp-rpc",
+          "verification": "early_signal"
+        }
+      ]
+    },
+    {
+      "id": "macos-authd",
+      "product": "Apple macOS (authd)",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "macos-authd",
           "verification": "early_signal"
         }
       ]
@@ -563,6 +629,17 @@
           "digest_date": "2026-11-26",
           "item_id": "todoist",
           "verification": "verified"
+        }
+      ]
+    },
+    {
+      "id": "traefik-137481",
+      "product": "Traefik proxy",
+      "appearances": [
+        {
+          "digest_date": "2026-11-28",
+          "item_id": "traefik-137481",
+          "verification": "early_signal"
         }
       ]
     },

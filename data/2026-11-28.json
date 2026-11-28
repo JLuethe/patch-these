@@ -4,13 +4,638 @@
   "coverage_start": "2026-11-27",
   "coverage_end": "2026-11-28",
   "published_at": "2026-11-28T14:02:00Z",
-  "updated_at": "2026-11-28T14:02:00Z",
-  "corrections": [],
+  "updated_at": "2026-11-28T17:58:00Z",
+  "corrections": [
+    {
+      "at": "2026-11-28T17:58:00Z",
+      "summary": "Added early signals for a Laravel TokenGuard authentication bypass (CVE-2026-114509), a Git recursive-clone flaw (CVE-2026-111760), a macOS authd flaw (CVE-2026-112430), a FortiOS flaw with reported public exploit code (CVE-2026-126259), a Traefik authentication bypass (CVE-2026-137481), a Budibase flaw (CVE-2026-137498) and an Android zero-click flaw (CVE-2026-58882), none yet confirmed by a vendor advisory.",
+      "item_ids": [
+        "laravel-tokenguard",
+        "git-recurse-submodules",
+        "macos-authd",
+        "fortinet-fortios-126259",
+        "traefik-137481",
+        "budibase-server",
+        "android-58882"
+      ]
+    }
+  ],
   "featured_item_ids": [
     "react-server-components",
     "php-fpm"
   ],
   "items": [
+    {
+      "id": "laravel-tokenguard",
+      "product": "Laravel framework (TokenGuard API token auth)",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "Posts describe CVE-2026-114509 as an authentication bypass in a very widely deployed PHP framework; not yet confirmed with Laravel's advisory.",
+      "cves": [
+        "CVE-2026-114509"
+      ],
+      "affected": "Per posts: Laravel apps that use the TokenGuard api_token driver on MySQL or MariaDB. Versions not confirmed.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on X and Bluesky say CVE-2026-114509 lets a request log in as an existing user without knowing their API token when a Laravel app uses the TokenGuard api_token driver with MySQL or MariaDB. CISA KEV does not list the CVE.",
+      "action": "Check whether your Laravel apps use the TokenGuard api_token driver on MySQL or MariaDB, and watch for Laravel's advisory and fixed release.",
+      "gaps": "The vendor advisory was not read; affected and fixed versions come from social posts only. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-114509",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-114509",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-114509",
+          "probability": 0.01731,
+          "score_date": "2026-11-28",
+          "source_ids": [
+            "first-epss-114509"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-laravel-tokenguard-0",
+          "kind": "social_report",
+          "url": "https://x.com/mehmetalpersen/status/2126692224817643554",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-laravel-tokenguard-1",
+          "kind": "social_report",
+          "url": "https://x.com/zoomeyebot/status/2126688930208834042",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "bsky-laravel-tokenguard-2",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/zoomeyebot.bsky.social/post/3n3ewxkihhb6f",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-114509",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-114509",
+          "label": "FIRST EPSS, 2026-11-28",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "git-recurse-submodules",
+      "product": "Git (clone --recurse-submodules)",
+      "audience": "both",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "Posts say CVE-2026-111760 lets a malicious repository run code on a developer's machine during a recursive clone, and that common macOS Git builds are affected; not yet confirmed with the Git project's notice.",
+      "cves": [
+        "CVE-2026-111760"
+      ],
+      "affected": "Per posts: Git builds before 2.56.1, including Homebrew 2.51.0 and Apple's 2.39.5 on a tested Mac. Not confirmed with the Git project.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A post on X says CVE-2026-111760 lets a malicious repository run code on your machine when you clone it with --recurse-submodules, and that a test Mac had two vulnerable Git copies (Homebrew and Apple's). The post says the fix is in Git 2.56.1. CISA KEV does not list the CVE.",
+      "action": "Check which Git versions are installed on your machines (there may be more than one), avoid recursive clones of untrusted repositories, and watch for the Git project's security release notes.",
+      "gaps": "The vendor advisory was not read; affected and fixed versions come from social posts only. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-111760",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-111760",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-111760",
+          "probability": 0.00676,
+          "score_date": "2026-11-28",
+          "source_ids": [
+            "first-epss-111760"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-git-recurse-submodules-0",
+          "kind": "social_report",
+          "url": "https://x.com/devtoollab/status/2126729010784977162",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-111760",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-111760",
+          "label": "FIRST EPSS, 2026-11-28",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "macos-authd",
+      "product": "Apple macOS (authd)",
+      "audience": "end_users",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "A post says a public exploit for CVE-2026-112430 turns a failed password prompt into root on macOS; not yet confirmed with Apple's security notes.",
+      "cves": [
+        "CVE-2026-112430"
+      ],
+      "affected": "Per posts: macOS versions not stated.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A post on X says CVE-2026-112430 is a macOS authd flaw with public exploit code that can give a local attacker root, and urges updating. This edition has not read Apple's security notes. CISA KEV does not list the CVE.",
+      "action": "Check that your Macs are on the latest macOS update and look for CVE-2026-112430 in Apple's security release notes.",
+      "gaps": "Apple's security notes were not read; the affected and fixed macOS versions are unconfirmed. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-112430",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-112430",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-112430",
+          "probability": 0.00183,
+          "score_date": "2026-11-28",
+          "source_ids": [
+            "first-epss-112430"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-macos-authd-0",
+          "kind": "social_report",
+          "url": "https://x.com/right2bear/status/2126722035921428710",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-112430",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-112430",
+          "label": "FIRST EPSS, 2026-11-28",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fortinet-fortios-126259",
+      "product": "Fortinet FortiOS",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "act_soon",
+      "action_type": "investigate",
+      "priority_reason": "A vulnerability-alert account reports public exploit code for CVE-2026-126259 in FortiOS, rated 9.8, with no fix listed; not yet confirmed with a Fortinet PSIRT advisory.",
+      "cves": [
+        "CVE-2026-126259"
+      ],
+      "affected": "Per posts: Fortinet FortiOS; versions not stated.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A post on X says public exploit code exists for CVE-2026-126259 in Fortinet FortiOS, scored 9.8, and that no fix is listed yet. This edition has not read Fortinet's PSIRT advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether you run FortiOS devices with management interfaces reachable from the internet, and watch Fortinet's PSIRT page for an advisory on CVE-2026-126259.",
+      "gaps": "Fortinet's PSIRT advisory was not read; affected versions and fix status are unconfirmed. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-126259",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-126259",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-126259",
+          "probability": 0.00625,
+          "score_date": "2026-11-28",
+          "source_ids": [
+            "first-epss-126259"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-fortinet-fortios-126259-0",
+          "kind": "social_report",
+          "url": "https://x.com/ToolsWatch/status/2126735959261958446",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-126259",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-126259",
+          "label": "FIRST EPSS, 2026-11-28",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "traefik-137481",
+      "product": "Traefik proxy",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "Posts describe CVE-2026-137481 as a 9.3-rated authentication bypass in a widely used reverse proxy under specific backend setups; not yet confirmed with Traefik's advisory.",
+      "cves": [
+        "CVE-2026-137481"
+      ],
+      "affected": "Per posts: Traefik versions before 2.11.62, 3.7.18 and 3.8.0, when a Java or Spring backend serves both public and protected routes. Not confirmed.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A post on X says CVE-2026-137481 in Traefik can let requests get past authentication when a Java or Spring backend serves both public and protected routes, and lists fixed releases. This edition has not read Traefik's advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether your Traefik deployments put auth middleware in front of Java or Spring backends, and watch Traefik's GitHub security advisories.",
+      "gaps": "The vendor advisory was not read; affected and fixed versions come from social posts only. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-137481",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-137481",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-137481",
+          "probability": 0.01041,
+          "score_date": "2026-11-28",
+          "source_ids": [
+            "first-epss-137481"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-traefik-137481-0",
+          "kind": "social_report",
+          "url": "https://x.com/BeaconLabMX/status/2126719495959978465",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-137481",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-137481",
+          "label": "FIRST EPSS, 2026-11-28",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "budibase-server",
+      "product": "Budibase (@budibase/server)",
+      "audience": "applications_and_servers",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "Posts describe CVE-2026-137498 as a 10.0-rated unauthenticated data read or delete in Budibase apps that publish MongoDB queries; not yet confirmed with Budibase's advisory.",
+      "cves": [
+        "CVE-2026-137498"
+      ],
+      "affected": "Per posts: Budibase before 4.0.0 with MongoDB query templates set to PUBLIC execution. Not confirmed.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. Posts on X say Budibase 4.0.0 fixes nine flaws, led by CVE-2026-137498, which they say lets anyone read or delete data through a MongoDB query a builder exposed with PUBLIC execution permission. This edition has not read Budibase's advisory. CISA KEV does not list the CVE.",
+      "action": "Check whether your Budibase apps expose MongoDB queries with PUBLIC execution permission, and watch Budibase's GitHub security advisories.",
+      "gaps": "The vendor advisory was not read; affected and fixed versions come from social posts only. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-137498",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-137498",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-137498",
+          "probability": 0.01096,
+          "score_date": "2026-11-28",
+          "source_ids": [
+            "first-epss-137498"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "x-budibase-server-0",
+          "kind": "social_report",
+          "url": "https://x.com/SamAiPr/status/2126730212909920459",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "x-budibase-server-1",
+          "kind": "social_report",
+          "url": "https://x.com/SamAiPr/status/2126729706284491082",
+          "label": "Discussed on X",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-137498",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-137498",
+          "label": "FIRST EPSS, 2026-11-28",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "android-58882",
+      "product": "Android (zero-click flaw)",
+      "audience": "end_users",
+      "kind": "vulnerability",
+      "verification": "early_signal",
+      "priority": "monitor",
+      "action_type": "investigate",
+      "priority_reason": "A Bluesky post relays an Italian national cyber agency alert that attack code for zero-click Android flaw CVE-2026-58882 is public; not yet confirmed with Google's Android bulletin.",
+      "cves": [
+        "CVE-2026-58882"
+      ],
+      "affected": "Per posts: Android devices without the latest security patch; versions not stated.",
+      "fix_status": "unknown",
+      "fixes": [],
+      "summary": "Not yet verified. A Bluesky post says Italy's national cybersecurity agency and Google urge Android users to install the latest system patches because attack code for zero-click flaw CVE-2026-58882 has been released. This edition has not read Google's Android Security Bulletin or the agency's alert. CISA KEV does not list the CVE.",
+      "action": "Check that your Android phones show a recent security patch level, and look for CVE-2026-58882 in Google's Android Security Bulletin.",
+      "gaps": "Google's Android Security Bulletin and the agency alert were not read; the patch level that fixes it is unconfirmed. Exploitation is unknown.",
+      "exploitation": {
+        "status": "unknown",
+        "source_ids": [],
+        "by_cve": [
+          {
+            "cve": "CVE-2026-58882",
+            "status": "unknown",
+            "source_ids": []
+          }
+        ]
+      },
+      "kev": [
+        {
+          "cve": "CVE-2026-58882",
+          "listed": false,
+          "date_added": null,
+          "source_ids": [
+            "cisa-kev"
+          ]
+        }
+      ],
+      "cvss": [],
+      "epss": [
+        {
+          "cve": "CVE-2026-58882",
+          "probability": 0.0035,
+          "score_date": "2026-11-28",
+          "source_ids": [
+            "first-epss-58882"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "bsky-android-58882-0",
+          "kind": "social_report",
+          "url": "https://bsky.app/profile/iheuktech.bsky.social/post/3n3f5adihaa24",
+          "label": "Discussed on Bluesky",
+          "checked_at": null,
+          "supports": [
+            "summary"
+          ]
+        },
+        {
+          "id": "cisa-kev",
+          "kind": "government_alert",
+          "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+          "label": "CISA KEV catalog feed, dateReleased 2026-11-27",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "kev"
+          ]
+        },
+        {
+          "id": "first-epss-58882",
+          "kind": "score_service",
+          "url": "https://api.first.org/data/v1/epss?cve=CVE-2026-58882",
+          "label": "FIRST EPSS, 2026-11-28",
+          "checked_at": "2026-11-28T17:58:00Z",
+          "supports": [
+            "epss"
+          ]
+        }
+      ]
+    },
     {
       "id": "react-server-components",
       "product": "React Server Components and Next.js",
